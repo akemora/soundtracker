@@ -8,17 +8,22 @@ Estados Unidos
 
 ## Biografía
 
-Herbert Pope Stothart (Milwaukee, 11 de septiembre de 1885-Los Ángeles, 1 de febrero de 1949) fue un compositor, arreglista y director de orquesta estadounidense. También fue nominado a doce Premios de la Academia, ganando el de la mejor banda sonora original por El mago de Oz. Stothart fue ampliamente reconocido como compositor de alto nivel de Hollywood durante las décadas de 1930 y 1940.
+Herbert Stothart (1885-1949) fue un compositor, arreglista y director de orquesta estadounidense de ascendencia escocesa y alemana, nacido en Milwaukee, Wisconsin. Inició su carrera en el teatro musical, trabajando en vodeviles y siendo contratado por Arthur Hammerstein como director musical para giras de Broadway. Colaboró con figuras como Oscar Hammerstein II, George Gershwin, Vincent Youmans y Franz Lehár, logrando su primer gran éxito en 1924 con la opereta 'Rose-Marie'. En 1929, con la llegada del cine sonoro, se mudó a Hollywood y firmó un contrato exclusivo con MGM, donde pasó el resto de su carrera componiendo bandas sonoras para más de 200 películas.
+
+En MGM, Stothart se convirtió en el compositor principal del estudio durante los años 30 y 40, trabajando en producciones emblemáticas como 'Mutiny on the Bounty' (1935), 'The Good Earth' (1937), 'The Wizard of Oz' (1939) —por la que ganó un Oscar— y 'Northwest Passage' (1940). Recibió 12 nominaciones al Oscar y fue clave en la transición al cine musical. En 1947 sufrió un infarto en Escocia, inspirando su poema sinfónico 'Heart Attack', y falleció en 1949 por cáncer mientras componía 'Voices of Liberation'. Está enterrado en Forest Lawn Memorial Park, Glendale. [^1] [^2] [^3]
 
 ## Estilo musical
 
-Stothart fue contratado inicialmente por el productor Arthur Hammerstein para trabajar como director musical para compañías en gira de espectáculos de Broadway. Pronto empezó a componer música para Oscar Hammerstein II, sobrino del productor. En particular, Stothart compuso música para la famosa opereta Rose-Marie. Colaboró ​​con compositores de renombre como Vincent Youmans, George Gershwin y Franz Lehár. Stothart logró el éxito en las listas de éxitos con estándares como "Cute Little Two by Four", "Wildflower", "Bambalina", "The Mounties", "Totem Tom-Tom", "¿Why Shouldn't We?", "Fly Away", "Song of the Flame", "The Cossack Love Song", "Dawn", "I Wanna Be Loved by You", "Cuban Love Song", "The Rogue Song" y "The Donkey Serenade".
+El estilo de Stothart era melódico y sutil, con énfasis en secciones de cuerdas exuberantes, especialmente violines, que aportaban un tono lush y fluido, puntuado por cuernos suaves. Empleaba leitmotivs inspirados en compositores clásicos como Wagner, escalas pentatónicas para evocaciones orientales, percusión asiática fusionada con metales patrióticos, y técnicas para generar emociones específicas: tonos rojos chocantes para ira, melodías suaves para tranquilidad, armonías discordantes para alarma, y quirks en maderas para comedia.
+
+Sus composiciones evitaban lo grandioso europeo, optando por un enfoque contenido y teatral de Broadway, con orquestación sinfónica adaptada al cine, frases de himnos nacionales para exaltación y motivos recurrentes no intrusivos que realzaban la narrativa visual. [^4] [^5] [^3]
 
 ## Datos curiosos y técnica de composición
 
-Stothart fue contratado inicialmente por el productor Arthur Hammerstein para trabajar como director musical para compañías en gira de espectáculos de Broadway.
-
-Pronto empezó a componer música para Oscar Hammerstein II, sobrino del productor.
+- Compuso para más de 200 películas en MGM, consolidándose como el más importante del estudio en la era dorada de Hollywood.
+- Ganó un Oscar por 'The Wizard of Oz' (1939) y recibió 11 nominaciones más entre 1935 y 1945.
+- Tras un infarto en Escocia (1947), creó 'Heart Attack: A Symphonic Poem' basado en su experiencia personal.
+- Usaba elementos exóticos como tomtoms y percusión oriental para crear inquietud y fusión cultural en scores como 'The Good Earth'. [^2] [^1] [^3] [^4]
 
 ## Top 10 bandas sonoras
 
@@ -32,10 +37,10 @@ Pronto empezó a componer música para Oscar Hammerstein II, sobrino del product
     * **Póster:** [link](001_herbert_stothart/posters/poster_mutiny_on_the_bounty_1935.jpg)
 5. ***After the Thin Man (Título en España: Ella, él y Asta)*** (1936)
     * **Póster:** [link](001_herbert_stothart/posters/poster_after_the_thin_man_1936.jpg)
-6. ***The Personal History, Adventures, Experience, & Observation of David Copperfield the Younger (Título en España: David Copperfield)*** (1935)
-    * **Póster:** [link](001_herbert_stothart/posters/poster_the_personal_history_adventures_experience_observation_of_david_copperfield_the_younger_1935.jpg)
-7. ***The Good Earth (Título en España: La buena tierra)*** (1937)
+6. ***The Good Earth (Título en España: La buena tierra)*** (1937)
     * **Póster:** [link](001_herbert_stothart/posters/poster_the_good_earth_1937.jpg)
+7. ***The Personal History, Adventures, Experience, & Observation of David Copperfield the Younger (Título en España: David Copperfield)*** (1935)
+    * **Póster:** [link](001_herbert_stothart/posters/poster_the_personal_history_adventures_experience_observation_of_david_copperfield_the_younger_1935.jpg)
 
 ## Filmografía completa
 
@@ -115,6 +120,14 @@ Pronto empezó a componer música para Oscar Hammerstein II, sobrino del product
 * 1944 – Nominación de la Academia – por *Thousands Cheer*
 * 1945 – Nominación de la Academia – por *Kismet*
 * 1946 – Nominación de la Academia – por *The Valley of Decision*
+
+## Citas
+
+[^1]: https://es.wikipedia.org/wiki/Herbert_Stothart
+[^2]: https://en.wikipedia.org/wiki/Herbert_Stothart
+[^3]: https://themoviescores.com/inicio/biografias-de-compositores-de-bandas-sonoras/herbert-stothart-biografia-compositor-banda-sonora/
+[^4]: https://silverscenesblog.blogspot.com/2015/01/herbert-stothart-composer.html
+[^5]: https://moviemusicuk.us/2015/07/01/herbert-stothart-fathers-of-film-music-part-11/
 
 ## Fuentes adicionales
 
