@@ -20,11 +20,11 @@ SOUNDTRACKER es un sistema de investigación automatizada que genera perfiles co
 
 | Componente | Estado | Descripción |
 |------------|--------|-------------|
-| Pipeline Python | ✅ Funcional | Generación de perfiles |
+| Pipeline Python | ✅ v2.0 | Arquitectura modular refactorizada |
 | Datos | ✅ 164 compositores | ~970 MB con pósters |
-| Base de datos | 🔜 Planificado | SQLite + FTS5 |
-| Backend API | 🔜 Planificado | FastAPI |
-| Frontend | 🔜 Planificado | Next.js + Tailwind |
+| Base de datos | ✅ Funcional | SQLite + FTS5 (5.88 MB) |
+| Backend API | 🔜 Fase 3 | FastAPI |
+| Frontend | 🔜 Fase 4-5 | Next.js + Tailwind |
 
 ## Instalación Rápida
 
@@ -42,8 +42,8 @@ cd /path/to/SOUNDTRACKER/App
 python3.11 -m venv venv
 source venv/bin/activate
 
-# Instalar dependencias
-pip install requests beautifulsoup4 google
+# Instalar en modo desarrollo
+pip install -e .
 ```
 
 ### Variables de Entorno
@@ -62,55 +62,149 @@ export SPOTIFY_CLIENT_SECRET="..."
 export DOWNLOAD_POSTERS=1        # Descargar pósters localmente
 export POSTER_WORKERS=8          # Workers concurrentes
 export FILM_LIMIT=200            # Máximo películas por compositor
-export TOP_FORCE_AWARDS=1        # Forzar premiadas en Top 10
 export START_INDEX=1             # Índice para reanudar batch
 ```
 
 ## Uso
 
-### Generar Todos los Compositores
+### Generar Compositores (Pipeline Nuevo)
 
 ```bash
-python scripts/create_composer_files.py
+# Procesar todos los compositores
+python scripts/generate_composers.py
+
+# Procesar rango específico
+python scripts/generate_composers.py --start 1 --end 10
+
+# Procesar compositor individual
+python scripts/generate_composers.py --name "John Williams"
+
+# Dry run (sin escribir archivos)
+python scripts/generate_composers.py --dry-run
 ```
 
-### Reanudar desde un Índice Específico
+### Construir Base de Datos
 
 ```bash
-START_INDEX=41 python scripts/create_composer_files.py
+# Construir desde archivos Markdown
+python scripts/build_database.py
+
+# Reconstruir (drop + create)
+python scripts/build_database.py --rebuild
+
+# Verbose
+python scripts/build_database.py -v
 ```
 
-### Actualizar Solo Top 10 (sin regenerar datos)
+### Consultar Base de Datos
+
+```bash
+# Buscar compositor (FTS5)
+sqlite3 data/soundtrackers.db "SELECT name FROM composers
+  WHERE id IN (SELECT rowid FROM fts_composers WHERE fts_composers MATCH 'Star Wars');"
+
+# Ver estadísticas
+sqlite3 data/soundtrackers.db "SELECT * FROM v_composer_stats LIMIT 5;"
+
+# Top premios
+sqlite3 data/soundtrackers.db "SELECT composer_name, wins FROM v_awards_summary
+  WHERE wins > 0 ORDER BY wins DESC LIMIT 10;"
+```
+
+### Actualizar Solo Top 10
 
 ```bash
 python scripts/update_top10_youtube.py
-```
-
-### Test de un Compositor Individual
-
-```bash
-python scripts/test_single_composer.py --composer "John Williams"
 ```
 
 ## Estructura del Proyecto
 
 ```
 App/
-├── scripts/                      # Scripts de generación
-│   ├── create_composer_files.py  # Pipeline principal
-│   └── update_top10_youtube.py   # Actualización de Top 10
+├── src/soundtracker/             # Paquete Python principal
+│   ├── __init__.py               # Exports principales
+│   ├── config.py                 # Settings (Pydantic)
+│   ├── models.py                 # Dataclasses (Film, Award, ComposerInfo)
+│   ├── logging_config.py         # Logging estructurado
+│   ├── pipeline.py               # Orquestación del pipeline
+│   ├── api_clients/              # Clientes de APIs externas
+│   │   ├── base.py               # BaseClient con retry/timeout
+│   │   ├── tmdb.py               # TMDB API
+│   │   ├── wikipedia.py          # Wikipedia API
+│   │   ├── wikidata.py           # Wikidata SPARQL
+│   │   ├── youtube.py            # YouTube Data API
+│   │   ├── spotify.py            # Spotify API
+│   │   └── search.py             # Perplexity/Google/DDG
+│   ├── services/                 # Servicios de negocio
+│   │   ├── biography.py          # Biografía, estilo, anécdotas
+│   │   ├── filmography.py        # Filmografía completa
+│   │   ├── top10.py              # Selección Top 10
+│   │   ├── awards.py             # Premios
+│   │   ├── posters.py            # Descarga de pósters
+│   │   └── translator.py         # Traducción
+│   ├── generators/               # Generadores de output
+│   │   └── markdown.py           # MarkdownGenerator
+│   ├── cache/                    # Sistema de caché
+│   │   └── file_cache.py         # FileCache thread-safe
+│   └── utils/                    # Utilidades
+│       ├── text.py               # Funciones de texto
+│       └── urls.py               # Funciones de URLs
+├── scripts/                      # Scripts CLI
+│   ├── generate_composers.py     # Pipeline CLI (<100 líneas)
+│   ├── build_database.py         # ETL a SQLite
+│   ├── schema.sql                # DDL de la base de datos
+│   ├── etl/                      # Módulo ETL
+│   │   └── parser.py             # Parser de Markdown
+│   ├── manage_master_list.py     # Gestión master list
+│   └── update_top10_youtube.py   # Actualización Top 10
+├── data/                         # Base de datos
+│   └── soundtrackers.db          # SQLite + FTS5 (5.88 MB)
 ├── outputs/                      # Datos generados
 │   ├── NNN_nombre_compositor.md  # Perfiles en Markdown
 │   ├── NNN_nombre_compositor/    # Carpetas con pósters
-│   ├── tmdb_cache.json           # Caché de TMDB
-│   └── streaming_cache.json      # Caché de YouTube
-├── AGENTS.md                     # Protocolo para agentes IA
-├── CONVENTIONS.md                # Estándares de código Python
-├── CONVENTIONS_FRONTEND.md       # Estándares de frontend
-├── DEVELOPMENT_PLAN.md           # Plan de desarrollo detallado
-├── AUDIT_AND_PROPOSAL.md         # Auditoría técnica
+│   └── composers_master_list.md  # Lista maestra
+├── tests/                        # Tests
+│   ├── test_models.py
+│   ├── test_config.py
+│   ├── test_cache.py
+│   ├── test_utils.py
+│   └── test_generators.py
+├── pyproject.toml                # Configuración del proyecto
+├── TASKS.md                      # Lista de tareas (291 tareas)
 └── README.md                     # Este archivo
 ```
+
+## Base de Datos
+
+La base de datos SQLite incluye:
+
+| Tabla | Descripción |
+|-------|-------------|
+| `composers` | Datos principales de compositores |
+| `films` | Filmografía con pósters y rankings |
+| `awards` | Premios y nominaciones |
+| `sources` | Fuentes externas y snippets |
+| `notes` | Notas adicionales |
+| `fts_composers` | FTS5 para búsqueda full-text |
+
+### Vistas
+
+| Vista | Descripción |
+|-------|-------------|
+| `v_composer_stats` | Estadísticas por compositor |
+| `v_top10_films` | Top 10 con info de compositor |
+| `v_awards_summary` | Resumen de premios |
+
+### Estadísticas Actuales
+
+| Métrica | Valor |
+|---------|-------|
+| Compositores | 164 |
+| Películas | 11,778 |
+| Top 10 Films | 1,531 |
+| Premios | 1,769 |
+| Victorias | 874 |
+| Fuentes | 3,926 |
 
 ## Fuentes de Datos
 
@@ -122,98 +216,57 @@ App/
 | Perplexity | Búsqueda de Top 10 |
 | Google Search | Fallback de búsqueda |
 | YouTube | Views para ranking |
-| Spotify | Popularidad (pendiente) |
-
-## Formato de Salida
-
-Cada compositor genera:
-
-1. **Archivo Markdown** (`outputs/NNN_nombre_compositor.md`)
-   - Biografía
-   - Estilo musical
-   - Anécdotas
-   - Top 10 con enlaces a pósters
-   - Filmografía completa
-   - Premios
-   - Fuentes
-
-2. **Carpeta de assets** (`outputs/NNN_nombre_compositor/`)
-   - `photo_nombre_compositor.jpg` - Foto del compositor
-   - `posters/` - Todos los pósters de películas
-
-### Formato de Títulos
-
-```
-Título Original (Título en España: Título Español)
-```
-
-Ejemplo:
-```
-Star Wars (Título en España: La guerra de las galaxias)
-```
-
-## Configuración Avanzada
-
-### Variables de Entorno Completas
-
-| Variable | Default | Descripción |
-|----------|---------|-------------|
-| `TMDB_API_KEY` | - | API key de TMDB (obligatoria) |
-| `PPLX_API_KEY` | - | API key de Perplexity |
-| `YOUTUBE_API_KEY` | - | API key de YouTube |
-| `SPOTIFY_CLIENT_ID` | - | Client ID de Spotify |
-| `SPOTIFY_CLIENT_SECRET` | - | Client secret de Spotify |
-| `DOWNLOAD_POSTERS` | `1` | Descargar pósters (1/0) |
-| `POSTER_WORKERS` | `8` | Workers concurrentes |
-| `POSTER_LIMIT` | `0` | Límite de pósters (0=ilimitado) |
-| `FILM_LIMIT` | `200` | Máximo películas por compositor |
-| `TOP_MIN_VOTE_COUNT` | `50` | Mínimo votos para Top 10 |
-| `TOP_FORCE_AWARDS` | `1` | Incluir premiadas en Top 10 |
-| `EXTERNAL_SNIPPET_SOURCES` | `12` | Fuentes externas a buscar |
-| `EXTERNAL_SNIPPET_MAX_CHARS` | `700` | Máximo chars por snippet |
-| `MAX_BIO_PARAGRAPHS` | `6` | Párrafos de biografía |
-| `SEARCH_WEB_ENABLED` | `1` | Habilitar búsqueda web |
-| `START_INDEX` | `1` | Índice para reanudar |
+| Spotify | Popularidad (opcional) |
 
 ## Plan de Desarrollo
 
-El proyecto está en proceso de expansión hacia una aplicación web completa:
-
 | Fase | Estado | Descripción |
 |------|--------|-------------|
-| Fase 0 | Pendiente | Preparación y Git LFS |
-| Fase 1 | Pendiente | Refactorización del código Python |
-| Fase 2 | Pendiente | Base de datos SQLite + FTS5 |
-| Fase 3 | Pendiente | Backend API con FastAPI |
-| Fase 4 | Pendiente | Frontend base con Next.js |
-| Fase 5 | Pendiente | Frontend avanzado |
-| Fase 6 | Pendiente | Deploy y CI/CD |
+| Fase 0 | ✅ Completada | Preparación y configuración |
+| Fase 1 | ✅ Completada | Refactorización Python modular |
+| Fase 2 | ✅ Completada | Base de datos SQLite + FTS5 |
+| Fase 3 | 🔜 Pendiente | Backend API con FastAPI |
+| Fase 4 | 🔜 Pendiente | Frontend base con Next.js |
+| Fase 5 | 🔜 Pendiente | Frontend avanzado |
+| Fase 6 | 🔜 Pendiente | Deploy y CI/CD |
 
-Ver `DEVELOPMENT_PLAN.md` para el roadmap detallado.
+Ver `TASKS.md` para el checklist detallado (291 tareas).
+
+## Tests
+
+```bash
+# Ejecutar todos los tests
+pytest tests/ -v
+
+# Tests específicos
+pytest tests/test_models.py -v
+pytest tests/test_cache.py -v
+
+# Con cobertura
+pytest tests/ --cov=soundtracker
+```
 
 ## Documentación
 
 | Documento | Propósito |
 |-----------|-----------|
 | `README.md` | Guía de inicio rápido |
-| `TASKS.md` | **Lista de tareas con checklist** (229 tareas) |
+| `TASKS.md` | **Lista de tareas con checklist** (291 tareas) |
 | `AGENTS.md` | Protocolo para agentes IA |
 | `CONVENTIONS.md` | Estándares de código Python |
 | `CONVENTIONS_FRONTEND.md` | Estándares de frontend |
 | `DEVELOPMENT_PLAN.md` | Roadmap técnico |
-| `AUDIT_AND_PROPOSAL.md` | Auditoría y propuestas |
-
-> **IMPORTANTE**: `TASKS.md` debe mantenerse actualizado después de cada tarea completada.
 
 ## Stack Tecnológico
 
-### Actual (Pipeline)
-- Python 3.11+
-- requests, BeautifulSoup4
-- APIs: TMDB, Wikipedia, Wikidata, YouTube, Perplexity
+### Actual (Fases 0-2)
+- **Python 3.11+** con type hints
+- **Pydantic** para configuración y validación
+- **SQLite** con FTS5 para búsqueda full-text
+- **APIs**: TMDB, Wikipedia, Wikidata, YouTube, Perplexity
 
-### Planificado
-- **Backend**: FastAPI + SQLite (FTS5)
+### Planificado (Fases 3-6)
+- **Backend**: FastAPI + SQLite
 - **Frontend**: Next.js 14 + Tailwind + shadcn/ui
 - **i18n**: ES (principal), EN (secundario)
 

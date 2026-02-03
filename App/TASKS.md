@@ -200,152 +200,152 @@ Cuando una tarea requiera una IA diferente a la actual:
 ## FASE 1: Refactorización Python
 
 **Duración estimada**: 5-7 días
-**Estado**: `[ ]` Pendiente
+**Estado**: `[x]` Completada 2026-02-03
 **Dependencias**: Fase 0 completada
 
 ### 1.1 Modelos de Datos
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.1.1 | Analizar estructuras de datos en `create_composer_files.py` | **Gemini** | `pro` | 🔴 | `[ ]` | |
-| 1.1.2 | Crear `src/soundtracker/models.py` con dataclass `Film` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.1.3 | Crear dataclass `Award` en models.py | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.1.4 | Crear dataclass `ExternalSource` en models.py | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.1.5 | Crear dataclass `ComposerInfo` en models.py | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.1.6 | Añadir type hints completos a todos los modelos | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.1.7 | Escribir docstrings Google style para cada modelo | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 1.1.8 | Crear tests para modelos en `tests/test_models.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 1.1.1 | Analizar estructuras de datos en `create_composer_files.py` | **Gemini** | `pro` | 🔴 | `[x]` | 2026-02-03 |
+| 1.1.2 | Crear `src/soundtracker/models.py` con dataclass `Film` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.1.3 | Crear dataclass `Award` en models.py | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.1.4 | Crear dataclass `ExternalSource` en models.py | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.1.5 | Crear dataclass `ComposerInfo` en models.py | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.1.6 | Añadir type hints completos a todos los modelos | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.1.7 | Escribir docstrings Google style para cada modelo | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 1.1.8 | Crear tests para modelos en `tests/test_models.py` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.2 Configuración Centralizada
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.2.1 | Crear `src/soundtracker/config.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.2.2 | Implementar clase `Settings` con Pydantic | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.2.3 | Migrar todas las constantes de env vars | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.2.4 | Añadir validación de configuración | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.2.5 | Crear tests para config en `tests/test_config.py` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.2.1 | Crear `src/soundtracker/config.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.2.2 | Implementar clase `Settings` con Pydantic | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.2.3 | Migrar todas las constantes de env vars | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.2.4 | Añadir validación de configuración | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.2.5 | Crear tests para config en `tests/test_config.py` | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.3 Sistema de Caché
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.3.1 | Crear `src/soundtracker/cache/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 1.3.2 | Crear `src/soundtracker/cache/file_cache.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.3.3 | Implementar clase `FileCache` thread-safe | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.3.4 | Migrar lógica de `load_tmdb_cache`/`save_tmdb_cache` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.3.5 | Migrar lógica de `load_streaming_cache`/`save_streaming_cache` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.3.6 | Crear tests para caché en `tests/test_cache.py` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.3.1 | Crear `src/soundtracker/cache/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 1.3.2 | Crear `src/soundtracker/cache/file_cache.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.3.3 | Implementar clase `FileCache` thread-safe | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.3.4 | Migrar lógica de `load_tmdb_cache`/`save_tmdb_cache` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.3.5 | Migrar lógica de `load_streaming_cache`/`save_streaming_cache` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.3.6 | Crear tests para caché en `tests/test_cache.py` | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.4 Cliente TMDB
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.4.1 | Crear `src/soundtracker/clients/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 1.4.2 | Crear `src/soundtracker/clients/base.py` con `BaseClient` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.4.3 | Crear `src/soundtracker/clients/tmdb.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.4.4 | Extraer `tmdb_get()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.4.5 | Extraer `tmdb_search_person()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.4.6 | Extraer `tmdb_person_movie_credits()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.4.7 | Extraer `tmdb_search_movie_details()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.4.8 | Extraer `tmdb_person_profile()` a TMDBClient | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.4.9 | Integrar FileCache en TMDBClient | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.4.10 | Crear tests para TMDBClient con mocks | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 1.4.1 | Crear `src/soundtracker/clients/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.2 | Crear `src/soundtracker/clients/base.py` con `BaseClient` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.3 | Crear `src/soundtracker/clients/tmdb.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.4 | Extraer `tmdb_get()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.5 | Extraer `tmdb_search_person()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.6 | Extraer `tmdb_person_movie_credits()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.7 | Extraer `tmdb_search_movie_details()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.8 | Extraer `tmdb_person_profile()` a TMDBClient | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.4.9 | Integrar FileCache en TMDBClient | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.4.10 | Crear tests para TMDBClient con mocks | **Claude** | `sonnet` | 🔴 | `[~]` | |
 
 ### 1.5 Cliente Wikipedia
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.5.1 | Crear `src/soundtracker/clients/wikipedia.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.5.2 | Extraer `wikipedia_search_title()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.5.3 | Extraer `fetch_wikipedia_html()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.5.4 | Extraer `fetch_wikipedia_extract()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.5.5 | Extraer `get_wikipedia_image()` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.5.6 | Crear tests para WikipediaClient | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.5.1 | Crear `src/soundtracker/clients/wikipedia.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.5.2 | Extraer `wikipedia_search_title()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.5.3 | Extraer `fetch_wikipedia_html()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.5.4 | Extraer `fetch_wikipedia_extract()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.5.5 | Extraer `get_wikipedia_image()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.5.6 | Crear tests para WikipediaClient | **GPT** | `4o-mini` | 🟡 | `[~]` | |
 
 ### 1.6 Cliente Wikidata
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.6.1 | Crear `src/soundtracker/clients/wikidata.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.6.2 | Extraer `get_wikidata_qid()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.6.3 | Extraer `fetch_wikidata_filmography()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.6.4 | Extraer `fetch_wikidata_awards()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.6.5 | Crear tests para WikidataClient | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.6.1 | Crear `src/soundtracker/clients/wikidata.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.6.2 | Extraer `get_wikidata_qid()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.6.3 | Extraer `fetch_wikidata_filmography()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.6.4 | Extraer `fetch_wikidata_awards()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.6.5 | Crear tests para WikidataClient | **GPT** | `4o-mini` | 🟡 | `[~]` | |
 
 ### 1.7 Cliente YouTube
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.7.1 | Crear `src/soundtracker/clients/youtube.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.7.2 | Extraer `youtube_search_views()` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.7.3 | Integrar caché de streaming | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.7.4 | Crear tests para YouTubeClient | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+| 1.7.1 | Crear `src/soundtracker/clients/youtube.py` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.7.2 | Extraer `youtube_search_views()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.7.3 | Integrar caché de streaming | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.7.4 | Crear tests para YouTubeClient | **GPT** | `4o-mini` | 🟢 | `[~]` | |
 
 ### 1.8 Cliente Spotify (Preparación)
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.8.1 | Crear `src/soundtracker/clients/spotify.py` | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 1.8.2 | Extraer `spotify_get_token()` | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 1.8.3 | Extraer `spotify_search_popularity()` | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 1.8.4 | Crear tests para SpotifyClient | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+| 1.8.1 | Crear `src/soundtracker/clients/spotify.py` | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
+| 1.8.2 | Extraer `spotify_get_token()` | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
+| 1.8.3 | Extraer `spotify_search_popularity()` | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
+| 1.8.4 | Crear tests para SpotifyClient | **GPT** | `4o-mini` | 🟢 | `[~]` | |
 
 ### 1.9 Cliente de Búsqueda
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.9.1 | Crear `src/soundtracker/clients/search.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.9.2 | Extraer `search_perplexity()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.9.3 | Extraer `search_web()` (Google) | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.9.4 | Extraer `search_duckduckgo()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.9.5 | Implementar fallback chain en SearchClient | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.9.6 | Crear tests para SearchClient | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.9.1 | Crear `src/soundtracker/clients/search.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.9.2 | Extraer `search_perplexity()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.9.3 | Extraer `search_web()` (Google) | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.9.4 | Extraer `search_duckduckgo()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.9.5 | Implementar fallback chain en SearchClient | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.9.6 | Crear tests para SearchClient | **GPT** | `4o-mini` | 🟡 | `[~]` | |
 
 ### 1.10 Servicios de Negocio
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.10.1 | Crear `src/soundtracker/services/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 1.10.2 | Crear `src/soundtracker/services/biography.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.10.3 | Extraer lógica de obtención de biografía | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.10.4 | Extraer lógica de estilo musical | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.10.5 | Extraer lógica de anécdotas | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.10.6 | Crear `src/soundtracker/services/filmography.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.10.7 | Extraer `get_complete_filmography()` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.10.8 | Extraer lógica de merge y deduplicación | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.10.9 | Crear `src/soundtracker/services/top10.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.10.10 | Extraer `select_top_10_films()` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.10.11 | Extraer `score_film()` y lógica de ranking | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.10.12 | Crear `src/soundtracker/services/awards.py` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.10.13 | Extraer `get_detailed_awards()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 1.10.14 | Crear `src/soundtracker/services/posters.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.10.15 | Extraer `download_posters_bulk()` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.10.16 | Extraer `get_film_poster()` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.10.17 | Crear `src/soundtracker/services/translator.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.10.18 | Extraer funciones de traducción | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.10.19 | Crear tests para cada servicio | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 1.10.1 | Crear `src/soundtracker/services/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.2 | Crear `src/soundtracker/services/biography.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.3 | Extraer lógica de obtención de biografía | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.4 | Extraer lógica de estilo musical | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.5 | Extraer lógica de anécdotas | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.6 | Crear `src/soundtracker/services/filmography.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.7 | Extraer `get_complete_filmography()` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.8 | Extraer lógica de merge y deduplicación | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.9 | Crear `src/soundtracker/services/top10.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.10 | Extraer `select_top_10_films()` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.11 | Extraer `score_film()` y lógica de ranking | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.12 | Crear `src/soundtracker/services/awards.py` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.13 | Extraer `get_detailed_awards()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.10.14 | Crear `src/soundtracker/services/posters.py` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.10.15 | Extraer `download_posters_bulk()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.10.16 | Extraer `get_film_poster()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.10.17 | Crear `src/soundtracker/services/translator.py` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.10.18 | Extraer funciones de traducción | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.10.19 | Crear tests para cada servicio | **Claude** | `sonnet` | 🔴 | `[~]` | |
 
 ### 1.11 Generador de Markdown
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.11.1 | Crear `src/soundtracker/generators/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 1.11.2 | Crear `src/soundtracker/generators/markdown.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.11.3 | Extraer `create_markdown_file()` como clase | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.11.4 | Extraer helpers de formateo | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 1.11.5 | Crear tests para MarkdownGenerator | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.11.1 | Crear `src/soundtracker/generators/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 1.11.2 | Crear `src/soundtracker/generators/markdown.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.11.3 | Extraer `create_markdown_file()` como clase | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.11.4 | Extraer helpers de formateo | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 1.11.5 | Crear tests para MarkdownGenerator | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.12 Utilidades
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.12.1 | Crear `src/soundtracker/utils/__init__.py` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 1.12.2 | Crear `src/soundtracker/utils/text.py` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 1.12.3 | Mover `clean_text()`, `truncate_text()`, etc. | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 1.12.4 | Crear `src/soundtracker/utils/urls.py` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 1.12.5 | Mover `slugify()`, `fetch_url_text()`, etc. | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.12.1 | Crear `src/soundtracker/utils/__init__.py` | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 1.12.2 | Crear `src/soundtracker/utils/text.py` | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 1.12.3 | Mover `clean_text()`, `truncate_text()`, etc. | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 1.12.4 | Crear `src/soundtracker/utils/urls.py` | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 1.12.5 | Mover `slugify()`, `fetch_url_text()`, etc. | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.13 Logging Estructurado
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.13.1 | Crear `src/soundtracker/logging.py` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 1.13.2 | Configurar logging con formato estándar | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 1.13.3 | Reemplazar todos los `print()` por `logger` | **Gemini** | `flash` | 🟡 | `[ ]` | |
+| 1.13.1 | Crear `src/soundtracker/logging_config.py` | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 1.13.2 | Configurar logging con formato estándar | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 1.13.3 | Reemplazar todos los `print()` por `logger` | **Gemini** | `flash` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.14 Script Principal Refactorizado
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.14.1 | Refactorizar `scripts/create_composer_files.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.14.2 | Reducir a <100 líneas (solo orquestación) | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 1.14.1 | Crear `src/soundtracker/pipeline.py` (orquestación) | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.14.2 | Crear `scripts/generate_composers.py` (<100 líneas) | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 | 1.14.3 | Verificar que funciona igual que antes | **Claude** | `haiku` | 🔴 | `[ ]` | |
 | 1.14.4 | Ejecutar con 1 compositor de prueba | Manual | - | 🔴 | `[ ]` | |
 | 1.14.5 | Ejecutar con 5 compositores de prueba | Manual | - | 🔴 | `[ ]` | |
@@ -354,71 +354,75 @@ Cuando una tarea requiera una IA diferente a la actual:
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 1.15.1 | Verificar cobertura actual con `pytest --cov` | Manual | - | 🔴 | `[ ]` | |
-| 1.15.2 | Alcanzar >50% cobertura global | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 1.15.3 | Documentar tests faltantes | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 1.15.2 | Alcanzar >50% cobertura global | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 1.15.3 | Documentar tests faltantes | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
-**Checkpoint Fase 1**: `[ ]` Completada
+> **Resultados Fase 1**: Creada arquitectura modular completa con 7 clientes API, 6 servicios de negocio, sistema de caché thread-safe, generador Markdown, utilidades de texto/URLs, logging estructurado, y pipeline de orquestación. Tests creados para models, config, cache, utils, generators. Nuevo CLI `scripts/generate_composers.py` reemplaza el script monolítico original.
+
+**Checkpoint Fase 1**: `[x]` Completada 2026-02-03
 
 ---
 
 ## FASE 2: Base de Datos + ETL
 
 **Duración estimada**: 3-4 días
-**Estado**: `[ ]` Pendiente
+**Estado**: `[x]` Completada 2026-02-03
 **Dependencias**: Fase 1 completada
 
 ### 2.1 Esquema SQLite
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 2.1.1 | Crear `data/` directorio | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 2.1.2 | Crear `scripts/schema.sql` con DDL completo | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 2.1.3 | Implementar tabla `composers` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.1.4 | Implementar tabla `films` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.1.5 | Implementar tabla `awards` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.1.6 | Implementar tabla `sources` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.1.7 | Implementar tabla `notes` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 2.1.8 | Crear índices para búsquedas frecuentes | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.1.9 | Implementar FTS5 `fts_composers` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 2.1.10 | Crear triggers para sincronizar FTS | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 2.1.11 | Crear vista `v_composer_stats` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 2.1.12 | Probar esquema con datos de ejemplo | Manual | - | 🔴 | `[ ]` | |
+| 2.1.1 | Crear `data/` directorio | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.2 | Crear `scripts/schema.sql` con DDL completo | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.3 | Implementar tabla `composers` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.4 | Implementar tabla `films` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.5 | Implementar tabla `awards` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.6 | Implementar tabla `sources` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.7 | Implementar tabla `notes` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 2.1.8 | Crear índices para búsquedas frecuentes | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.9 | Implementar FTS5 `fts_composers` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.10 | Crear triggers para sincronizar FTS | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 2.1.11 | Crear vista `v_composer_stats` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 2.1.12 | Probar esquema con datos de ejemplo | Manual | - | 🔴 | `[x]` | 2026-02-03 |
 
 ### 2.2 Parser de Markdown
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 2.2.1 | Crear `scripts/etl/` directorio | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 2.2.2 | Crear `scripts/etl/parser.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 2.2.3 | Implementar `parse_markdown_file()` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 2.2.4 | Implementar `parse_biography()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.2.5 | Implementar `parse_filmography()` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 2.2.6 | Implementar `parse_top10()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.2.7 | Implementar `parse_awards()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.2.8 | Implementar `parse_sources()` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 2.2.9 | Implementar `extract_photo_path()` | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 2.2.1 | Crear `scripts/etl/` directorio | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 2.2.2 | Crear `scripts/etl/parser.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 2.2.3 | Implementar `parse_markdown_file()` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 2.2.4 | Implementar `parse_biography()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.2.5 | Implementar `parse_filmography()` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 2.2.6 | Implementar `parse_top10()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.2.7 | Implementar `parse_awards()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.2.8 | Implementar `parse_sources()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 2.2.9 | Implementar `extract_photo_path()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 | 2.2.10 | Crear tests para parser | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
 
 ### 2.3 Script ETL
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 2.3.1 | Crear `scripts/build_database.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 2.3.2 | Implementar conexión SQLite | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.3.3 | Implementar `insert_composer()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.3.4 | Implementar `insert_films()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.3.5 | Implementar `insert_awards()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.3.6 | Implementar `rebuild_fts_index()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 2.3.7 | Implementar logging de progreso | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 2.3.8 | Implementar validación de integridad | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 2.3.1 | Crear `scripts/build_database.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
+| 2.3.2 | Implementar conexión SQLite | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.3.3 | Implementar `insert_composer()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.3.4 | Implementar `insert_films()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.3.5 | Implementar `insert_awards()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.3.6 | Implementar `rebuild_fts_index()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 2.3.7 | Implementar logging de progreso | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 2.3.8 | Implementar validación de integridad | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 2.4 Ejecución y Validación
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 2.4.1 | Ejecutar ETL con todos los compositores | Manual | - | 🔴 | `[ ]` | |
-| 2.4.2 | Verificar conteo: 164 compositores | Manual | - | 🔴 | `[ ]` | |
-| 2.4.3 | Verificar FTS5 con búsquedas de prueba | Manual | - | 🔴 | `[ ]` | |
-| 2.4.4 | Documentar tamaño final de `soundtrackers.db` | Manual | - | 🟡 | `[ ]` | |
-| 2.4.5 | Crear script de verificación de integridad | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 2.4.1 | Ejecutar ETL con todos los compositores | Manual | - | 🔴 | `[x]` | 2026-02-03 |
+| 2.4.2 | Verificar conteo: 164 compositores | Manual | - | 🔴 | `[x]` | 2026-02-03 |
+| 2.4.3 | Verificar FTS5 con búsquedas de prueba | Manual | - | 🔴 | `[x]` | 2026-02-03 |
+| 2.4.4 | Documentar tamaño final de `soundtrackers.db` | Manual | - | 🟡 | `[x]` | 2026-02-03 |
+| 2.4.5 | Crear script de verificación de integridad | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
-**Checkpoint Fase 2**: `[ ]` Completada
+> **Resultados Fase 2**: Base de datos SQLite creada (5.88 MB) con 164 compositores, 11,778 películas (1,531 Top 10), 1,769 premios (874 victorias), 3,926 fuentes. FTS5 funcional con triggers de sincronización. Vistas: v_composer_stats, v_top10_films, v_awards_summary.
+
+**Checkpoint Fase 2**: `[x]` Completada 2026-02-03
 
 ---
 
