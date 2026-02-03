@@ -43,7 +43,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ## FASE 0: Preparación
 
 **Duración estimada**: 1-2 días
-**Estado**: `[ ]` Pendiente
+**Estado**: `[x]` Completada 2026-02-03
 
 ### 0.1 Evaluación de Datos
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
@@ -186,12 +186,14 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 0.5 Scripts de Actualización (existentes)
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 0.5.1 | Documentar `update_top10_youtube.py` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 0.5.2 | Añadir logging a `update_top10_youtube.py` | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 0.5.3 | Añadir manejo de errores robusto | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 0.5.4 | Crear tests para `update_top10_youtube.py` | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+| 0.5.1 | Documentar `update_top10_youtube.py` | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 0.5.2 | Añadir logging a `update_top10_youtube.py` | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
+| 0.5.3 | Añadir manejo de errores robusto | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
+| 0.5.4 | Crear tests para `update_top10_youtube.py` | **GPT** | `4o-mini` | 🟢 | `[x]` | 2026-02-03 |
 
-**Checkpoint Fase 0**: `[ ]` Completada
+> **Resultados 0.5**: Script documentado con docstrings, logging estructurado, manejo de errores try/except. Tests creados en `tests/test_update_top10_youtube.py` (230 líneas).
+
+**Checkpoint Fase 0**: `[x]` Completada 2026-02-03
 
 ---
 
