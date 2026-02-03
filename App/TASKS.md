@@ -73,10 +73,12 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 0.3 Estructura de Directorios
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 0.3.1 | Crear estructura `src/soundtracker/` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 0.3.2 | Crear `src/soundtracker/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 0.3.3 | Crear estructura `tests/` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 0.3.4 | Crear `tests/conftest.py` vacío | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 0.3.1 | Crear estructura `src/soundtracker/` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 0.3.2 | Crear `src/soundtracker/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 0.3.3 | Crear estructura `tests/` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 0.3.4 | Crear `tests/conftest.py` vacío | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+
+> **Resultados 0.3**: Creada estructura src/soundtracker/{clients,services,generators,cache,utils} y tests/{test_clients,test_services,test_generators} con __init__.py y conftest.py
 
 ### 0.4 Gestor de Master List (Sincronización Bidireccional)
 
