@@ -48,10 +48,12 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 0.1 Evaluación de Datos
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 0.1.1 | Medir tamaño total de `outputs/` (MB/GB) | **Gemini** | `flash` | 🔴 | `[ ]` | |
-| 0.1.2 | Contar archivos por tipo (.md, .jpg, .json) | **Gemini** | `flash` | 🔴 | `[ ]` | |
-| 0.1.3 | Identificar archivos >100MB para Git LFS | **Gemini** | `flash` | 🔴 | `[ ]` | |
-| 0.1.4 | Documentar decisión Git vs Git LFS | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.1.1 | Medir tamaño total de `outputs/` (MB/GB) | **Gemini** | `flash` | 🔴 | `[x]` | 2026-02-03 |
+| 0.1.2 | Contar archivos por tipo (.md, .jpg, .json) | **Gemini** | `flash` | 🔴 | `[x]` | 2026-02-03 |
+| 0.1.3 | Identificar archivos >100MB para Git LFS | **Gemini** | `flash` | 🔴 | `[x]` | 2026-02-03 |
+| 0.1.4 | Documentar decisión Git vs Git LFS | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+
+> **Resultados 0.1**: outputs/ = 970MB, 12680 jpg, 172 md, 2 json. Sin archivos >100MB. Decisión: Git estándar (sin LFS).
 
 ### 0.2 Configuración del Proyecto
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |

@@ -373,11 +373,43 @@ GET /api/composers?
 
 ---
 
-## 8. Riesgos y Mitigación
+## 8. Decisión: Git vs Git LFS
+
+> **Análisis realizado**: 2026-02-03 | **Decisión**: ✅ Git estándar (sin LFS)
+
+### Resultados del Análisis
+
+| Métrica | Valor |
+|---------|-------|
+| Tamaño total `outputs/` | **970 MB** |
+| Archivos JPG (pósters) | 12,680 |
+| Archivos MD | 172 |
+| Archivos JSON (cachés) | 2 |
+| Archivos >100MB | **0** |
+| Tamaño promedio JPG | ~76 KB |
+
+### Decisión
+
+**Git estándar** (sin Git LFS) es suficiente porque:
+
+1. **Ningún archivo supera 100MB** (límite de GitHub)
+2. **Pósters son pequeños** (~76KB promedio)
+3. **Regenerables**: Los pósters pueden regenerarse ejecutando el pipeline
+4. **Simplicidad**: Git LFS añade complejidad innecesaria
+
+### Recomendaciones
+
+- ✅ Mantener `outputs/` en Git estándar
+- ✅ Añadir `outputs/` a `.gitignore` si el repo se hace público (datos regenerables)
+- ⚠️ Revisar si el repo crece significativamente (>2GB)
+
+---
+
+## 9. Riesgos y Mitigación
 
 | Riesgo | Probabilidad | Impacto | Mitigación |
 |--------|--------------|---------|------------|
-| Pósters exceden límites de Git | Alta | Alto | Git LFS o almacenamiento externo |
+| Pósters exceden límites de Git | ~~Alta~~ **Baja** | Alto | ✅ Análisis confirma: sin archivos >100MB |
 | APIs externas cambian | Media | Medio | Caché agresivo + fallbacks |
 | FTS5 lento con datos grandes | Baja | Medio | Índices optimizados + límites |
 | Refactorización introduce bugs | Media | Alto | Tests antes de migrar |
