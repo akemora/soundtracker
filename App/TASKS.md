@@ -314,7 +314,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.10.16 | Extraer `get_film_poster()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 | 1.10.17 | Crear `src/soundtracker/services/translator.py` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 | 1.10.18 | Extraer funciones de traducción | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
-| 1.10.19 | Crear tests para cada servicio | **Claude** | `sonnet` | 🔴 | `[~]` | |
+| 1.10.19 | Crear tests para cada servicio | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 
 ### 1.11 Generador de Markdown
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
