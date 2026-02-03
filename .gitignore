@@ -17,7 +17,6 @@ venv/
 .DS_Store
 
 # Project outputs
-App/outputs/
 App/intermediate_research/
 
 # Cache
@@ -27,4 +26,3 @@ App/intermediate_research/
 # Environment
 .env
 .env.*
-
