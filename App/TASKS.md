@@ -273,7 +273,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.7.1 | Crear `src/soundtracker/clients/youtube.py` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 | 1.7.2 | Extraer `youtube_search_views()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 | 1.7.3 | Integrar caché de streaming | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
-| 1.7.4 | Crear tests para YouTubeClient | **GPT** | `4o-mini` | 🟢 | `[~]` | |
+| 1.7.4 | Crear tests para YouTubeClient | **GPT** | `4o-mini` | 🟢 | `[x]` | 2026-02-03 |
 
 ### 1.8 Cliente Spotify (Preparación)
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
