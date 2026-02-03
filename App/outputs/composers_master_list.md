@@ -1,6 +1,6 @@
 # Film Music Composers: A Consolidated and Chronological List
 
-## Lista principal (278 entradas)
+## Lista principal (164 entradas)
 
 | No. | Name | Birth Year | Death Year | Country |
 |---|---|---|---|---|
@@ -168,241 +168,116 @@
 | 162 | Germaine Franco | 1987 |  | USA |
 | 163 | Kris Bowers | 1989 |  | USA |
 | 164 | Daniel Blumberg | 1990 |  | UK |
-| 202 | Augusto Algueró | 1934 | 2011 | Spain |
-| 239 | Alejandro Amenábar | 1972 |  | Spain/Chile |
-| 224 | Emilio Aragón | 1959 |  | Spain/Cuba |
-| 208 | Fernando Arbex | 1941 | 2003 | Spain |
-| 194 | Ángel Arteaga | 1928 | 1984 | Spain |
-| 189 | Miquel Asins | 1916 | 1996 | Spain |
-| 278 | Juan Bautista (músico) | 1946 |  |  |
-| 257 | Javier Bayon | 1980 |  | Spain |
-| 175 | César Benito | 1901 |  | Spain |
-| 195 | Carmelo Bernaola | 1929 | 2002 | Spain |
-| 231 | Bernardo Bonezzi | 1964 | 2012 | Spain |
-| 229 | Xavier Capellas | 1962 |  | Spain |
-| 258 | Arturo Cardelús | 1981 |  | Spain |
-| 261 | Nico Casal | 1985 |  | Spain |
-| 178 | Carlos Castellano Gómez | 1904 | 2002 | Spain |
-| 253 | Pablo Cervantes Gutiérrez | 1977 |  | Spain |
-| 192 | Alejandro Cintas | 1926 | 2017 | Spain |
-| 174 | Arturo Dúo Vital | 1901 | 1964 | Spain |
-| 220 | Jacobo Durán-Loriga | 1958 |  | Spain |
-| 191 | Enrique Escobar | 1921 | 2004 | Spain |
-| 201 | Antón García Abril | 1933 | 2021 | Spain |
-| 203 | Juan Gabriel García Escobar | 1934 | 2011 | Spain |
-| 188 | Fernando García Morcillo | 1916 | 2002 | Spain |
-| 214 | Francisco Guerrero Marín | 1951 | 1997 | Spain |
-| 205 | Fermín Gurbindo | 1935 | 1985 | Spain |
-| 233 | Cope Gutiérrez | 1966 |  | Spain |
-| 199 | Rafael Ibarbia | 1931 | 2003 | Spain |
-| 223 | Ángel Illarramendi | 1958 |  | Spain |
-| 183 | José María Irueste Germán | 1908 |  | Spain |
-| 242 | Zacarías M. de la Riva | 1972 |  | Spain |
-| 252 | Constantino Martínez-Orts | 1977 |  | Spain |
-| 184 | Mario Medina Seguí | 1908 | 2000 | Spain |
-| 264 | Melody (cantante española) | 1990 |  | Spain |
-| 169 | Genaro Monreal | 1894 | 1974 | Spain |
-| 256 | Zeltia Montes | 1979 |  | Spain |
-| 213 | Ramon Muntaner i Torruella | 1950 | 2021 | Spain |
-| 217 | Paco Ortega | 1957 |  | Spain |
-| 198 | Luis de Pablo | 1930 | 2021 | Spain |
-| 167 | José Padilla Sánchez | 1889 | 1960 | Spain |
-| 186 | Manuel Parada | 1911 | 1973 | Spain |
-| 246 | Sergio de la Puente | 1975 |  | Spain |
-| 177 | Juan Quintero Muñoz | 1903 | 1980 | Spain |
-| 248 | Gerard Requena | 1976 |  | Spain |
-| 228 | Víctor Reyes (músico) | 1962 |  | Spain |
-| 237 | Alejandro Román | 1971 |  | Spain |
-| 185 | Salvador Ruiz de Luna | 1908 | 1978 | Spain |
-| 218 | Suso Saiz | 1957 |  | Spain |
-| 236 | José Sánchez-Sanz | 1970 |  | Spain |
-| 211 | Alfonso Santisteban | 1943 | 2013 | Spain |
-| 207 | Carles Santos Ventura | 1940 | 2017 | Spain |
-| 209 | Jordi Savall | 1941 |  | Spain |
-| 235 | Paco Serén | 1969 |  | Spain |
-| 232 | Joan Valent | 1964 |  | Spain |
-| 234 | Diego Vasallo | 1966 |  | Spain |
-| 173 | José Vázquez Vigo | 1898 | 1955 | Spain/Argentina |
-| 226 | David Vostell | 1960 |  | Germany/Spain |
-| 200 | Adolfo Waitzman | 1932 | 1998 | Argentina/Spain |
-| 176 | Julián Bautista | 1901 | 1961 | Spain |
-| 222 | Mario de Benito | 1958 |  | Spain |
-| 259 | Ivan Boumans | 1983 |  | Luxembourg |
-| 182 | Fred Elizalde | 1907 | 1979 | Philippines |
-| 247 | Antonio Escobar Núñez | 1976 |  | Spain |
-| 179 | Jesús García Leoz | 1904 | 1953 | Spain |
-| 196 | Gregorio García Segura | 1929 | 2003 | Spain |
-| 170 | Alejandro Gutiérrez del Barrio | 1895 | 1954 | Argentina |
-| 180 | Ernesto Halffter | 1905 | 1989 | Spain |
-| 187 | Xavier Montsalvatge | 1912 | 2002 | Spain |
-| 168 | Federico Moreno Torroba | 1891 | 1982 | Spain |
-| 230 | José Luis Narom | 1963 |  | Spain |
-| 245 | Borja Penalba | 1975 |  | Spain |
-| 254 | José Manuel Pérez-Muñoz | 1978 |  | Spain |
-| 212 | Jordi Sabatés | 1948 | 2022 | Spain |
-| 172 | Regino Sainz de la Maza | 1896 | 1981 | Spain |
-| 244 | Juan Antonio Simarro | 1973 |  | Spain |
-| 193 | Narciso Yepes | 1927 | 1997 | Spain |
-| 277 | Sergio Llopis |  |  | Spain |
-| 166 | Enrique Granados | 1867 | 1916 | Spain |
+
+## Sección España (compositores de bandas sonoras) (106 entradas)
+
+| No. | Name | Birth Year | Death Year | Country |
+|---|---|---|---|---|
 | 165 | Manuel Fernández Caballero | 1835 | 1906 | Spain |
+| 166 | Enrique Granados | 1867 | 1916 | Spain |
+| 167 | José Padilla Sánchez | 1889 | 1960 | Spain |
+| 168 | Federico Moreno Torroba | 1891 | 1982 | Spain |
+| 169 | Genaro Monreal | 1894 | 1974 | Spain |
+| 170 | Alejandro Gutiérrez del Barrio | 1895 | 1954 | Argentina |
 | 171 | Jacinto Guerrero | 1895 | 1951 | Spain |
+| 172 | Regino Sainz de la Maza | 1896 | 1981 | Spain |
+| 173 | José Vázquez Vigo | 1898 | 1955 | Spain/Argentina |
+| 174 | Arturo Dúo Vital | 1901 | 1964 | Spain |
+| 175 | César Benito | 1901 |  | Spain |
+| 176 | Julián Bautista | 1901 | 1961 | Spain |
+| 177 | Juan Quintero Muñoz | 1903 | 1980 | Spain |
+| 178 | Carlos Castellano Gómez | 1904 | 2002 | Spain |
+| 179 | Jesús García Leoz | 1904 | 1953 | Spain |
+| 180 | Ernesto Halffter | 1905 | 1989 | Spain |
 | 181 | José Muñoz Molleda | 1905 | 1988 | Spain |
-| 274 | Maestro Serramont (Martín Montserrat Guillemat) |  |  | Spain |
-| 190 | Miquel Asins Arbó | 1916 | 1996 | Spain |
-| 197 | Cristóbal Halffter | 1930 | 2021 | Spain |
-| 204 | Waldo de los Ríos | 1934 | 1977 | Argentina |
-| 206 | Carles Santos | 1940 | 2017 | Spain |
-| 210 | José Nieto | 1942 |  | Spain |
-| 215 | Juan Bardem | 1956 |  | Spain |
-| 221 | Lucio Godoy | 1958 |  | Argentina |
-| 227 | Bingen Mendizábal | 1962 |  | Spain |
-| 219 | Eva Gancedo | 1958 |  | Spain |
-| 240 | Julio de la Rosa | 1972 |  | Spain |
-| 241 | Xavi Font | 1972 |  | Spain |
-| 265 | Diego Navarro | 1992 |  | Bolivia |
-| 243 | Federico Jusid | 1973 |  | Spain |
-| 269 | Alfonso de Vilallonga |  |  | Spain |
-| 249 | Raül Refree | 1976 |  | Spain |
-| 250 | Arnau Bataller | 1977 |  | Spain |
-| 251 | Aránzazu Calleja | 1977 |  | Spain |
-| 275 | Maite Arroitajauregi (Mursego) |  |  | Spain |
-| 273 | Iván Palomares |  |  | Spain |
-| 255 | Olivier Arson | 1979 |  | France |
-| 260 | Gerard Pastor | 1984 |  | Spain |
-| 268 | Adrián Foulkes |  |  | Spain |
-| 262 | Alicia Morote | 1988 |  | Spain |
-| 276 | Paloma Peñarrubia |  |  | Spain |
-| 270 | Carlos Viola |  |  | Spain |
-| 216 | Manel Santisteban | 1956 |  | Spain |
-| 272 | Iván Martínez Lacámara |  |  | Spain |
-| 238 | Noel Molina | 1971 |  | Spain |
-| 267 | Gonzalo Hermida | 1995 |  | Spain |
-| 266 | David Álvarez | 1994 |  | Spain |
-| 271 | Hidrogenesse |  |  | Spain |
-| 263 | Paula Olaz | 1989 |  | Spain |
-| 225 | César Astudillo | 1960 |  | Peru |
-
-## Sección España (compositores de bandas sonoras) (119 entradas)
-
-165. Manuel Fernández Caballero (1835-1906) — Spain
-166. Enrique Granados (1867-1916) — Spain
-167. José Padilla Sánchez (1889-1960) — Spain
-168. Federico Moreno Torroba (1891-1982) — Spain
-169. Genaro Monreal (1894-1974) — Spain
-170. Alejandro Gutiérrez del Barrio (1895-1954) — Argentina
-171. Jacinto Guerrero (1895-1951) — Spain
-172. Regino Sainz de la Maza (1896-1981) — Spain
-173. José Vázquez Vigo (1898-1955) — Spain/Argentina
-174. Arturo Dúo Vital (1901-1964) — Spain
-175. César Benito (1901-) — Spain
-176. Julián Bautista (1901-1961) — Spain
-177. Juan Quintero Muñoz (1903-1980) — Spain
-178. Carlos Castellano Gómez (1904-2002) — Spain
-179. Jesús García Leoz (1904-1953) — Spain
-180. Ernesto Halffter (1905-1989) — Spain
-181. José Muñoz Molleda (1905-1988) — Spain
-182. Fred Elizalde (1907-1979) — Philippines
-183. José María Irueste Germán (1908-) — Spain
-184. Mario Medina Seguí (1908-2000) — Spain
-185. Salvador Ruiz de Luna (1908-1978) — Spain
-186. Manuel Parada (1911-1973) — Spain
-187. Xavier Montsalvatge (1912-2002) — Spain
-188. Fernando García Morcillo (1916-2002) — Spain
-189. Miquel Asins (1916-1996) — Spain
-190. Miquel Asins Arbó (1916-1996) — Spain
-191. Enrique Escobar (1921-2004) — Spain
-192. Alejandro Cintas (1926-2017) — Spain
-193. Narciso Yepes (1927-1997) — Spain
-194. Ángel Arteaga (1928-1984) — Spain
-195. Carmelo Bernaola (1929-2002) — Spain
-196. Gregorio García Segura (1929-2003) — Spain
-197. Cristóbal Halffter (1930-2021) — Spain
-198. Luis de Pablo (1930-2021) — Spain
-199. Rafael Ibarbia (1931-2003) — Spain
-200. Adolfo Waitzman (1932-1998) — Argentina/Spain
-201. Antón García Abril (1933-2021) — Spain
-202. Augusto Algueró (1934-2011) — Spain
-203. Juan Gabriel García Escobar (1934-2011) — Spain
-204. Waldo de los Ríos (1934-1977) — Argentina
-205. Fermín Gurbindo (1935-1985) — Spain
-206. Carles Santos (1940-2017) — Spain
-207. Carles Santos Ventura (1940-2017) — Spain
-208. Fernando Arbex (1941-2003) — Spain
-209. Jordi Savall (1941-) — Spain
-210. José Nieto (1942-) — Spain
-211. Alfonso Santisteban (1943-2013) — Spain
-212. Jordi Sabatés (1948-2022) — Spain
-213. Ramon Muntaner i Torruella (1950-2021) — Spain
-214. Francisco Guerrero Marín (1951-1997) — Spain
-107. Alberto Iglesias (1955-) — Spain
-111. Javier Navarrete (1956-) — Spain
-215. Juan Bardem (1956-) — Spain
-216. Manel Santisteban (1956-) — Spain
-217. Paco Ortega (1957-) — Spain
-218. Suso Saiz (1957-) — Spain
-219. Eva Gancedo (1958-) — Spain
-220. Jacobo Durán-Loriga (1958-) — Spain
-221. Lucio Godoy (1958-) — Argentina
-222. Mario de Benito (1958-) — Spain
-118. Pascal Gaigne (1958-) — France
-223. Ángel Illarramendi (1958-) — Spain
-224. Emilio Aragón (1959-) — Spain/Cuba
-225. César Astudillo (1960-) — Peru
-226. David Vostell (1960-) — Germany/Spain
-227. Bingen Mendizábal (1962-) — Spain
-228. Víctor Reyes (músico) (1962-) — Spain
-229. Xavier Capellas (1962-) — Spain
-230. José Luis Narom (1963-) — Spain
-231. Bernardo Bonezzi (1964-2012) — Spain
-232. Joan Valent (1964-) — Spain
-233. Cope Gutiérrez (1966-) — Spain
-234. Diego Vasallo (1966-) — Spain
-138. Roque Baños (1968-) — Spain
-235. Paco Serén (1969-) — Spain
-236. José Sánchez-Sanz (1970-) — Spain
-237. Alejandro Román (1971-) — Spain
-238. Noel Molina (1971-) — Spain
-239. Alejandro Amenábar (1972-) — Spain/Chile
-240. Julio de la Rosa (1972-) — Spain
-241. Xavi Font (1972-) — Spain
-242. Zacarías M. de la Riva (1972-) — Spain
-243. Federico Jusid (1973-) — Spain
-244. Juan Antonio Simarro (1973-) — Spain
-245. Borja Penalba (1975-) — Spain
-246. Sergio de la Puente (1975-) — Spain
-247. Antonio Escobar Núñez (1976-) — Spain
-147. Fernando Velázquez (1976-) — Spain
-248. Gerard Requena (1976-) — Spain
-249. Raül Refree (1976-) — Spain
-250. Arnau Bataller (1977-) — Spain
-251. Aránzazu Calleja (1977-) — Spain
-252. Constantino Martínez-Orts (1977-) — Spain
-253. Pablo Cervantes Gutiérrez (1977-) — Spain
-254. José Manuel Pérez-Muñoz (1978-) — Spain
-255. Olivier Arson (1979-) — France
-256. Zeltia Montes (1979-) — Spain
-257. Javier Bayon (1980-) — Spain
-258. Arturo Cardelús (1981-) — Spain
-259. Ivan Boumans (1983-) — Luxembourg
-260. Gerard Pastor (1984-) — Spain
-157. Lucas Vidal (1984-) — Spain
-261. Nico Casal (1985-) — Spain
-262. Alicia Morote (1988-) — Spain
-263. Paula Olaz (1989-) — Spain
-264. Melody (cantante española) (1990-) — Spain
-265. Diego Navarro (1992-) — Bolivia
-266. David Álvarez (1994-) — Spain
-267. Gonzalo Hermida (1995-) — Spain
-268. Adrián Foulkes — Spain
-269. Alfonso de Vilallonga — Spain
-270. Carlos Viola — Spain
-271. Hidrogenesse — Spain
-272. Iván Martínez Lacámara — Spain
-273. Iván Palomares — Spain
-274. Maestro Serramont (Martín Montserrat Guillemat) — Spain
-275. Maite Arroitajauregi (Mursego) — Spain
-276. Paloma Peñarrubia — Spain
-277. Sergio Llopis — Spain
+| 182 | Fred Elizalde | 1907 | 1979 | Philippines |
+| 183 | José María Irueste Germán | 1908 |  | Spain |
+| 184 | Mario Medina Seguí | 1908 | 2000 | Spain |
+| 185 | Salvador Ruiz de Luna | 1908 | 1978 | Spain |
+| 186 | Manuel Parada | 1911 | 1973 | Spain |
+| 187 | Xavier Montsalvatge | 1912 | 2002 | Spain |
+| 188 | Fernando García Morcillo | 1916 | 2002 | Spain |
+| 189 | Miquel Asins Arbó | 1916 | 1996 | Spain |
+| 190 | Enrique Escobar | 1921 | 2004 | Spain |
+| 191 | Alejandro Cintas | 1926 | 2017 | Spain |
+| 192 | Narciso Yepes | 1927 | 1997 | Spain |
+| 193 | Ángel Arteaga | 1928 | 1984 | Spain |
+| 194 | Carmelo Bernaola | 1929 | 2002 | Spain |
+| 195 | Gregorio García Segura | 1929 | 2003 | Spain |
+| 196 | Cristóbal Halffter | 1930 | 2021 | Spain |
+| 197 | Luis de Pablo | 1930 | 2021 | Spain |
+| 198 | Rafael Ibarbia | 1931 | 2003 | Spain |
+| 199 | Adolfo Waitzman | 1932 | 1998 | Argentina/Spain |
+| 200 | Antón García Abril | 1933 | 2021 | Spain |
+| 201 | Augusto Algueró | 1934 | 2011 | Spain |
+| 202 | Juan Gabriel García Escobar | 1934 | 2011 | Spain |
+| 204 | Fermín Gurbindo | 1935 | 1985 | Spain |
+| 205 | Carles Santos | 1940 | 2017 | Spain |
+| 206 | Fernando Arbex | 1941 | 2003 | Spain |
+| 207 | Jordi Savall | 1941 |  | Spain |
+| 208 | José Nieto | 1942 |  | Spain |
+| 209 | Alfonso Santisteban | 1943 | 2013 | Spain |
+| 211 | Jordi Sabatés | 1948 | 2022 | Spain |
+| 212 | Ramon Muntaner i Torruella | 1950 | 2021 | Spain |
+| 213 | Francisco Guerrero Marín | 1951 | 1997 | Spain |
+| 214 | Juan Bardem | 1956 |  | Spain |
+| 215 | Manel Santisteban | 1956 |  | Spain |
+| 216 | Paco Ortega | 1957 |  | Spain |
+| 217 | Suso Saiz | 1957 |  | Spain |
+| 218 | Eva Gancedo | 1958 |  | Spain |
+| 219 | Jacobo Durán-Loriga | 1958 |  | Spain |
+| 221 | Mario de Benito | 1958 |  | Spain |
+| 222 | Ángel Illarramendi | 1958 |  | Spain |
+| 223 | Emilio Aragón | 1959 |  | Spain/Cuba |
+| 225 | David Vostell | 1960 |  | Germany/Spain |
+| 226 | Bingen Mendizábal | 1962 |  | Spain |
+| 227 | Víctor Reyes | 1962 |  | Spain |
+| 228 | Xavier Capellas | 1962 |  | Spain |
+| 229 | José Luis Narom | 1963 |  | Spain |
+| 230 | Bernardo Bonezzi | 1964 | 2012 | Spain |
+| 231 | Joan Valent | 1964 |  | Spain |
+| 232 | Cope Gutiérrez | 1966 |  | Spain |
+| 233 | Diego Vasallo | 1966 |  | Spain |
+| 234 | Paco Serén | 1969 |  | Spain |
+| 235 | José Sánchez-Sanz | 1970 |  | Spain |
+| 236 | Alejandro Román | 1971 |  | Spain |
+| 237 | Noel Molina | 1971 |  | Spain |
+| 238 | Alejandro Amenábar | 1972 |  | Spain/Chile |
+| 239 | Julio de la Rosa | 1972 |  | Spain |
+| 240 | Xavi Font | 1972 |  | Spain |
+| 241 | Zacarías M. de la Riva | 1972 |  | Spain |
+| 242 | Federico Jusid | 1973 |  | Spain |
+| 243 | Juan Antonio Simarro | 1973 |  | Spain |
+| 244 | Borja Penalba | 1975 |  | Spain |
+| 245 | Sergio de la Puente | 1975 |  | Spain |
+| 246 | Antonio Escobar Núñez | 1976 |  | Spain |
+| 247 | Gerard Requena | 1976 |  | Spain |
+| 248 | Raül Refree | 1976 |  | Spain |
+| 249 | Arnau Bataller | 1977 |  | Spain |
+| 250 | Aránzazu Calleja | 1977 |  | Spain |
+| 251 | Constantino Martínez-Orts | 1977 |  | Spain |
+| 252 | Pablo Cervantes Gutiérrez | 1977 |  | Spain |
+| 253 | José Manuel Pérez-Muñoz | 1978 |  | Spain |
+| 255 | Zeltia Montes | 1979 |  | Spain |
+| 256 | Javier Bayon | 1980 |  | Spain |
+| 257 | Arturo Cardelús | 1981 |  | Spain |
+| 258 | Ivan Boumans | 1983 |  | Luxembourg |
+| 259 | Gerard Pastor | 1984 |  | Spain |
+| 260 | Nico Casal | 1985 |  | Spain |
+| 261 | Alicia Morote | 1988 |  | Spain |
+| 262 | Paula Olaz | 1989 |  | Spain |
+| 263 | Melody (cantante española) | 1990 |  | Spain |
+| 265 | David Álvarez | 1994 |  | Spain |
+| 266 | Gonzalo Hermida | 1995 |  | Spain |
+| 267 | Adrián Foulkes |  |  | Spain |
+| 268 | Alfonso de Vilallonga |  |  | Spain |
+| 269 | Carlos Viola |  |  | Spain |
+| 270 | Hidrogenesse |  |  | Spain |
+| 271 | Iván Martínez Lacámara |  |  | Spain |
+| 272 | Iván Palomares |  |  | Spain |
+| 273 | Maestro Serramont | Martín Montserrat Guillemat |  | Spain |
+| 274 | Maite Arroitajauregi |  |  | Spain |
+| 275 | Paloma Peñarrubia |  |  | Spain |
+| 276 | Sergio Llopis |  |  | Spain |
 
 Nota: Se incluyen también Ivan Boumans, Fred Elizalde y Alejandro Gutiérrez del Barrio a petición del usuario.
