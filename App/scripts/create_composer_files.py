@@ -660,13 +660,21 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
     if choices:
         content = (choices[0].get('message') or {}).get('content') or ''
     parsed = _safe_json_loads(content)
-    if not parsed:
+    if not parsed or not isinstance(parsed, dict):
         return None
     citations = parsed.get('citations') or data.get('citations') or []
     citations = _dedupe_list([c for c in citations if isinstance(c, str)])
-    biography = (parsed.get('biography') or {}).get('text') or ''
-    style = (parsed.get('style') or {}).get('text') or ''
-    facts = (parsed.get('facts') or {}).get('text') or ''
+
+    def extract_text(section: object) -> str:
+        if isinstance(section, dict):
+            return section.get('text') or ''
+        if isinstance(section, str):
+            return section
+        return ''
+
+    biography = extract_text(parsed.get('biography'))
+    style = extract_text(parsed.get('style'))
+    facts = extract_text(parsed.get('facts'))
     biography = _normalize_citations_text(biography, citations)
     style = _normalize_citations_text(style, citations)
     facts = _normalize_citations_text(facts, citations)
