@@ -347,7 +347,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.14.1 | Crear `src/soundtracker/pipeline.py` (orquestación) | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 | 1.14.2 | Crear `scripts/generate_composers.py` (<100 líneas) | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 | 1.14.3 | Verificar que funciona igual que antes | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
-| 1.14.4 | Ejecutar con 1 compositor de prueba | Manual | - | 🔴 | `[ ]` | |
+| 1.14.4 | Ejecutar con 1 compositor de prueba | Manual | - | 🔴 | `[x]` | 2026-02-03 |
 | 1.14.5 | Ejecutar con 5 compositores de prueba | Manual | - | 🔴 | `[ ]` | |
 
 ### 1.15 Tests y Cobertura
