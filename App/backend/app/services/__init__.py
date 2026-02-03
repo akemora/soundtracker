@@ -3,7 +3,13 @@
 This package exports all service functions for use in routers.
 """
 
-from .composer_service import get_awards, get_composer, get_filmography, list_composers
+from .composer_service import (
+    get_awards,
+    get_composer,
+    get_composer_filter_options,
+    get_filmography,
+    list_composers,
+)
 from .search_service import search_composers, search_suggestions
 
 __all__ = [
@@ -12,6 +18,7 @@ __all__ = [
     "get_composer",
     "get_filmography",
     "get_awards",
+    "get_composer_filter_options",
     # Search services
     "search_composers",
     "search_suggestions",

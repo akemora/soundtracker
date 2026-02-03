@@ -6,6 +6,7 @@ This package exports all API models for use in routers and services.
 from .award import AwardDetail, AwardListResponse, AwardSummary
 from .composer import (
     ComposerDetail,
+    ComposerFilterOptions,
     ComposerListResponse,
     ComposerResponse,
     ComposerStats,
@@ -23,6 +24,7 @@ __all__ = [
     "ComposerStats",
     "ComposerWithStats",
     "ComposerListResponse",
+    "ComposerFilterOptions",
     "ComposerResponse",
     "PaginationInfo",
     # Film models

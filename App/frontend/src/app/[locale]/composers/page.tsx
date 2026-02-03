@@ -14,6 +14,7 @@ type Props = {
     order?: string;
     decade?: string;
     has_awards?: string;
+    country?: string;
   }>;
 };
 
@@ -29,6 +30,7 @@ export default async function ComposersPage({ params, searchParams }: Props) {
   const order = (search.order as "asc" | "desc") || "asc";
   const decade = search.decade ? Number(search.decade) : undefined;
   const has_awards = search.has_awards !== undefined ? search.has_awards === "true" : undefined;
+  const country = search.country || undefined;
 
   let data;
   try {
@@ -39,6 +41,7 @@ export default async function ComposersPage({ params, searchParams }: Props) {
       order,
       decade,
       has_awards,
+      country,
     });
   } catch {
     data = null;
@@ -51,6 +54,7 @@ export default async function ComposersPage({ params, searchParams }: Props) {
     params.set("order", order);
     if (decade) params.set("decade", String(decade));
     if (has_awards !== undefined) params.set("has_awards", String(has_awards));
+    if (country) params.set("country", country);
     return `/composers?${params.toString()}`;
   };
 
@@ -70,7 +74,11 @@ export default async function ComposersPage({ params, searchParams }: Props) {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar with filters */}
         <aside className="lg:w-64 flex-shrink-0">
-          <FilterPanel currentDecade={decade} hasAwards={has_awards} />
+          <FilterPanel
+            currentDecade={decade}
+            hasAwards={has_awards}
+            currentCountry={country}
+          />
         </aside>
 
         {/* Main content */}

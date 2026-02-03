@@ -1,23 +1,44 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { getComposerFilters } from "@/lib/api";
 
 interface FilterPanelProps {
   currentDecade?: number;
   hasAwards?: boolean;
+  currentCountry?: string;
 }
 
 // Decades available for film composers
 const DECADES = [1880, 1890, 1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990];
 
-export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
+export function FilterPanel({ currentDecade, hasAwards, currentCountry }: FilterPanelProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [countries, setCountries] = useState<string[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    getComposerFilters()
+      .then((data) => {
+        if (!active) return;
+        setCountries(data.countries || []);
+      })
+      .catch(() => {
+        if (!active) return;
+        setCountries([]);
+        setAwardTypes([]);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
@@ -55,15 +76,25 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
     [createQueryString, pathname, router]
   );
 
+  const handleCountryChange = useCallback(
+    (value: string | null) => {
+      const query = createQueryString({ country: value || null });
+      router.push(`${pathname}?${query}`);
+    },
+    [createQueryString, pathname, router]
+  );
+
   const clearAllFilters = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("decade");
     params.delete("has_awards");
+    params.delete("country");
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`);
   }, [pathname, router, searchParams]);
 
-  const hasActiveFilters = currentDecade !== undefined || hasAwards !== undefined;
+  const hasActiveFilters =
+    currentDecade !== undefined || hasAwards !== undefined || !!currentCountry;
 
   return (
     <div className="space-y-4 p-4 border border-border rounded-lg bg-card">
@@ -133,6 +164,23 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
         </div>
       </div>
 
+      {/* Country filter */}
+      <div className="space-y-2">
+        <label className="text-sm text-muted-foreground">País:</label>
+        <select
+          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+          value={currentCountry || ""}
+          onChange={(event) => handleCountryChange(event.target.value || null)}
+        >
+          <option value="">Todos</option>
+          {countries.map((country) => (
+            <option key={country} value={country}>
+              {country}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Active filters summary */}
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
@@ -155,6 +203,18 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
                 type="button"
                 className="ml-1 hover:text-destructive"
                 onClick={() => handleAwardsChange(null)}
+              >
+                x
+              </button>
+            </Badge>
+          )}
+          {currentCountry && (
+            <Badge variant="secondary" className="text-xs">
+              {currentCountry}
+              <button
+                type="button"
+                className="ml-1 hover:text-destructive"
+                onClick={() => handleCountryChange(null)}
               >
                 x
               </button>

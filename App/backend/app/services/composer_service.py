@@ -12,6 +12,7 @@ from ..models import (
     AwardListResponse,
     AwardSummary,
     ComposerDetail,
+    ComposerFilterOptions,
     ComposerListResponse,
     ComposerResponse,
     ComposerStats,
@@ -30,6 +31,7 @@ async def list_composers(
     order: str = "asc",
     decade: int | None = None,
     has_awards: bool | None = None,
+    country: str | None = None,
 ) -> ComposerListResponse:
     """List composers with pagination, sorting, and filtering.
 
@@ -41,6 +43,7 @@ async def list_composers(
         order: Sort order (asc/desc).
         decade: Filter by birth decade (e.g., 1930 for 1930s).
         has_awards: Filter by whether composer has awards (True/False).
+        country: Filter by country of origin.
 
     Returns:
         Paginated list of composers with statistics.
@@ -67,17 +70,21 @@ async def list_composers(
     elif has_awards is False:
         where_clauses.append("total_awards = 0")
 
+    if country:
+        where_clauses.append("LOWER(country) = LOWER(?)")
+        params.append(country)
+
     where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
 
     # Get total count with filters
-    count_query = f"SELECT COUNT(*) as total FROM v_composer_stats WHERE {where_sql}"
+    count_query = f"SELECT COUNT(*) as total FROM v_composer_stats v WHERE {where_sql}"
     count_result = await db.execute_query(count_query, tuple(params), fetch_one=True)
     total = count_result["total"] if count_result else 0
 
     # Get paginated results from stats view with filters
     query = f"""
         SELECT *
-        FROM v_composer_stats
+        FROM v_composer_stats v
         WHERE {where_sql}
         ORDER BY {sort_by} {order_dir}
         LIMIT ? OFFSET ?
@@ -94,6 +101,27 @@ async def list_composers(
     )
 
     return ComposerListResponse(composers=composers, pagination=pagination)
+
+
+async def get_composer_filter_options(db: DatabaseManager) -> ComposerFilterOptions:
+    """Get available filter options for composers.
+
+    Args:
+        db: Database manager instance.
+
+    Returns:
+        Available countries and award types.
+    """
+    country_rows = await db.execute_query(
+        """
+        SELECT DISTINCT country
+        FROM composers
+        WHERE country IS NOT NULL AND country != ''
+        ORDER BY country
+        """
+    )
+    countries = [row["country"] for row in country_rows]
+    return ComposerFilterOptions(countries=countries)
 
 
 async def get_composer(db: DatabaseManager, slug: str) -> ComposerResponse:

@@ -7,8 +7,20 @@ listing, detail views, filmography, and awards.
 from fastapi import APIRouter, Depends, Query
 
 from ..database import DatabaseManager, get_database
-from ..models import AwardListResponse, ComposerListResponse, ComposerResponse, FilmListResponse
-from ..services import get_awards, get_composer, get_filmography, list_composers
+from ..models import (
+    AwardListResponse,
+    ComposerFilterOptions,
+    ComposerListResponse,
+    ComposerResponse,
+    FilmListResponse,
+)
+from ..services import (
+    get_awards,
+    get_composer,
+    get_composer_filter_options,
+    get_filmography,
+    list_composers,
+)
 
 router = APIRouter(prefix="/api/composers", tags=["Composers"])
 
@@ -21,6 +33,7 @@ async def api_list_composers(
     order: str = Query("asc", description="Sort order (asc/desc)"),
     decade: int | None = Query(None, description="Filter by birth decade (e.g., 1930)"),
     has_awards: bool | None = Query(None, description="Filter by award status"),
+    country: str | None = Query(None, description="Filter by country of origin"),
     db: DatabaseManager = Depends(get_database),
 ) -> ComposerListResponse:
     """List composers with pagination and filters.
@@ -45,7 +58,16 @@ async def api_list_composers(
         order=order,
         decade=decade,
         has_awards=has_awards,
+        country=country,
     )
+
+
+@router.get("/filters", response_model=ComposerFilterOptions)
+async def api_get_composer_filters(
+    db: DatabaseManager = Depends(get_database),
+) -> ComposerFilterOptions:
+    """Get available filter options for composers."""
+    return await get_composer_filter_options(db=db)
 
 
 @router.get("/{slug}", response_model=ComposerResponse)

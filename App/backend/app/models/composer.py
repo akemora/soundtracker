@@ -99,6 +99,12 @@ class ComposerListResponse(BaseModel):
     pagination: PaginationInfo = Field(description="Pagination information")
 
 
+class ComposerFilterOptions(BaseModel):
+    """Available filter options for composer list."""
+
+    countries: list[str] = Field(description="Available countries")
+
+
 class ComposerResponse(BaseModel):
     """Response model for single composer endpoint.
 
