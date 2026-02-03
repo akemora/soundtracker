@@ -623,10 +623,10 @@ Cuando una tarea requiera una IA diferente a la actual:
 |---|-------|-----|--------|-----------|--------|-------|
 | 5.5.1 | Crear `src/app/[locale]/search/page.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 5.5.2 | Crear `src/components/search/SearchBar.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
-| 5.5.3 | Implementar autocompletado (debounced) | **Claude** | `opus` | 🔴 | `[ ]` | |
+| 5.5.3 | Implementar autocompletado (debounced) | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 5.5.4 | Crear `src/components/search/SearchResults.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
-| 5.5.5 | Crear `src/components/search/FilterPanel.tsx` | **Claude** | `opus` | 🟡 | `[ ]` | |
-| 5.5.6 | Implementar filtros (década, premios) | **Claude** | `opus` | 🟡 | `[ ]` | |
+| 5.5.5 | Crear `src/components/search/FilterPanel.tsx` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 5.5.6 | Implementar filtros (década, premios) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 5.6 Dark Mode
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
@@ -640,19 +640,19 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 5.7 Optimización de Imágenes
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.7.1 | Configurar next/image correctamente | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 5.7.1 | Configurar next/image correctamente | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 | 5.7.2 | Crear placeholders blur para pósters | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 5.7.3 | Configurar sizes para responsive | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 5.7.3 | Configurar sizes para responsive | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 | 5.7.4 | Verificar Lighthouse Performance | Manual | - | 🟡 | `[ ]` | |
 
 ### 5.8 Testing Frontend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.8.1 | Configurar Jest + React Testing Library | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
-| 5.8.2 | Escribir tests para ComposerCard | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 5.8.3 | Escribir tests para SearchBar | **Claude** | `haiku` | 🟢 | `[ ]` | |
+| 5.8.1 | Configurar Jest + React Testing Library | **Claude** | `opus` | 🟢 | `[x]` | 2026-02-03 |
+| 5.8.2 | Escribir tests para ComposerCard | **Claude** | `opus` | 🟢 | `[x]` | 2026-02-03 |
+| 5.8.3 | Escribir tests para SearchBar | **Claude** | `opus` | 🟢 | `[x]` | 2026-02-03 |
 
-**Checkpoint Fase 5**: `[ ]` Completada
+**Checkpoint Fase 5**: `[x]` Completada (2026-02-03)
 
 ---
 
