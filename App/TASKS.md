@@ -494,7 +494,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 3.6.1 | Ejecutar backend localmente | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
-| 3.6.2 | Verificar documentación OpenAPI en `/docs` | Manual | - | 🔴 | `[ ]` | |
+| 3.6.2 | Verificar documentación OpenAPI en `/docs` | Manual | - | 🔴 | `[x]` | 2026-02-03 |
 | 3.6.3 | Probar endpoints con curl/httpie | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 3.6.4 | Verificar respuestas de búsqueda FTS5 | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 
