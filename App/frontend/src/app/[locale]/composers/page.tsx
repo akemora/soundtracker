@@ -15,6 +15,7 @@ type Props = {
     decade?: string;
     has_awards?: string;
     country?: string;
+    award_type?: string;
   }>;
 };
 
@@ -31,6 +32,7 @@ export default async function ComposersPage({ params, searchParams }: Props) {
   const decade = search.decade ? Number(search.decade) : undefined;
   const has_awards = search.has_awards !== undefined ? search.has_awards === "true" : undefined;
   const country = search.country || undefined;
+  const award_type = search.award_type || undefined;
 
   let data;
   try {
@@ -42,6 +44,7 @@ export default async function ComposersPage({ params, searchParams }: Props) {
       decade,
       has_awards,
       country,
+      award_type,
     });
   } catch {
     data = null;
@@ -55,6 +58,7 @@ export default async function ComposersPage({ params, searchParams }: Props) {
     if (decade) params.set("decade", String(decade));
     if (has_awards !== undefined) params.set("has_awards", String(has_awards));
     if (country) params.set("country", country);
+    if (award_type) params.set("award_type", award_type);
     return `/composers?${params.toString()}`;
   };
 
@@ -78,6 +82,7 @@ export default async function ComposersPage({ params, searchParams }: Props) {
             currentDecade={decade}
             hasAwards={has_awards}
             currentCountry={country}
+            awardType={award_type}
           />
         </aside>
 

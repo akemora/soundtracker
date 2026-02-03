@@ -109,6 +109,7 @@ export interface ComposerListResponse {
 
 export interface ComposerFilterOptions {
   countries: string[];
+  award_types: string[];
 }
 
 export interface ComposerResponse {

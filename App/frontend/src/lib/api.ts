@@ -50,6 +50,7 @@ export async function getComposers(params?: {
   decade?: number;
   has_awards?: boolean;
   country?: string;
+  award_type?: string;
 }): Promise<ComposerListResponse> {
   const searchParams = new URLSearchParams();
 
@@ -60,6 +61,7 @@ export async function getComposers(params?: {
   if (params?.decade) searchParams.set("decade", String(params.decade));
   if (params?.has_awards !== undefined) searchParams.set("has_awards", String(params.has_awards));
   if (params?.country) searchParams.set("country", params.country);
+  if (params?.award_type) searchParams.set("award_type", params.award_type);
 
   const query = searchParams.toString();
   const endpoint = `/api/composers${query ? `?${query}` : ""}`;

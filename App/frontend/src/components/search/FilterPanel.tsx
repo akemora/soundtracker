@@ -11,16 +11,18 @@ interface FilterPanelProps {
   currentDecade?: number;
   hasAwards?: boolean;
   currentCountry?: string;
+  awardType?: string;
 }
 
 // Decades available for film composers
 const DECADES = [1880, 1890, 1900, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990];
 
-export function FilterPanel({ currentDecade, hasAwards, currentCountry }: FilterPanelProps) {
+export function FilterPanel({ currentDecade, hasAwards, currentCountry, awardType }: FilterPanelProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [countries, setCountries] = useState<string[]>([]);
+  const [awardTypes, setAwardTypes] = useState<string[]>([]);
 
   useEffect(() => {
     let active = true;
@@ -28,6 +30,7 @@ export function FilterPanel({ currentDecade, hasAwards, currentCountry }: Filter
       .then((data) => {
         if (!active) return;
         setCountries(data.countries || []);
+        setAwardTypes(data.award_types || []);
       })
       .catch(() => {
         if (!active) return;
@@ -84,17 +87,26 @@ export function FilterPanel({ currentDecade, hasAwards, currentCountry }: Filter
     [createQueryString, pathname, router]
   );
 
+  const handleAwardTypeChange = useCallback(
+    (value: string | null) => {
+      const query = createQueryString({ award_type: value || null });
+      router.push(`${pathname}?${query}`);
+    },
+    [createQueryString, pathname, router]
+  );
+
   const clearAllFilters = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("decade");
     params.delete("has_awards");
     params.delete("country");
+    params.delete("award_type");
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`);
   }, [pathname, router, searchParams]);
 
   const hasActiveFilters =
-    currentDecade !== undefined || hasAwards !== undefined || !!currentCountry;
+    currentDecade !== undefined || hasAwards !== undefined || !!currentCountry || !!awardType;
 
   return (
     <div className="space-y-4 p-4 border border-border rounded-lg bg-card">
@@ -181,6 +193,23 @@ export function FilterPanel({ currentDecade, hasAwards, currentCountry }: Filter
         </select>
       </div>
 
+      {/* Award type filter */}
+      <div className="space-y-2">
+        <label className="text-sm text-muted-foreground">Tipo de premio:</label>
+        <select
+          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+          value={awardType || ""}
+          onChange={(event) => handleAwardTypeChange(event.target.value || null)}
+        >
+          <option value="">Todos</option>
+          {awardTypes.map((award) => (
+            <option key={award} value={award}>
+              {award}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Active filters summary */}
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
@@ -215,6 +244,18 @@ export function FilterPanel({ currentDecade, hasAwards, currentCountry }: Filter
                 type="button"
                 className="ml-1 hover:text-destructive"
                 onClick={() => handleCountryChange(null)}
+              >
+                x
+              </button>
+            </Badge>
+          )}
+          {awardType && (
+            <Badge variant="secondary" className="text-xs">
+              {awardType}
+              <button
+                type="button"
+                className="ml-1 hover:text-destructive"
+                onClick={() => handleAwardTypeChange(null)}
               >
                 x
               </button>

@@ -767,7 +767,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 8.1.1 | Añadir filtro por país en compositores | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
-| 8.1.2 | Añadir filtro por tipo de premio | **Claude** | `opus` | 🟢 | `[ ]` | |
+| 8.1.2 | Añadir filtro por tipo de premio | **Claude** | `opus` | 🟢 | `[x]` | 2026-02-03 |
 
 ### 8.2 Secciones Adicionales
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |

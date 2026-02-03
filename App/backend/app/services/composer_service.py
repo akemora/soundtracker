@@ -32,6 +32,7 @@ async def list_composers(
     decade: int | None = None,
     has_awards: bool | None = None,
     country: str | None = None,
+    award_type: str | None = None,
 ) -> ComposerListResponse:
     """List composers with pagination, sorting, and filtering.
 
@@ -44,6 +45,7 @@ async def list_composers(
         decade: Filter by birth decade (e.g., 1930 for 1930s).
         has_awards: Filter by whether composer has awards (True/False).
         country: Filter by country of origin.
+        award_type: Filter by award type (e.g., Oscar, BAFTA).
 
     Returns:
         Paginated list of composers with statistics.
@@ -73,6 +75,12 @@ async def list_composers(
     if country:
         where_clauses.append("LOWER(country) = LOWER(?)")
         params.append(country)
+
+    if award_type:
+        where_clauses.append(
+            "EXISTS (SELECT 1 FROM awards a WHERE a.composer_id = v.id AND a.award_name = ?)"
+        )
+        params.append(award_type)
 
     where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
 
@@ -120,8 +128,18 @@ async def get_composer_filter_options(db: DatabaseManager) -> ComposerFilterOpti
         ORDER BY country
         """
     )
+    award_rows = await db.execute_query(
+        """
+        SELECT DISTINCT award_name
+        FROM awards
+        WHERE award_name IS NOT NULL AND award_name != ''
+        ORDER BY award_name
+        """
+    )
+
     countries = [row["country"] for row in country_rows]
-    return ComposerFilterOptions(countries=countries)
+    award_types = [row["award_name"] for row in award_rows]
+    return ComposerFilterOptions(countries=countries, award_types=award_types)
 
 
 async def get_composer(db: DatabaseManager, slug: str) -> ComposerResponse:

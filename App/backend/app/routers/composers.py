@@ -34,6 +34,7 @@ async def api_list_composers(
     decade: int | None = Query(None, description="Filter by birth decade (e.g., 1930)"),
     has_awards: bool | None = Query(None, description="Filter by award status"),
     country: str | None = Query(None, description="Filter by country of origin"),
+    award_type: str | None = Query(None, description="Filter by award type"),
     db: DatabaseManager = Depends(get_database),
 ) -> ComposerListResponse:
     """List composers with pagination and filters.
@@ -59,6 +60,7 @@ async def api_list_composers(
         decade=decade,
         has_awards=has_awards,
         country=country,
+        award_type=award_type,
     )
 
 

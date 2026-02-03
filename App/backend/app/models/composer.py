@@ -103,6 +103,7 @@ class ComposerFilterOptions(BaseModel):
     """Available filter options for composer list."""
 
     countries: list[str] = Field(description="Available countries")
+    award_types: list[str] = Field(description="Available award types")
 
 
 class ComposerResponse(BaseModel):
