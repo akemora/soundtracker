@@ -586,6 +586,16 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
     if not (DEEP_RESEARCH_ENABLED and PPLX_API_KEY):
         return None
     outline = _build_research_outline(composer)
+    red_tones_note = ''
+    if 'stothart' in composer.lower():
+        red_tones_note = (
+            'Incluye, si está documentado con fuentes fiables, la mención a la teoría de los '
+            '"tonos rojos" en su forma de pensar la música; si no hay fuentes claras, indícalo explícitamente. '
+        )
+    else:
+        red_tones_note = (
+            'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
+        )
     system_prompt = (
         'Eres un investigador musical y divulgador. Responde SOLO con JSON válido. '
         'Estructura: {"biography": {"text": "..."}, '
@@ -598,8 +608,7 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
         'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
         'facts.text: 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
         'excentricidades o rasgos humanos que lo hagan memorable. '
-        'Incluye, si está documentado con fuentes fiables, la mención a la teoría de los "tonos rojos" '
-        'en su forma de pensar la música; si no hay fuentes claras, indícalo explícitamente. '
+        + red_tones_note +
         'Cada párrafo debe terminar con citas [1], [2] usando la lista global "citations". '
         'Usa fuentes fiables y no inventes. '
         'Si hay incertidumbre, indícalo.'
