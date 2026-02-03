@@ -348,7 +348,9 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.14.2 | Crear `scripts/generate_composers.py` (<100 líneas) | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 | 1.14.3 | Verificar que funciona igual que antes | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.14.4 | Ejecutar con 1 compositor de prueba | Manual | - | 🔴 | `[x]` | 2026-02-03 |
-| 1.14.5 | Ejecutar con 5 compositores de prueba | Manual | - | 🔴 | `[ ]` | |
+| 1.14.5 | Ejecutar con 5 compositores de prueba | Manual | - | 🔴 | `[x]` | 2026-02-03 |
+
+> **Nota 2026-02-03**: Ejecuciones con `SEARCH_WEB_ENABLED=0`, `USE_WEB_TOPLISTS=0` y `--no-posters`. Outputs en `/tmp/soundtracker_pipeline_test1` y `/tmp/soundtracker_pipeline_test5`.
 
 ### 1.15 Tests y Cobertura
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
