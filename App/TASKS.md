@@ -179,7 +179,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 0.4.10.3 | Tests para sincronización | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 | 0.4.10.4 | Tests para operaciones de archivo | **GPT** | `4o-mini` | 🟢 | `[x]` | 2026-02-03 |
 | 0.4.10.5 | Documentar uso en README.md | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
-| 0.4.10.6 | Añadir ejemplos de uso en docstrings | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+| 0.4.10.6 | Añadir ejemplos de uso en docstrings | **GPT** | `4o-mini` | 🟢 | `[x]` | 2026-02-03 |
 
 > **Resultados 0.4.10**: Creados tests completos en `tests/test_manage_master_list.py` (464 líneas) con 6 clases de test: TestComposerEntry, TestOutputFile, TestMasterListManager, TestOutputFilesManager, TestSyncEngine, TestSyncReport.
 

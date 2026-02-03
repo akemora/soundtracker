@@ -240,7 +240,15 @@ class SyncReport:
 
 
 class MasterListManager:
-    """Gestiona el archivo composers_master_list.md."""
+    """Gestiona el archivo composers_master_list.md.
+
+    Example:
+        manager = MasterListManager()
+        manager.load()
+        entry = manager.get_by_name("John Williams")
+        if entry:
+            print(entry.index_str, entry.name)
+    """
 
     def __init__(self, path: Path = MASTER_LIST_PATH) -> None:
         """Inicializa el manager."""
@@ -404,7 +412,15 @@ class MasterListManager:
 
 
 class OutputFilesManager:
-    """Gestiona los archivos de output."""
+    """Gestiona los archivos de output.
+
+    Example:
+        outputs = OutputFilesManager()
+        outputs.load()
+        first = outputs.get_by_index(1)
+        if first:
+            print(first.path)
+    """
 
     def __init__(self, output_dir: Path = OUTPUTS_DIR) -> None:
         """Inicializa el manager."""
@@ -563,7 +579,14 @@ class OutputFilesManager:
 
 
 class SyncEngine:
-    """Motor de sincronización entre master list y output files."""
+    """Motor de sincronización entre master list y output files.
+
+    Example:
+        engine = SyncEngine()
+        report = engine.check_sync()
+        if not report.is_synced:
+            report.print_report()
+    """
 
     def __init__(
         self,
