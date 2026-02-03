@@ -5,6 +5,7 @@ from composer information.
 """
 
 import logging
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -118,6 +119,10 @@ class MarkdownGenerator:
         # Awards
         if info.awards:
             lines.extend(self._build_awards(info.awards))
+
+        # Citations
+        if info.external_sources:
+            lines.extend(self._build_citations(info.external_sources))
 
         # External sources
         if self.include_sources and info.external_sources:
@@ -273,9 +278,13 @@ class MarkdownGenerator:
         Returns:
             Markdown lines.
         """
+        filtered = [source for source in sources if source.domain != "citation"]
+        if not filtered:
+            return []
+
         lines = ["## Fuentes adicionales\n"]
 
-        for source in sources:
+        for source in filtered:
             snippet = source.snippet or f"Fuente: {source.name}"
             lines.append(f"* [{source.name}]({source.url}) — {snippet}")
 
@@ -301,6 +310,26 @@ class MarkdownGenerator:
             if text:
                 lines.append(f"* {snippet.name}: {text}")
 
+        lines.append("")
+        return lines
+
+    def _build_citations(
+        self,
+        sources: list[ExternalSource],
+    ) -> list[str]:
+        """Build citations section."""
+        citations = [source for source in sources if source.domain == "citation"]
+        if not citations:
+            return []
+
+        def sort_key(source: ExternalSource) -> int:
+            match = re.search(r"(\\d+)", source.name or "")
+            return int(match.group(1)) if match else 0
+
+        lines = ["## Citas\n"]
+        for source in sorted(citations, key=sort_key):
+            label = source.name or "Fuente"
+            lines.append(f"{label}: {source.url}")
         lines.append("")
         return lines
 

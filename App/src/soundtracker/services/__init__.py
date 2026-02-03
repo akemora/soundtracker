@@ -8,6 +8,7 @@ from soundtracker.services.awards import AwardsService
 from soundtracker.services.biography import BiographyService
 from soundtracker.services.filmography import FilmographyService
 from soundtracker.services.posters import PosterService
+from soundtracker.services.research import ResearchService
 from soundtracker.services.top10 import Top10Service
 from soundtracker.services.translator import TranslatorService
 
@@ -16,6 +17,7 @@ __all__ = [
     "BiographyService",
     "FilmographyService",
     "PosterService",
+    "ResearchService",
     "Top10Service",
     "TranslatorService",
 ]

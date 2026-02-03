@@ -6,6 +6,7 @@ and poster downloads.
 """
 
 import logging
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -19,11 +20,42 @@ from soundtracker.services import (
     BiographyService,
     FilmographyService,
     PosterService,
+    ResearchService,
     Top10Service,
 )
 from soundtracker.utils.text import slugify
 
 logger = logging.getLogger(__name__)
+
+
+class CitationManager:
+    """Assign numeric markers to citation URLs."""
+
+    def __init__(self) -> None:
+        self._mapping: dict[str, int] = {}
+
+    def annotate(self, text: str, citations: list[str]) -> str:
+        """Append citation markers to text."""
+        if not text or not citations:
+            return text
+
+        markers = [self._marker(url) for url in citations]
+        return f"{text} {' '.join(markers)}"
+
+    def export(self) -> list[tuple[str, str]]:
+        """Export list of (marker, url) sorted by marker number."""
+        items = [(self._marker(url), url) for url in self._mapping]
+        return sorted(items, key=lambda item: self._marker_number(item[0]))
+
+    def _marker(self, url: str) -> str:
+        if url not in self._mapping:
+            self._mapping[url] = len(self._mapping) + 1
+        return f"[^{self._mapping[url]}]"
+
+    @staticmethod
+    def _marker_number(marker: str) -> int:
+        match = re.search(r"(\\d+)", marker)
+        return int(match.group(1)) if match else 0
 
 
 class ComposerPipeline:
@@ -61,6 +93,7 @@ class ComposerPipeline:
         self.awards_service = AwardsService()
         self.top10_service = Top10Service()
         self.poster_service = PosterService()
+        self.research_service = ResearchService()
 
         # Initialize generator
         self.markdown_generator = MarkdownGenerator()
@@ -117,6 +150,47 @@ class ComposerPipeline:
         logger.info("Completed: %s -> %s", name, output_path)
         return info
 
+    def _apply_deep_research(self, info: ComposerInfo) -> None:
+        """Enrich biography/style/facts using deep research.
+
+        Args:
+            info: ComposerInfo to update.
+        """
+        if not self.research_service.is_enabled:
+            return
+
+        research = self.research_service.get_profile(info.name)
+        if not research:
+            return
+
+        citation_manager = CitationManager()
+
+        if research.biography.text:
+            info.biography = citation_manager.annotate(
+                research.biography.text,
+                research.biography.citations,
+            )
+        if research.style.text:
+            info.style = citation_manager.annotate(
+                research.style.text,
+                research.style.citations,
+            )
+        if research.facts.text:
+            info.anecdotes = citation_manager.annotate(
+                research.facts.text,
+                research.facts.citations,
+            )
+
+        for marker, url in citation_manager.export():
+            info.external_sources.append(
+                ExternalSource(
+                    name=marker,
+                    url=url,
+                    snippet="Cita",
+                    domain="citation",
+                )
+            )
+
     def _collect_biography(self, info: ComposerInfo) -> None:
         """Collect biography, style, and anecdotes.
 
@@ -156,6 +230,9 @@ class ComposerPipeline:
             info.birth_year = birth
             info.death_year = death
             info.country = self.wikidata.get_country(qid)
+
+        # Deep research enrichment (Perplexity)
+        self._apply_deep_research(info)
 
     def _collect_filmography(
         self,

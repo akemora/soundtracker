@@ -146,6 +146,11 @@ class Settings(BaseSettings):
         alias="USE_WEB_TOPLISTS",
         description="Use web search for top lists",
     )
+    deep_research_enabled: bool = Field(
+        default=True,
+        alias="DEEP_RESEARCH_ENABLED",
+        description="Enable deep research with Perplexity",
+    )
     poster_web_fallback: bool = Field(
         default=True,
         alias="POSTER_WEB_FALLBACK",
