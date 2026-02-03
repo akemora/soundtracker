@@ -167,6 +167,7 @@ class ComposerPipeline:
 
         films = self.filmography_service.get_complete_filmography(
             info.name,
+            composer_folder=composer_folder,
             tmdb_id=info.tmdb_id,
             wikidata_qid=info.wikidata_qid,
         )

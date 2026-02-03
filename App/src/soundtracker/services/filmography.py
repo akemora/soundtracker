@@ -74,6 +74,8 @@ class FilmographyService:
         self,
         composer: str,
         composer_folder: Optional[Path] = None,
+        tmdb_id: Optional[int] = None,
+        wikidata_qid: Optional[str] = None,
     ) -> list[Film]:
         """Get complete filmography for a composer.
 
@@ -82,6 +84,8 @@ class FilmographyService:
         Args:
             composer: Composer name.
             composer_folder: Optional folder for poster paths.
+            tmdb_id: Optional TMDB person ID to skip search.
+            wikidata_qid: Optional Wikidata QID to skip lookup.
 
         Returns:
             List of Film objects sorted by year.
@@ -90,14 +94,16 @@ class FilmographyService:
 
         # Primary source: TMDB
         if self.tmdb.is_available:
-            person_id, _ = self.tmdb.search_person(composer)
+            person_id = tmdb_id
+            if person_id is None:
+                person_id, _ = self.tmdb.search_person(composer)
             if person_id:
                 tmdb_films = self.tmdb.get_person_movie_credits(person_id)
                 films = tmdb_films
 
         # Supplement with Wikidata
         if len(films) < 8:
-            qid = self.wikidata.get_qid(composer)
+            qid = wikidata_qid or self.wikidata.get_qid(composer)
             if qid:
                 wd_films = self.wikidata.get_filmography(qid)
                 films = self._merge_films(films, wd_films)
