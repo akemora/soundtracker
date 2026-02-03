@@ -31,7 +31,7 @@ export default async function HomePage({ params }: Props) {
       <section className="relative py-20 md:py-32 bg-gradient-to-b from-muted/50 to-background">
         <div className="container flex flex-col items-center text-center gap-8">
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance">
-            {t("title")}
+            SOUND<span className="text-accent">TRACKER</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl text-balance">
             {t("subtitle")}
@@ -44,7 +44,7 @@ export default async function HomePage({ params }: Props) {
 
           {/* CTA */}
           <div className="flex gap-4 mt-4">
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <Link href="/composers">{t("exploreAll")}</Link>
             </Button>
           </div>
@@ -52,26 +52,13 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       {/* Featured Composers */}
-      <section className="py-16 md:py-24">
-        <div className="container">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="font-display text-2xl md:text-3xl font-bold">
-              {t("featuredComposers")}
-            </h2>
-            <Button variant="outline" asChild>
-              <Link href="/composers">{t("exploreAll")}</Link>
-            </Button>
-          </div>
-
-          {composers.length > 0 ? (
+      {composers.length > 0 && (
+        <section className="py-16 md:py-24">
+          <div className="container">
             <ComposerGrid composers={composers} />
-          ) : (
-            <p className="text-muted-foreground text-center py-12">
-              Start the backend API to see composers.
-            </p>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

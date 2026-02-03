@@ -83,7 +83,7 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
           <Button
             variant={currentDecade === undefined ? "default" : "outline"}
             size="sm"
-            className="text-xs"
+            className={`text-xs ${currentDecade === undefined ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`}
             onClick={() => handleDecadeChange(null)}
           >
             Todas
@@ -93,7 +93,7 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
               key={decade}
               variant={currentDecade === decade ? "default" : "outline"}
               size="sm"
-              className="text-xs"
+              className={`text-xs ${currentDecade === decade ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`}
               onClick={() => handleDecadeChange(decade)}
             >
               {decade}s
@@ -109,7 +109,7 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
           <Button
             variant={hasAwards === undefined ? "default" : "outline"}
             size="sm"
-            className="text-xs"
+            className={`text-xs ${hasAwards === undefined ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`}
             onClick={() => handleAwardsChange(null)}
           >
             Todos
@@ -117,7 +117,7 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
           <Button
             variant={hasAwards === true ? "default" : "outline"}
             size="sm"
-            className="text-xs"
+            className={`text-xs ${hasAwards === true ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`}
             onClick={() => handleAwardsChange(true)}
           >
             Con premios
@@ -125,7 +125,7 @@ export function FilterPanel({ currentDecade, hasAwards }: FilterPanelProps) {
           <Button
             variant={hasAwards === false ? "default" : "outline"}
             size="sm"
-            className="text-xs"
+            className={`text-xs ${hasAwards === false ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`}
             onClick={() => handleAwardsChange(false)}
           >
             Sin premios

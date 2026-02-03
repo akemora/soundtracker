@@ -3,6 +3,7 @@ import { ComposerGrid } from "@/components/composers/ComposerGrid";
 import { Pagination } from "@/components/ui/Pagination";
 import { SortSelector } from "@/components/composers/SortSelector";
 import { FilterPanel } from "@/components/search/FilterPanel";
+import { SearchBar } from "@/components/search/SearchBar";
 import { getComposers } from "@/lib/api";
 
 type Props = {
@@ -60,7 +61,10 @@ export default async function ComposersPage({ params, searchParams }: Props) {
         <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
           {t("title")}
         </h1>
-        <p className="text-muted-foreground">{t("subtitle")}</p>
+        <p className="text-muted-foreground mb-4">{t("subtitle")}</p>
+        <div className="max-w-md">
+          <SearchBar placeholder="Buscar compositores..." />
+        </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">

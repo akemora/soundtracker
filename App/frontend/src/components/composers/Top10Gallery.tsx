@@ -84,18 +84,19 @@ function FilmCard({
             fill
             className="object-cover"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+            unoptimized
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center p-2">
-            <span className="text-xs text-center text-muted-foreground">
+          <div className="absolute inset-0 flex items-end justify-center p-2 pb-4">
+            <span className="text-xs text-center text-muted-foreground line-clamp-2">
               {film.title}
             </span>
           </div>
         )}
 
-        {/* Rank Badge */}
+        {/* Rank Badge - positioned outside poster area to avoid overlap */}
         {film.top10_rank && (
-          <Badge className="absolute top-2 left-2 bg-gold text-gold-foreground font-bold">
+          <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground font-bold text-sm shadow-lg z-10">
             #{film.top10_rank}
           </Badge>
         )}
@@ -132,6 +133,7 @@ function FilmDetailModal({ film }: { film: FilmDetail }) {
             className="object-cover"
             sizes="(max-width: 640px) 100vw, 200px"
             priority
+            unoptimized
           />
         </div>
       )}
@@ -167,8 +169,8 @@ function FilmDetailModal({ film }: { film: FilmDetail }) {
         )}
 
         {film.top10_rank && (
-          <Badge className="bg-gold text-gold-foreground">
-            Top #{film.top10_rank}
+          <Badge className="bg-primary text-primary-foreground font-bold">
+            ★ Top #{film.top10_rank}
           </Badge>
         )}
 

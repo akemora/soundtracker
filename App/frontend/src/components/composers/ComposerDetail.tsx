@@ -41,6 +41,7 @@ export function ComposerDetail({ composer, stats }: ComposerDetailProps) {
                 className="object-cover"
                 priority
                 sizes="(max-width: 1024px) 100vw, 33vw"
+                unoptimized
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -66,8 +67,8 @@ export function ComposerDetail({ composer, stats }: ComposerDetailProps) {
                   <span className="text-sm text-muted-foreground">Premios</span>
                   <div className="flex gap-2">
                     {stats.wins > 0 && (
-                      <Badge className="bg-gold text-gold-foreground">
-                        {stats.wins} 🏆
+                      <Badge className="bg-gold text-gold-foreground font-bold">
+                        ★ {stats.wins} wins
                       </Badge>
                     )}
                     {stats.nominations > 0 && (
@@ -86,7 +87,16 @@ export function ComposerDetail({ composer, stats }: ComposerDetailProps) {
         {/* Header */}
         <div>
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-            {composer.name}
+            {(() => {
+              const parts = composer.name.split(" ");
+              const firstName = parts[0];
+              const lastName = parts.slice(1).join(" ");
+              return (
+                <>
+                  {firstName}{lastName && <> <span className="text-accent">{lastName}</span></>}
+                </>
+              );
+            })()}
           </h1>
           {composer.country && (
             <p className="text-lg text-muted-foreground">{composer.country}</p>
@@ -112,7 +122,7 @@ export function ComposerDetail({ composer, stats }: ComposerDetailProps) {
         {/* Musical Style */}
         {composer.style && (
           <>
-            <Separator />
+            <Separator className="bg-accent" />
             <section>
               <h2 className="font-display text-xl font-semibold mb-3">
                 {t("style")}
@@ -127,7 +137,7 @@ export function ComposerDetail({ composer, stats }: ComposerDetailProps) {
         {/* Anecdotes */}
         {composer.anecdotes && (
           <>
-            <Separator />
+            <Separator className="bg-accent" />
             <section>
               <h2 className="font-display text-xl font-semibold mb-3">
                 Anécdotas

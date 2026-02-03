@@ -19,9 +19,13 @@ settings = get_settings()
 async def get_asset(file_type: str, filename: str) -> FileResponse:
     """Serve a static asset file (poster or photo).
 
+    The file structure is:
+    - outputs/{composer_slug}/photo_{name}.jpg (photos)
+    - outputs/{composer_slug}/posters/poster_{name}.jpg (posters)
+
     Args:
         file_type: Type of asset ('posters' or 'photos').
-        filename: Name of the file to serve.
+        filename: Path to the file relative to outputs directory.
 
     Returns:
         FileResponse with the requested asset.
@@ -38,9 +42,9 @@ async def get_asset(file_type: str, filename: str) -> FileResponse:
             detail=f"Invalid asset type. Must be one of: {', '.join(valid_types)}",
         )
 
-    # Build file path
+    # Build file path - files are directly in outputs folder structure
     assets_dir = Path(settings.assets_path)
-    file_path = assets_dir / file_type / filename
+    file_path = assets_dir / filename
 
     # Security: prevent directory traversal
     try:

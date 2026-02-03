@@ -57,8 +57,8 @@ export function AwardsList({ slug }: AwardsListProps) {
     <div className="space-y-6">
       {/* Summary */}
       <div className="flex gap-4">
-        <Badge className="bg-gold text-gold-foreground text-sm px-3 py-1">
-          {data.summary.wins} Victorias 🏆
+        <Badge className="bg-gold text-gold-foreground text-sm px-3 py-1 font-bold">
+          ★ {data.summary.wins} Victorias
         </Badge>
         <Badge variant="secondary" className="text-sm px-3 py-1">
           {data.summary.nominations} Nominaciones
@@ -106,8 +106,8 @@ function AwardItem({ award }: { award: AwardDetail }) {
         {award.year && (
           <span className="text-sm text-muted-foreground">{award.year}</span>
         )}
-        <Badge variant={isWin ? "default" : "secondary"} className={isWin ? "bg-gold text-gold-foreground" : ""}>
-          {isWin ? "Win" : "Nom."}
+        <Badge variant={isWin ? "default" : "secondary"} className={isWin ? "bg-gold text-gold-foreground font-bold" : ""}>
+          {isWin ? "★ Win" : "Nom."}
         </Badge>
       </div>
     </div>

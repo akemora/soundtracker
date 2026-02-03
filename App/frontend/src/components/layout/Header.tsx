@@ -34,7 +34,7 @@ export function Header() {
               className={`text-sm font-medium transition-colors hover:text-accent ${
                 pathname === link.href
                   ? "text-accent"
-                  : "text-muted-foreground"
+                  : "text-foreground"
               }`}
             >
               {link.label}

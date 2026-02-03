@@ -140,6 +140,7 @@ function FilmRow({ film }: { film: FilmDetail }) {
                 className="object-cover"
                 sizes="48px"
                 loading="lazy"
+                unoptimized
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-xs text-muted-foreground">
@@ -152,11 +153,6 @@ function FilmRow({ film }: { film: FilmDetail }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h4 className="font-medium truncate">{film.title}</h4>
-              {film.is_top10 && (
-                <Badge className="bg-gold text-gold-foreground text-xs">
-                  Top {film.top10_rank}
-                </Badge>
-              )}
             </div>
             <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
               {film.year && <span>{film.year}</span>}

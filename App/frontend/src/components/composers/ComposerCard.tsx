@@ -32,6 +32,7 @@ export function ComposerCard({ composer }: ComposerCardProps) {
               fill
               className="object-cover transition-transform group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              unoptimized
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-muted">
@@ -44,8 +45,8 @@ export function ComposerCard({ composer }: ComposerCardProps) {
           {/* Awards badge */}
           {composer.wins > 0 && (
             <div className="absolute top-2 right-2">
-              <Badge variant="secondary" className="bg-gold text-gold-foreground">
-                {composer.wins} 🏆
+              <Badge variant="secondary" className="bg-primary text-primary-foreground font-bold shadow-md">
+                ★ {composer.wins}
               </Badge>
             </div>
           )}
@@ -53,12 +54,21 @@ export function ComposerCard({ composer }: ComposerCardProps) {
 
         {/* Info */}
         <CardContent className="p-4">
-          <h3 className="font-display font-semibold text-lg truncate group-hover:text-accent transition-colors">
-            {composer.name}
+          <h3 className="font-display font-semibold text-lg truncate transition-colors">
+            {(() => {
+              const parts = composer.name.split(" ");
+              const firstName = parts[0];
+              const lastName = parts.slice(1).join(" ");
+              return (
+                <>
+                  {firstName}{lastName && <> <span className="text-accent">{lastName}</span></>}
+                </>
+              );
+            })()}
           </h3>
 
           <p className="text-sm text-muted-foreground mt-1">
-            {composer.country || "Unknown"} • {lifespan}
+            {composer.country ? `${composer.country} • ` : ""}{lifespan}
           </p>
 
           {/* Stats */}

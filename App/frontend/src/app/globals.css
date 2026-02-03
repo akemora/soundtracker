@@ -142,3 +142,11 @@
     background: linear-gradient(135deg, oklch(0.78 0.15 85), oklch(0.65 0.12 65));
   }
 }
+
+/* Container centering */
+@layer components {
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8;
+    max-width: 1280px;
+  }
+}
