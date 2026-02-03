@@ -1,5 +1,7 @@
 # Soundtrackers: Film Composer Research Application
 
+> Ver plan de desarrollo completo en `App/DEVELOPMENT_PLAN.md`.
+
 ## Resumen
 
 Este proyecto automatiza la investigacion profunda de compositores de cine. Genera un Markdown por compositor con biografia, estilo musical, anecdotas, filmografia completa, top 10 de bandas sonoras, premios, fuentes externas y enlaces a posters locales. Todo el texto se normaliza a espanol (Espana) y los titulos de peliculas se muestran como:
