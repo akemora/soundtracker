@@ -16,26 +16,26 @@ Herbert Stothart nació en Milwaukee, Wisconsin. Estudió música en Europa y en
 
 ## Top 10 bandas sonoras
 
-1. ***Waterloo Bridge (Título en España: El puente de Waterloo)***
+1. ***Mrs. Miniver (Título en España: La señora Miniver)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_mrs_miniver_1942.jpg)
+2. ***National Velvet (Título en España: Fuego de juventud)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_national_velvet_1945.jpg)
+3. ***Waterloo Bridge (Título en España: El puente de Waterloo)***
     * **Póster:** [link](001_herbert_stothart/posters/poster_waterloo_bridge_1940.jpg)
-2. ***Anna Karenina (Título en España: Ana Karenina)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_anna_karenina_1935.jpg)
-3. ***Mutiny on the Bounty (Título en España: La tragedia de la Bounty)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_mutiny_on_the_bounty_1935.jpg)
-4. ***A Tale of Two Cities (Título en España: Historia de dos ciudades)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_a_tale_of_two_cities_1935.jpg)
+4. ***Sweethearts (Título en España: Enamorados)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_sweethearts_1938.jpg)
 5. ***The Picture of Dorian Gray (Título en España: El retrato de Dorian Gray)***
     * **Póster:** [link](001_herbert_stothart/posters/poster_the_picture_of_dorian_gray_1945.jpg)
-6. ***National Velvet (Título en España: Fuego de juventud)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_national_velvet_1945.jpg)
-7. ***The Three Musketeers (Título en España: Los tres mosqueteros)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_the_three_musketeers_1948.jpg)
-8. ***Mrs. Miniver (Título en España: La señora Miniver)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_mrs_miniver_1942.jpg)
-9. ***After the Thin Man (Título en España: Ella, él y Asta)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_after_the_thin_man_1936.jpg)
-10. ***Treasure Island (Título en España: La isla del tesoro)***
-    * **Póster:** [link](001_herbert_stothart/posters/poster_treasure_island_1934.jpg)
+6. ***The White Cliffs of Dover (Título en España: Las rocas blancas de Dover)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_the_white_cliffs_of_dover_1944.jpg)
+7. ***Northwest Passage (Título en España: Paso al noroeste)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_northwest_passage_1940.jpg)
+8. ***The Cuban Love Song (Título en España: Bajo el cielo de Cuba)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_the_cuban_love_song_1931.jpg)
+9. ***Anna Karenina (Título en España: Ana Karenina)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_anna_karenina_1935.jpg)
+10. ***Mutiny on the Bounty (Título en España: La tragedia de la Bounty)***
+    * **Póster:** [link](001_herbert_stothart/posters/poster_mutiny_on_the_bounty_1935.jpg)
 
 ## Filmografía completa
 

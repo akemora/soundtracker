@@ -18,26 +18,26 @@ Nació en Viena (Austria), el 10 de mayo de 1888, y murió en Los Ángeles (EE U
 
 ## Top 10 bandas sonoras
 
-1. ***The Informer (Título en España: El delator)***
-    * **Póster:** [link](002_max_steiner/posters/poster_the_informer_1935.jpg)
-2. ***Battle Cry (Título en España: Más allá de las lágrimas)***
-    * **Póster:** [link](002_max_steiner/posters/poster_battle_cry_1955.jpg)
-3. ***Casablanca (Título en España: Casablanca)***
-    * **Póster:** [link](002_max_steiner/posters/poster_casablanca_1942.jpg)
-4. ***Dark Victory (Título en España: Amarga victoria)***
-    * **Póster:** [link](002_max_steiner/posters/poster_dark_victory_1939.jpg)
-5. ***Jezebel (Título en España: Jezabel)***
-    * **Póster:** [link](002_max_steiner/posters/poster_jezebel_1938.jpg)
-6. ***The Miracle of Our Lady of Fatima (Título en España: El Mensaje de Fátima)***
-    * **Póster:** [link](002_max_steiner/posters/poster_the_miracle_of_our_lady_of_fatima_1952.jpg)
-7. ***The Flame and the Arrow (Título en España: El Halcón Y La Flecha)***
-    * **Póster:** [link](002_max_steiner/posters/poster_the_flame_and_the_arrow_1950.jpg)
-8. ***Beyond the Forest (Título en España: Más allá del bosque)***
-    * **Póster:** [link](002_max_steiner/posters/poster_beyond_the_forest_1949.jpg)
-9. ***Life with Father (Título en España: Vivir con papá)***
-    * **Póster:** [link](002_max_steiner/posters/poster_life_with_father_1947.jpg)
-10. ***My Wild Irish Rose (Título en España: My Wild Irish Rose)***
-    * **Póster:** [link](002_max_steiner/posters/poster_my_wild_irish_rose_1947.jpg)
+1. ***King Kong (Título en España: King Kong)***
+    * **Póster:** [link](002_max_steiner/posters/poster_king_kong_1933.jpg)
+2. ***Little Women (Título en España: Las cuatro hermanitas)***
+    * **Póster:** [link](002_max_steiner/posters/poster_little_women_1933.jpg)
+3. ***She (Título en España: She, la diosa del fuego)***
+    * **Póster:** [link](002_max_steiner/posters/poster_she_1935.jpg)
+4. ***The Son of Kong (Título en España: El hijo de Kong)***
+    * **Póster:** [link](002_max_steiner/posters/poster_the_son_of_kong_1933.jpg)
+5. ***Symphony of Six Million (Título en España: La melodía de la vida)***
+    * **Póster:** [link](002_max_steiner/posters/poster_symphony_of_six_million_1932.jpg)
+6. ***Cimarron (Título en España: Cimarrón)***
+    * **Póster:** [link](002_max_steiner/posters/poster_cimarron_1931.jpg)
+7. ***Bird of Paradise (Título en España: Ave del paraíso)***
+    * **Póster:** [link](002_max_steiner/posters/poster_bird_of_paradise_1932.jpg)
+8. ***Of Human Bondage (Título en España: Cautivo del deseo)***
+    * **Póster:** [link](002_max_steiner/posters/poster_of_human_bondage_1934.jpg)
+9. ***The Little Minister (Título en España: Sangre gitana)***
+    * **Póster:** [link](002_max_steiner/posters/poster_the_little_minister_1934.jpg)
+10. ***Morning Glory (Título en España: Gloria de un día)***
+    * **Póster:** [link](002_max_steiner/posters/poster_morning_glory_1933.jpg)
 
 ## Filmografía completa
 

@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 from urllib.parse import quote_plus, urlparse, parse_qs, unquote
 
 try:
@@ -202,9 +202,32 @@ def get_composers_from_file(path: Path) -> List[str]:
             if not parts:
                 continue
             name = parts[0]
-            if name == 'Name' or re.fullmatch(r'-+', name):
+            if name in {'Name', 'No.'} or re.fullmatch(r'-+', name):
                 continue
+            if parts[0].isdigit() and len(parts) >= 2:
+                name = parts[1]
             composers.append(name)
+    return composers
+
+
+def get_composers_with_indices(path: Path) -> List[Tuple[Optional[int], str]]:
+    composers: List[Tuple[Optional[int], str]] = []
+    if not path.exists():
+        print(f"Master list not found at {path}")
+        return composers
+    with path.open('r', encoding='utf-8') as fh:
+        for line in fh:
+            if not line.startswith('|'):
+                continue
+            parts = [col.strip() for col in line.split('|') if col.strip()]
+            if not parts:
+                continue
+            if parts[0] in {'Name', 'No.'} or re.fullmatch(r'-+', parts[0]):
+                continue
+            if parts[0].isdigit() and len(parts) >= 2:
+                composers.append((int(parts[0]), parts[1]))
+            else:
+                composers.append((None, parts[0]))
     return composers
 
 
@@ -1945,14 +1968,15 @@ def create_markdown_file(composer_info: Dict, target: Path) -> None:
 
 def main() -> None:
     master = OUTPUT_DIR / 'composers_master_list.md'
-    composers = get_composers_from_file(master)
-    if not composers:
+    composers_with_indices = get_composers_with_indices(master)
+    if not composers_with_indices:
         print('No composers to process.')
         return
     start_index = int(os.getenv('START_INDEX', '1'))
     if start_index < 1:
         start_index = 1
-    for idx, composer in enumerate(composers, start=1):
+    for position, (explicit_idx, composer) in enumerate(composers_with_indices, start=1):
+        idx = explicit_idx or position
         if idx < start_index:
             continue
         slug = slugify(composer)
