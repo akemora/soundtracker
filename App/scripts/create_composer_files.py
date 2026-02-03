@@ -92,6 +92,7 @@ EXTERNAL_DOMAINS = {
 }
 HEADERS = {'User-Agent': 'Soundtracker/1.0'}
 REQUEST_TIMEOUT = 10
+DEEP_RESEARCH_TIMEOUT = int(os.getenv('DEEP_RESEARCH_TIMEOUT', '60'))
 POSTER_LIMIT = int(os.getenv('POSTER_LIMIT', '0'))
 POSTER_SEARCH_RESULTS = 2
 POSTER_WEB_FALLBACK = os.getenv('POSTER_WEB_FALLBACK', '1') == '1'
@@ -101,6 +102,12 @@ TMDB_IMAGE = 'https://image.tmdb.org/t/p/w500'
 PPLX_API_KEY = os.getenv('PPLX_API_KEY') or os.getenv('PERPLEXITY_API_KEY')
 PPLX_MODEL = os.getenv('PPLX_MODEL', 'sonar')
 PPLX_API = 'https://api.perplexity.ai/v2'
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.1-mini')
+OPENAI_API = os.getenv('OPENAI_API', 'https://api.openai.com/v1/chat/completions')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
+DEEP_RESEARCH_ENABLED = os.getenv('DEEP_RESEARCH_ENABLED', '1') == '1'
 EXTERNAL_SNIPPET_MAX_CHARS = int(os.getenv('EXTERNAL_SNIPPET_MAX_CHARS', '700'))
 EXTERNAL_SNIPPET_SOURCES = int(os.getenv('EXTERNAL_SNIPPET_SOURCES', '12'))
 MIN_PARAGRAPH_LEN = int(os.getenv('MIN_PARAGRAPH_LEN', '50'))
@@ -397,7 +404,7 @@ def search_perplexity(query: str, num: int = 5) -> List[str]:
                 'Content-Type': 'application/json',
             },
             json=payload,
-            timeout=REQUEST_TIMEOUT,
+            timeout=DEEP_RESEARCH_TIMEOUT,
         )
         resp.raise_for_status()
         data = resp.json()
@@ -422,6 +429,242 @@ def search_perplexity(query: str, num: int = 5) -> List[str]:
             if cleaned not in urls:
                 urls.append(cleaned)
     return urls[:num]
+
+
+def _safe_json_loads(content: str) -> Optional[Dict]:
+    if not content:
+        return None
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        pass
+    match = re.search(r"\{.*\}", content, re.DOTALL)
+    if not match:
+        return None
+    try:
+        return json.loads(match.group(0))
+    except json.JSONDecodeError:
+        return None
+
+
+def _dedupe_list(items: List[str]) -> List[str]:
+    seen = set()
+    deduped = []
+    for item in items:
+        if not item or item in seen:
+            continue
+        seen.add(item)
+        deduped.append(item)
+    return deduped
+
+
+def _normalize_citations_text(text: str, citations: List[str]) -> str:
+    if not text or not citations:
+        return text
+    cleaned = re.sub(r"\s*\[\d+\]", "", text)
+    blocks = cleaned.split("\n\n")
+    total = len(citations)
+    cite_index = 0
+    normalized_blocks: List[str] = []
+    for block in blocks:
+        stripped = block.strip()
+        if not stripped:
+            normalized_blocks.append(block)
+            continue
+        if stripped.startswith("#") or stripped.startswith("|"):
+            normalized_blocks.append(block)
+            continue
+        lines = block.splitlines()
+        content_lines = [line for line in lines if line.strip()]
+        if content_lines and all(line.strip().startswith("- ") for line in content_lines):
+            new_lines = []
+            for line in lines:
+                if not line.strip():
+                    new_lines.append(line)
+                    continue
+                marker = f"[{(cite_index % total) + 1}]"
+                cite_index += 1
+                new_lines.append(f"{line} {marker}")
+            normalized_blocks.append("\n".join(new_lines))
+            continue
+        marker = f"[{(cite_index % total) + 1}]"
+        cite_index += 1
+        normalized_blocks.append(f"{block} {marker}")
+    return "\n\n".join(normalized_blocks)
+
+
+def _openai_outline(composer: str) -> Optional[str]:
+    if not OPENAI_API_KEY:
+        return None
+    payload = {
+        'model': OPENAI_MODEL,
+        'messages': [
+            {
+                'role': 'system',
+                'content': (
+                    'Eres un investigador musical. Devuelve un esquema corto con los '
+                    'puntos clave que no deben faltar en un informe académico sobre el compositor, '
+                    'incluyendo hitos, colaboraciones, técnicas, obras clave y contexto histórico. '
+                    'Responde en viñetas.'
+                ),
+            },
+            {'role': 'user', 'content': f'Compositor: {composer}'},
+        ],
+        'max_tokens': 450,
+        'temperature': 0.2,
+    }
+    try:
+        resp = requests.post(
+            OPENAI_API,
+            headers={
+                'Authorization': f'Bearer {OPENAI_API_KEY}',
+                'Content-Type': 'application/json',
+            },
+            json=payload,
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        return None
+    choices = data.get('choices') or []
+    if not choices:
+        return None
+    content = (choices[0].get('message') or {}).get('content') or ''
+    return content.strip() or None
+
+
+def _gemini_outline(composer: str) -> Optional[str]:
+    if not GEMINI_API_KEY:
+        return None
+    prompt = (
+        'Genera un esquema conciso en viñetas con los puntos clave que deben '
+        'aparecer en un informe académico sobre este compositor: hitos, colaboraciones, '
+        'técnicas, obras clave, contexto histórico, legado y datos humanos.\n'
+        f'Compositor: {composer}'
+    )
+    payload = {
+        'contents': [
+            {'role': 'user', 'parts': [{'text': prompt}]},
+        ],
+        'generationConfig': {
+            'temperature': 0.2,
+            'maxOutputTokens': 512,
+        },
+    }
+    try:
+        resp = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
+            params={'key': GEMINI_API_KEY},
+            json=payload,
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        return None
+    candidates = data.get('candidates') or []
+    if not candidates:
+        return None
+    parts = (candidates[0].get('content') or {}).get('parts') or []
+    text = ''.join(part.get('text', '') for part in parts)
+    return text.strip() or None
+
+
+def _build_research_outline(composer: str) -> str:
+    outlines = []
+    openai_outline = _openai_outline(composer)
+    if openai_outline:
+        outlines.append(f"GPT 5.1 mini:\n{openai_outline}")
+    gemini_outline = _gemini_outline(composer)
+    if gemini_outline:
+        outlines.append(f"Gemini 2.5 flash:\n{gemini_outline}")
+    return "\n\n".join(outlines)
+
+
+def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
+    if not (DEEP_RESEARCH_ENABLED and PPLX_API_KEY):
+        return None
+    outline = _build_research_outline(composer)
+    system_prompt = (
+        'Eres un investigador musical. Responde SOLO con JSON válido. '
+        'Estructura: {"biography": {"text": "..."}, '
+        '"style": {"text": "..."}, "facts": {"text": "..."}, '
+        '"citations": ["url", ...]}. '
+        'Texto en español. '
+        'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta), '
+        'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
+        '(cronología, colaboraciones, obras clave). '
+        'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
+        'facts.text: 8-12 ítems en viñetas sobre hábitos, método de trabajo, excentricidades '
+        'o rasgos humanos. '
+        'Cada párrafo o ítem debe terminar con citas [1], [2] usando la lista global "citations". '
+        'Usa fuentes fiables y no inventes. '
+        'Si hay incertidumbre, indícalo.'
+    )
+    user_prompt = f"Compositor: {composer}"
+    if outline:
+        user_prompt += f"\n\nGuía adicional (contraste GPT/Gemini):\n{outline}"
+    payload = {
+        'model': PPLX_MODEL,
+        'messages': [
+            {'role': 'system', 'content': system_prompt},
+            {'role': 'user', 'content': user_prompt},
+        ],
+        'max_tokens': 2400,
+        'temperature': 0.2,
+        'search_mode': 'deep',
+    }
+    data = None
+    try:
+        resp = requests.post(
+            f"{PPLX_API}/chat/completions",
+            headers={
+                'Authorization': f"Bearer {PPLX_API_KEY}",
+                'Content-Type': 'application/json',
+            },
+            json=payload,
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        payload.pop('search_mode', None)
+        try:
+            resp = requests.post(
+                f"{PPLX_API}/chat/completions",
+                headers={
+                    'Authorization': f"Bearer {PPLX_API_KEY}",
+                    'Content-Type': 'application/json',
+                },
+                json=payload,
+                timeout=DEEP_RESEARCH_TIMEOUT,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+        except (requests.RequestException, ValueError):
+            return None
+    content = ''
+    choices = data.get('choices') or []
+    if choices:
+        content = (choices[0].get('message') or {}).get('content') or ''
+    parsed = _safe_json_loads(content)
+    if not parsed:
+        return None
+    citations = parsed.get('citations') or data.get('citations') or []
+    citations = _dedupe_list([c for c in citations if isinstance(c, str)])
+    biography = (parsed.get('biography') or {}).get('text') or ''
+    style = (parsed.get('style') or {}).get('text') or ''
+    facts = (parsed.get('facts') or {}).get('text') or ''
+    biography = _normalize_citations_text(biography, citations)
+    style = _normalize_citations_text(style, citations)
+    facts = _normalize_citations_text(facts, citations)
+    return {
+        'biography': biography.strip(),
+        'style': style.strip(),
+        'facts': facts.strip(),
+        'citations': citations,
+    }
 
 
 def search_web(query: str, num: int = 3, pause: float = 1.2) -> List[str]:
@@ -1358,6 +1601,31 @@ def fetch_wikidata_awards(qid: str) -> List[Dict]:
     return awards
 
 
+def fetch_wikidata_country(qid: str) -> Optional[str]:
+    query = f"""
+    SELECT ?countryLabel WHERE {{
+      wd:{qid} wdt:P27 ?country .
+      SERVICE wikibase:label {{ bd:serviceParam wikibase:language "es,en". }}
+    }}
+    LIMIT 1
+    """
+    try:
+        resp = requests.get(
+            'https://query.wikidata.org/sparql',
+            params={'format': 'json', 'query': query},
+            headers=HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return None
+    items = data.get('results', {}).get('bindings', [])
+    if not items:
+        return None
+    return items[0].get('countryLabel', {}).get('value')
+
+
 def get_complete_filmography(composer: str, composer_folder: Path) -> List[Dict]:
     films: List[Dict] = []
     tmdb_films: List[Dict] = []
@@ -1777,6 +2045,9 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
                 elif photo_url.startswith('/'):
                     photo_url = f"https://en.wikipedia.org{photo_url}"
                 info['photo'] = download_image(photo_url, photo_path) or photo_url
+    qid = get_wikidata_qid(composer)
+    if qid and not info.get('country'):
+        info['country'] = fetch_wikidata_country(qid)
     known_for_titles: List[str] = []
     person_id = None
     if TMDB_API_KEY:
@@ -1824,50 +2095,68 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
                         })
     info['external_sources'] = get_external_sources(composer)
     info['external_snippets'] = get_external_snippets(composer, info['external_sources'])
-    if info.get('biography'):
+    deep_bio = False
+    deep_style = False
+    deep_facts = False
+    deep_profile = get_deep_research_profile(composer)
+    if deep_profile:
+        if deep_profile.get('biography'):
+            info['biography'] = deep_profile['biography']
+            deep_bio = True
+        if deep_profile.get('style'):
+            info['style'] = deep_profile['style']
+            deep_style = True
+        if deep_profile.get('facts'):
+            info['anecdotes'] = deep_profile['facts']
+            deep_facts = True
+        if deep_profile.get('citations'):
+            info['citations'] = deep_profile['citations']
+    if info.get('biography') and not deep_bio:
         info['biography'] = ensure_spanish(info['biography'])
-    if info.get('style'):
+    if info.get('style') and not deep_style:
         info['style'] = ensure_spanish(info['style'])
-    if info.get('anecdotes'):
+    if info.get('anecdotes') and not deep_facts:
         info['anecdotes'] = ensure_spanish(info['anecdotes'])
     style_text = info.get('style', '')
-    if not style_text:
-        style_text = select_snippet_by_keywords(info['external_snippets'], STYLE_HINTS) or ''
-    if len(style_text) < 120:
-        style_text = build_enriched_text(
-            composer,
-            style_text,
-            info['external_snippets'],
-            STYLE_HINTS,
-            f"{composer} estilo musical compositor",
-        )
-    if biography and style_text and style_text in biography:
-        style_text = ''
-    if not style_text and info['external_snippets']:
-        style_text = info['external_snippets'][0].get('text', '')
-    if style_text:
-        info['style'] = style_text
-    else:
-        info['style'] = "Información de estilo musical en proceso de documentación."
+    if not deep_style:
+        if not style_text:
+            style_text = select_snippet_by_keywords(info['external_snippets'], STYLE_HINTS) or ''
+        if len(style_text) < 120:
+            style_text = build_enriched_text(
+                composer,
+                style_text,
+                info['external_snippets'],
+                STYLE_HINTS,
+                f"{composer} estilo musical compositor",
+            )
+        if biography and style_text and style_text in biography:
+            style_text = ''
+        if not style_text and info['external_snippets']:
+            style_text = info['external_snippets'][0].get('text', '')
+        if style_text:
+            info['style'] = style_text
+        else:
+            info['style'] = "Información de estilo musical en proceso de documentación."
     anecdote_text = info.get('anecdotes', '')
-    if not anecdote_text:
-        anecdote_text = select_snippet_by_keywords(info['external_snippets'], ANECDOTE_HINTS) or ''
-    if len(anecdote_text) < 120:
-        anecdote_text = build_enriched_text(
-            composer,
-            anecdote_text,
-            info['external_snippets'],
-            ANECDOTE_HINTS,
-            f"{composer} vida personal curiosidades",
-        )
-    if biography and anecdote_text and anecdote_text in biography:
-        anecdote_text = ''
-    if not anecdote_text and info['external_snippets']:
-        anecdote_text = info['external_snippets'][-1].get('text', '')
-    if anecdote_text:
-        info['anecdotes'] = anecdote_text
-    else:
-        info['anecdotes'] = "Información de anécdotas y curiosidades en proceso de documentación."
+    if not deep_facts:
+        if not anecdote_text:
+            anecdote_text = select_snippet_by_keywords(info['external_snippets'], ANECDOTE_HINTS) or ''
+        if len(anecdote_text) < 120:
+            anecdote_text = build_enriched_text(
+                composer,
+                anecdote_text,
+                info['external_snippets'],
+                ANECDOTE_HINTS,
+                f"{composer} vida personal curiosidades",
+            )
+        if biography and anecdote_text and anecdote_text in biography:
+            anecdote_text = ''
+        if not anecdote_text and info['external_snippets']:
+            anecdote_text = info['external_snippets'][-1].get('text', '')
+        if anecdote_text:
+            info['anecdotes'] = anecdote_text
+        else:
+            info['anecdotes'] = "Información de anécdotas y curiosidades en proceso de documentación."
     return info
 
 
@@ -1892,11 +2181,34 @@ def format_film_title(entry: Dict[str, Optional[str]]) -> str:
     return original or spanish
 
 
+def escape_table_cell(value: str) -> str:
+    return value.replace('|', '\\|')
+
+
+def is_academy_award(award_name: str) -> bool:
+    if not award_name:
+        return False
+    lowered = award_name.lower()
+    return any(keyword in lowered for keyword in ('academy', 'oscar', 'academia'))
+
+
+def format_award_label(award_name: str, status: str) -> str:
+    if is_academy_award(award_name):
+        translated = {'Win': 'Ganador', 'Nomination': 'Nominación'}.get(status, status)
+        if translated == 'Ganador':
+            return 'Premio de la Academia'
+        if translated == 'Nominación':
+            return 'Nominación de la Academia'
+    return award_name
+
+
 def create_markdown_file(composer_info: Dict, target: Path) -> None:
     lines = [f"# {composer_info['name']}\n"]
     photo = composer_info.get('photo')
     if photo:
         lines.append(f"![{composer_info['name']}]({format_link(photo, target.parent)})\n")
+    lines.append("## País o nacionalidad\n")
+    lines.append(f"{composer_info.get('country') or 'No disponible.'}\n")
     biography = composer_info.get('biography')
     if biography:
         lines.append("## Biografía\n")
@@ -1907,7 +2219,7 @@ def create_markdown_file(composer_info: Dict, target: Path) -> None:
         lines.append(f"{style}\n")
     anecdotes = composer_info.get('anecdotes')
     if anecdotes:
-        lines.append("## Anécdotas y curiosidades\n")
+        lines.append("## Datos curiosos y técnica de composición\n")
         lines.append(f"{anecdotes}\n")
     films = composer_info.get('top_10_films', [])
     if films:
@@ -1915,7 +2227,9 @@ def create_markdown_file(composer_info: Dict, target: Path) -> None:
         for idx, film in enumerate(films, 1):
             entry = film.get('entry') or {}
             title_display = format_film_title(entry)
-            lines.append(f"{idx}. ***{title_display}***")
+            year = entry.get('year')
+            year_text = f" ({year})" if year else ""
+            lines.append(f"{idx}. ***{title_display}***{year_text}")
             poster = film.get('poster')
             if poster:
                 lines.append(f"    * **Póster:** [link]({format_link(poster, target.parent)})")
@@ -1923,16 +2237,23 @@ def create_markdown_file(composer_info: Dict, target: Path) -> None:
     filmography = composer_info.get('filmography', [])
     if filmography:
         lines.append("## Filmografía completa\n")
+        lines.append("| Año | Título | Título original | Póster |")
+        lines.append("| --- | --- | --- | --- |")
         for entry in filmography:
-            title = format_film_title(entry)
-            year = entry.get('year')
-            poster = entry.get('poster_local')
-            line = f"- {title}"
-            if year:
-                line += f" ({year})"
+            year = str(entry.get('year') or '—')
+            title_es = entry.get('title_es') or entry.get('title') or entry.get('original_title') or '—'
+            original = entry.get('original_title') or entry.get('title') or '—'
+            if title_es == original:
+                original = '—'
+            poster = entry.get('poster_local') or entry.get('poster_url')
             if poster:
-                line += f" · [Póster]({format_link(poster, target.parent)})"
-            lines.append(line)
+                poster_cell = f"[Póster]({format_link(poster, target.parent)})"
+            else:
+                poster_cell = '—'
+            lines.append(
+                f"| {escape_table_cell(year)} | {escape_table_cell(title_es)} | "
+                f"{escape_table_cell(original)} | {escape_table_cell(poster_cell)} |"
+            )
         lines.append('')
     awards = composer_info.get('awards', [])
     if awards:
@@ -1943,13 +2264,22 @@ def create_markdown_file(composer_info: Dict, target: Path) -> None:
             if award.get('year'):
                 parts.append(str(award['year']))
             if award.get('award'):
-                parts.append(award['award'])
+                label = format_award_label(award['award'], award.get('status', ''))
+                parts.append(label)
             if award.get('film'):
                 parts.append(f"por *{award['film']}*")
             if award.get('status'):
-                parts.append(f"({status_map.get(award['status'], award['status'])})")
+                translated = status_map.get(award['status'], award['status'])
+                if not is_academy_award(award.get('award', '')):
+                    parts.append(f"({translated})")
             if parts:
                 lines.append(f"* {' – '.join(parts)}")
+        lines.append('')
+    citations = composer_info.get('citations', [])
+    if citations:
+        lines.append("## Citas\n")
+        for idx, url in enumerate(citations, 1):
+            lines.append(f"[{idx}]: {url}")
         lines.append('')
     sources = composer_info.get('external_sources', [])
     if sources:
