@@ -344,7 +344,7 @@ class ComposerPipeline:
                 domain=domain,
             ))
 
-        info.external_sources = sources
+        info.external_sources.extend(sources)
 
 
 def process_composers_from_list(
