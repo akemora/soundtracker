@@ -126,10 +126,15 @@ class ComposerPipeline:
         logger.debug("Collecting biography for %s", info.name)
 
         bio_data = self.biography_service.get_biography(info.name)
-        info.biography = bio_data.get("biography")
-        info.style = bio_data.get("style")
-        info.anecdotes = bio_data.get("anecdotes")
-        info.image_url = bio_data.get("image_url")
+        if isinstance(bio_data, dict):
+            info.biography = bio_data.get("biography")
+            info.style = bio_data.get("style")
+            info.anecdotes = bio_data.get("anecdotes")
+            info.image_url = bio_data.get("image_url")
+        else:
+            info.biography = bio_data
+            info.style = self.biography_service.get_musical_style(info.name)
+            info.anecdotes = self.biography_service.get_anecdotes(info.name)
 
         # Get TMDB profile image if available
         if not info.image_url and settings.is_tmdb_available:
