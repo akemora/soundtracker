@@ -94,8 +94,19 @@ python scripts/build_database.py
 python scripts/update_countries.py
 
 # Gestionar master list
+# --sync-check: valida consistencia entre master list y outputs
+# --add/--remove/--rename: operaciones CRUD
+# --rebuild-index: reconstruye desde outputs
+# --renumber: reordena por año de nacimiento
 python scripts/manage_master_list.py --sync-check
+python scripts/manage_master_list.py --sync-check --json
 python scripts/manage_master_list.py --add "Nombre" --birth 1980 --country Spain
+python scripts/manage_master_list.py --add "Nombre" --birth 1980 --country Spain --generate
+python scripts/manage_master_list.py --remove 053 --archive
+python scripts/manage_master_list.py --remove 053 --permanent
+python scripts/manage_master_list.py --rename 053 "Nuevo Nombre"
+python scripts/manage_master_list.py --rebuild-index
+python scripts/manage_master_list.py --renumber
 ```
 
 ### Docker
