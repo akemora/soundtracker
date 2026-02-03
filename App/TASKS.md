@@ -1,6 +1,6 @@
 # TASKS.md - Lista de Tareas de Desarrollo
 
-**Control de Progreso del Proyecto SOUNDTRACKER** | v1.0 | 2026-02-03
+**Control de Progreso del Proyecto SOUNDTRACKER** | v1.2 | 2026-02-03
 
 ---
 
@@ -74,21 +74,104 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 0.3.3 | Crear estructura `tests/` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
 | 0.3.4 | Crear `tests/conftest.py` vacío | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
 
-### 0.4 Gestión de Master List
+### 0.4 Gestor de Master List (Sincronización Bidireccional)
+
+> **IMPORTANTE**: La master list y los archivos de output deben estar SIEMPRE sincronizados.
+> Cambios en uno deben reflejarse en el otro. Nunca borrar datos, solo archivar.
+
+#### 0.4.1 Script Principal: `manage_master_list.py`
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 0.4.1 | Documentar formato de `composers_master_list.md` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 0.4.2 | Crear `scripts/validate_master_list.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 0.4.3 | Implementar validación de formato de tabla | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 0.4.4 | Implementar detección de duplicados | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 0.4.5 | Implementar validación de años (birth/death) | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 0.4.6 | Crear `scripts/sync_master_list.py` | **Claude** | `sonnet` | 🟡 | `[ ]` | |
-| 0.4.7 | Verificar consistencia master list ↔ archivos generados | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 0.4.8 | Detectar compositores sin archivo generado | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 0.4.9 | Detectar archivos huérfanos (no en master list) | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 0.4.10 | Crear `scripts/add_composer.py` | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 0.4.11 | Implementar añadir compositor a master list | **Claude** | `haiku` | 🟢 | `[ ]` | |
-| 0.4.12 | Implementar reordenación automática por año | **Claude** | `haiku` | 🟢 | `[ ]` | |
+| 0.4.1.1 | Crear `scripts/manage_master_list.py` con estructura base | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 0.4.1.2 | Implementar CLI con argparse (--sync-check, --add, --remove, etc.) | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.1.3 | Implementar clase `MasterListManager` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 0.4.1.4 | Implementar clase `OutputFilesManager` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 0.4.1.5 | Implementar clase `SyncEngine` (orquestador) | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+
+#### 0.4.2 Parsing y Validación de Master List
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.2.1 | Parsear tabla Markdown a lista de diccionarios | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.2.2 | Validar formato de tabla (columnas requeridas) | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.2.3 | Validar años de nacimiento/muerte (rangos lógicos) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.2.4 | Detectar duplicados por nombre (fuzzy matching) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.2.5 | Detectar duplicados por años (mismo compositor) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.2.6 | Generar slug normalizado para cada compositor | **Claude** | `haiku` | 🔴 | `[ ]` | |
+
+#### 0.4.3 Parsing de Archivos Output
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.3.1 | Escanear `outputs/` para archivos `NNN_*.md` | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.3.2 | Extraer índice y slug de nombre de archivo | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.3.3 | Parsear header del Markdown para obtener nombre real | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.3.4 | Detectar carpetas de assets asociadas (`NNN_slug/`) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.3.5 | Contar pósters por compositor | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+
+#### 0.4.4 Comando: `--sync-check` (Verificación de Estado)
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.4.1 | Comparar master list vs archivos output | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 0.4.4.2 | Detectar compositores en lista SIN archivo output | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.4.3 | Detectar archivos output SIN entrada en master list | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.4.4 | Detectar índices duplicados (001, 001) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.4.5 | Detectar huecos en índices (001, 003 sin 002) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.4.6 | Detectar discrepancias de nombre (lista vs archivo) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.4.7 | Generar reporte de sincronización (JSON/texto) | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+
+#### 0.4.5 Comando: `--add` (Añadir Compositor)
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.5.1 | Validar que el compositor no existe ya | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.5.2 | Calcular siguiente índice disponible | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.5.3 | Insertar en master list ordenado por año de nacimiento | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.5.4 | Crear archivo Markdown base (`NNN_slug.md`) | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.5.5 | Crear carpeta de assets (`NNN_slug/posters/`) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.5.6 | Opción `--generate`: ejecutar pipeline para poblar datos | **Claude** | `haiku` | 🟡 | `[ ]` | |
+
+#### 0.4.6 Comando: `--remove` (Eliminar/Archivar Compositor)
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.6.1 | Crear directorio `outputs/_archived/` si no existe | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.6.2 | Mover archivo Markdown a `_archived/` con timestamp | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.6.3 | Mover carpeta de assets a `_archived/` | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.6.4 | Eliminar entrada de master list | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 0.4.6.5 | Opción `--permanent`: eliminar sin archivar (con confirmación) | **Claude** | `haiku` | 🟢 | `[ ]` | |
+| 0.4.6.6 | Log de operaciones de archivo | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+
+#### 0.4.7 Comando: `--rebuild-index` (Outputs → Master List)
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.7.1 | Leer todos los archivos output existentes | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.7.2 | Extraer metadatos (nombre, país, años) de cada archivo | **Claude** | `sonnet` | 🟡 | `[ ]` | |
+| 0.4.7.3 | Generar master list desde archivos (backup de original) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.7.4 | Validar y reportar datos faltantes | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+
+#### 0.4.8 Comando: `--renumber` (Reordenar Índices)
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.8.1 | Ordenar compositores por año de nacimiento | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.8.2 | Renombrar archivos con nuevos índices secuenciales | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.8.3 | Renombrar carpetas de assets | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.8.4 | Actualizar master list con nuevos índices | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.8.5 | Actualizar referencias internas en Markdown (pósters) | **Claude** | `sonnet` | 🟡 | `[ ]` | |
+
+#### 0.4.9 Comando: `--rename` (Renombrar Compositor)
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.9.1 | Actualizar nombre en master list | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.9.2 | Renombrar archivo Markdown | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.9.3 | Renombrar carpeta de assets | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.9.4 | Actualizar header del Markdown | **Claude** | `haiku` | 🟡 | `[ ]` | |
+
+#### 0.4.10 Tests y Documentación
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 0.4.10.1 | Crear `tests/test_manage_master_list.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 0.4.10.2 | Tests para parsing de master list | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 0.4.10.3 | Tests para sincronización | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 0.4.10.4 | Tests para operaciones de archivo | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+| 0.4.10.5 | Documentar uso en README.md | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 0.4.10.6 | Añadir ejemplos de uso en docstrings | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
 
 ### 0.5 Scripts de Actualización (existentes)
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
@@ -609,14 +692,14 @@ Cuando una tarea requiera una IA diferente a la actual:
 
 | Fase | Total Tareas | Completadas | Progreso |
 |------|--------------|-------------|----------|
-| Fase 0 | 29 | 0 | 0% |
+| Fase 0 | 75 | 0 | 0% |
 | Fase 1 | 74 | 0 | 0% |
 | Fase 2 | 22 | 0 | 0% |
 | Fase 3 | 32 | 0 | 0% |
 | Fase 4 | 35 | 0 | 0% |
 | Fase 5 | 37 | 0 | 0% |
 | Fase 6 | 16 | 0 | 0% |
-| **TOTAL** | **245** | **0** | **0%** |
+| **TOTAL** | **291** | **0** | **0%** |
 
 ---
 
@@ -626,6 +709,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 |-------|-------|--------|-------|
 | 2026-02-03 | Documento creado | - | Versión inicial |
 | 2026-02-03 | Añadidas secciones 0.4 y 0.5 | - | +16 tareas: gestión master list y scripts existentes |
+| 2026-02-03 | Expandida sección 0.4 | - | Gestor sincronizado master list ↔ outputs (+46 tareas) |
 
 ---
 
@@ -671,4 +755,4 @@ Cuando una tarea requiera una IA diferente a la actual:
 ---
 
 **Última actualización**: 2026-02-03
-**Versión**: 1.1
+**Versión**: 1.2
