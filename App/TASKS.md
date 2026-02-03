@@ -668,14 +668,14 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 6.1.1 | Crear `backend/Dockerfile` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.1.2 | Configurar imagen Python slim | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.1.3 | Copiar DB y assets | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
-| 6.1.4 | Probar build local | Manual | - | 🔴 | `[ ]` | |
+| 6.1.4 | Probar build local | **Codex** | - | 🔴 | `[x]` | 2026-02-03 |
 
 ### 6.2 Docker Frontend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 6.2.1 | Crear `frontend/Dockerfile` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.2.2 | Configurar build multi-stage | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
-| 6.2.3 | Probar build local | Manual | - | 🔴 | `[ ]` | |
+| 6.2.3 | Probar build local | **Codex** | - | 🔴 | `[x]` | 2026-02-03 |
 
 ### 6.3 Docker Compose
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
@@ -683,7 +683,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 6.3.1 | Crear `docker-compose.yml` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.3.2 | Configurar red entre servicios | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.3.3 | Configurar volúmenes para assets | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
-| 6.3.4 | Probar `docker-compose up` local | Manual | - | 🔴 | `[ ]` | |
+| 6.3.4 | Probar `docker-compose up` local | **Codex** | - | 🔴 | `[x]` | 2026-02-03 |
 
 ### 6.4 CI/CD
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
