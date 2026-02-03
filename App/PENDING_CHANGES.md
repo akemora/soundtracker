@@ -1,5 +1,7 @@
 # Estado y pendientes de `create_composer_files.py`
 
+> Ver plan de desarrollo completo en `App/DEVELOPMENT_PLAN.md`.
+
 ## Estado actual (implementado)
 
 - Generacion de Markdown por compositor con:
