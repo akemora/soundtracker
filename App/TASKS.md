@@ -256,7 +256,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.5.3 | Extraer `fetch_wikipedia_html()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.5.4 | Extraer `fetch_wikipedia_extract()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.5.5 | Extraer `get_wikipedia_image()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
-| 1.5.6 | Crear tests para WikipediaClient | **GPT** | `4o-mini` | 🟡 | `[~]` | |
+| 1.5.6 | Crear tests para WikipediaClient | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.6 Cliente Wikidata
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
