@@ -659,48 +659,48 @@ Cuando una tarea requiera una IA diferente a la actual:
 ## FASE 6: Deploy y CI/CD
 
 **Duración estimada**: 2-3 días
-**Estado**: `[ ]` Pendiente
+**Estado**: `[x]` Completada 2026-02-03
 **Dependencias**: Fase 5 completada
 
 ### 6.1 Docker Backend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 6.1.1 | Crear `backend/Dockerfile` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 6.1.2 | Configurar imagen Python slim | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 6.1.3 | Copiar DB y assets | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
+| 6.1.1 | Crear `backend/Dockerfile` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 6.1.2 | Configurar imagen Python slim | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 6.1.3 | Copiar DB y assets | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.1.4 | Probar build local | Manual | - | 🔴 | `[ ]` | |
 
 ### 6.2 Docker Frontend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 6.2.1 | Crear `frontend/Dockerfile` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 6.2.2 | Configurar build multi-stage | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 6.2.1 | Crear `frontend/Dockerfile` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 6.2.2 | Configurar build multi-stage | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.2.3 | Probar build local | Manual | - | 🔴 | `[ ]` | |
 
 ### 6.3 Docker Compose
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 6.3.1 | Crear `docker-compose.yml` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 6.3.2 | Configurar red entre servicios | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 6.3.3 | Configurar volúmenes para assets | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
+| 6.3.1 | Crear `docker-compose.yml` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 6.3.2 | Configurar red entre servicios | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 6.3.3 | Configurar volúmenes para assets | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 6.3.4 | Probar `docker-compose up` local | Manual | - | 🔴 | `[ ]` | |
 
 ### 6.4 CI/CD
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 6.4.1 | Crear `.github/workflows/ci.yml` | **Claude** | `sonnet` | 🟡 | `[ ]` | |
-| 6.4.2 | Configurar job de lint (Python) | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 6.4.3 | Configurar job de tests (Python) | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 6.4.4 | Configurar job de lint (Frontend) | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 6.4.5 | Configurar job de build (Frontend) | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 6.4.1 | Crear `.github/workflows/ci.yml` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 6.4.2 | Configurar job de lint (Python) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 6.4.3 | Configurar job de tests (Python) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 6.4.4 | Configurar job de lint (Frontend) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 6.4.5 | Configurar job de build (Frontend) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 6.5 Scripts de Deploy
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 6.5.1 | Crear `scripts/deploy.sh` | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 6.5.1 | Crear `scripts/deploy.sh` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 | 6.5.2 | Documentar proceso de deploy | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
 
-**Checkpoint Fase 6**: `[ ]` Completada
+**Checkpoint Fase 6**: `[x]` Completada (2026-02-03)
 
 ---
 
