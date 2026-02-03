@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { LanguageSelector } from "./LanguageSelector";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Header() {
   const t = useTranslations("nav");
@@ -42,7 +43,8 @@ export function Header() {
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           <LanguageSelector />
           <Button variant="outline" size="sm" asChild className="hidden sm:flex">
             <Link href="/composers">{t("composers")}</Link>
