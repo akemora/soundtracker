@@ -641,7 +641,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 5.7.1 | Configurar next/image correctamente | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
-| 5.7.2 | Crear placeholders blur para pósters | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 5.7.2 | Crear placeholders blur para pósters | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 | 5.7.3 | Configurar sizes para responsive | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 | 5.7.4 | Verificar Lighthouse Performance | Manual | - | 🟡 | `[ ]` | |
 

@@ -10,6 +10,9 @@ import { getFilmography } from "@/lib/api";
 import type { FilmDetail, FilmListResponse } from "@/lib/types";
 import { getAssetUrl } from "@/lib/api";
 
+const POSTER_BLUR_DATA_URL =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyJyBoZWlnaHQ9JzMnPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0nZycgeDE9JzAnIHkxPScwJyB4Mj0nMCcgeTI9JzEnPjxzdG9wIG9mZnNldD0nMCUnIHN0b3AtY29sb3I9JyMyYjJiMmInLz48c3RvcCBvZmZzZXQ9JzEwMCUnIHN0b3AtY29sb3I9JyMzYTNhM2EnLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0nMicgaGVpZ2h0PSczJyBmaWxsPSd1cmwoI2cpJy8+PC9zdmc+";
+
 interface FilmographyListProps {
   slug: string;
 }
@@ -140,6 +143,8 @@ function FilmRow({ film }: { film: FilmDetail }) {
                 className="object-cover"
                 sizes="48px"
                 loading="lazy"
+                placeholder="blur"
+                blurDataURL={POSTER_BLUR_DATA_URL}
                 unoptimized
               />
             ) : (
