@@ -586,56 +586,56 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 5.1 Página de Detalle
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.1.1 | Crear `src/app/[locale]/composers/[slug]/page.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.1.2 | Crear `src/components/composers/ComposerDetail.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.1.3 | Implementar sección de foto y bio | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.1.4 | Implementar sección de estilo musical | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.1.5 | Implementar sección de anécdotas | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 5.1.6 | Añadir metadata SEO | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 5.1.1 | Crear `src/app/[locale]/composers/[slug]/page.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.1.2 | Crear `src/components/composers/ComposerDetail.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.1.3 | Implementar sección de foto y bio | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.1.4 | Implementar sección de estilo musical | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.1.5 | Implementar sección de anécdotas | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 5.1.6 | Añadir metadata SEO | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 5.2 Galería Top 10
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.2.1 | Crear `src/components/composers/Top10Gallery.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.2.2 | Implementar grid de pósters | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.2.3 | Implementar badges de ranking | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.2.4 | Crear modal de detalle de película | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.2.5 | Añadir animaciones hover | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 5.2.1 | Crear `src/components/composers/Top10Gallery.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.2.2 | Implementar grid de pósters | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.2.3 | Implementar badges de ranking | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.2.4 | Crear modal de detalle de película | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.2.5 | Añadir animaciones hover | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 5.3 Filmografía
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.3.1 | Crear `src/components/composers/FilmographyList.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.3.2 | Implementar lista con pósters pequeños | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.3.3 | Implementar paginación infinite scroll o botón | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.3.4 | Añadir filtro por década | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 5.3.5 | Optimizar carga de imágenes (lazy loading) | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 5.3.1 | Crear `src/components/composers/FilmographyList.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.3.2 | Implementar lista con pósters pequeños | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.3.3 | Implementar paginación infinite scroll o botón | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.3.4 | Añadir filtro por década | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 5.3.5 | Optimizar carga de imágenes (lazy loading) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 5.4 Premios
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.4.1 | Crear `src/components/composers/AwardsList.tsx` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.4.2 | Implementar badges para Win/Nomination | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.4.3 | Agrupar por tipo de premio | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 5.4.1 | Crear `src/components/composers/AwardsList.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.4.2 | Implementar badges para Win/Nomination | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.4.3 | Agrupar por tipo de premio | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 5.5 Búsqueda Avanzada
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.5.1 | Crear `src/app/[locale]/search/page.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.5.2 | Crear `src/components/search/SearchBar.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.5.3 | Implementar autocompletado (debounced) | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 5.5.4 | Crear `src/components/search/SearchResults.tsx` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 5.5.5 | Crear `src/components/search/FilterPanel.tsx` | **Claude** | `sonnet` | 🟡 | `[ ]` | |
-| 5.5.6 | Implementar filtros (década, premios) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 5.5.1 | Crear `src/app/[locale]/search/page.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.5.2 | Crear `src/components/search/SearchBar.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.5.3 | Implementar autocompletado (debounced) | **Claude** | `opus` | 🔴 | `[ ]` | |
+| 5.5.4 | Crear `src/components/search/SearchResults.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 5.5.5 | Crear `src/components/search/FilterPanel.tsx` | **Claude** | `opus` | 🟡 | `[ ]` | |
+| 5.5.6 | Implementar filtros (década, premios) | **Claude** | `opus` | 🟡 | `[ ]` | |
 
 ### 5.6 Dark Mode
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 5.6.1 | Instalar next-themes | Manual | - | 🟡 | `[ ]` | |
-| 5.6.2 | Configurar ThemeProvider | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 5.6.3 | Crear `src/components/ThemeToggle.tsx` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 5.6.4 | Definir variables dark en Tailwind | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 5.6.5 | Aplicar dark: classes a todos los componentes | **Gemini** | `flash` | 🟡 | `[ ]` | |
+| 5.6.1 | Instalar next-themes | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 5.6.2 | Configurar ThemeProvider | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 5.6.3 | Crear `src/components/ThemeToggle.tsx` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 5.6.4 | Definir variables dark en Tailwind | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 5.6.5 | Aplicar dark: classes a todos los componentes | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 5.7 Optimización de Imágenes
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |

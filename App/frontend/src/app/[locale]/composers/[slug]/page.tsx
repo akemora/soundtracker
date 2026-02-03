@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getComposer } from "@/lib/api";
 import { ComposerDetail } from "@/components/composers/ComposerDetail";
 import { Top10Gallery } from "@/components/composers/Top10Gallery";
+import { FilmographyList } from "@/components/composers/FilmographyList";
 import { AwardsList } from "@/components/composers/AwardsList";
 
 type Props = {
@@ -59,6 +60,16 @@ export default async function ComposerPage({ params }: Props) {
         <section className="mt-12">
           <h2 className="font-display text-2xl font-bold mb-6">{t("top10")}</h2>
           <Top10Gallery films={top10} />
+        </section>
+      )}
+
+      {/* Full Filmography - loaded client-side */}
+      {stats && stats.film_count > 0 && (
+        <section className="mt-12">
+          <h2 className="font-display text-2xl font-bold mb-6">
+            {t("filmography")} ({stats.film_count})
+          </h2>
+          <FilmographyList slug={slug} />
         </section>
       )}
 
