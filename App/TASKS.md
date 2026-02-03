@@ -647,7 +647,9 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 5.7.1 | Configurar next/image correctamente | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 | 5.7.2 | Crear placeholders blur para pósters | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 | 5.7.3 | Configurar sizes para responsive | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
-| 5.7.4 | Verificar Lighthouse Performance | Manual | - | 🟡 | `[ ]` | |
+| 5.7.4 | Verificar Lighthouse Performance | Manual | - | 🟡 | `[x]` | 2026-02-03 |
+
+> **Nota 2026-02-03**: Lighthouse Performance en `http://localhost:3000` con Chromium headless. Score: 0.69 (69). Reporte: `/tmp/lighthouse-report.json`.
 
 ### 5.8 Testing Frontend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
