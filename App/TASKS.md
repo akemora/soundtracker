@@ -509,71 +509,71 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 4.1 Setup Next.js
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 4.1.1 | Crear proyecto Next.js 14 con `npx create-next-app` | Manual | - | 🔴 | `[ ]` | |
-| 4.1.2 | Configurar TypeScript estricto | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 4.1.3 | Instalar Tailwind CSS | Manual | - | 🔴 | `[ ]` | |
-| 4.1.4 | Configurar `tailwind.config.ts` con tokens | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.1.5 | Instalar shadcn/ui | Manual | - | 🔴 | `[ ]` | |
-| 4.1.6 | Configurar componentes base de shadcn | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 4.1.7 | Instalar next-intl | Manual | - | 🟡 | `[ ]` | |
-| 4.1.8 | Configurar i18n (ES/EN) | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 4.1.1 | Crear proyecto Next.js 14 con `npx create-next-app` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.1.2 | Configurar TypeScript estricto | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.1.3 | Instalar Tailwind CSS | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.1.4 | Configurar `tailwind.config.ts` con tokens | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.1.5 | Instalar shadcn/ui | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.1.6 | Configurar componentes base de shadcn | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.1.7 | Instalar next-intl | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 4.1.8 | Configurar i18n (ES/EN) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 4.2 Design Tokens
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 4.2.1 | Definir paleta de colores en Tailwind | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.2.2 | Definir tipografía (Playfair + Inter) | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.2.3 | Definir spacing y border-radius | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 4.2.4 | Definir shadows | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 4.2.5 | Crear `globals.css` con estilos base | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 4.2.1 | Definir paleta de colores en Tailwind | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.2.2 | Definir tipografía (Playfair + Inter) | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.2.3 | Definir spacing y border-radius | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 4.2.4 | Definir shadows | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 4.2.5 | Crear `globals.css` con estilos base | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 
 ### 4.3 Layout Principal
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 4.3.1 | Crear `src/app/[locale]/layout.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.3.2 | Crear `src/components/layout/Header.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.3.3 | Implementar navegación en Header | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.3.4 | Crear `src/components/layout/Footer.tsx` | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 4.3.5 | Añadir selector de idioma | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 4.3.1 | Crear `src/app/[locale]/layout.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.3.2 | Crear `src/components/layout/Header.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.3.3 | Implementar navegación en Header | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.3.4 | Crear `src/components/layout/Footer.tsx` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 4.3.5 | Añadir selector de idioma | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 4.4 API Client
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 4.4.1 | Crear `src/lib/api.ts` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.4.2 | Implementar fetcher base | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.4.3 | Implementar `getComposers()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.4.4 | Implementar `getComposer()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.4.5 | Implementar `search()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.4.6 | Crear `src/lib/types.ts` con interfaces | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 4.4.1 | Crear `src/lib/api.ts` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.4.2 | Implementar fetcher base | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.4.3 | Implementar `getComposers()` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.4.4 | Implementar `getComposer()` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.4.5 | Implementar `search()` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.4.6 | Crear `src/lib/types.ts` con interfaces | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 
 ### 4.5 Página Home
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 4.5.1 | Crear `src/app/[locale]/page.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.5.2 | Implementar Hero section | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.5.3 | Añadir SearchBar en Hero | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.5.4 | Implementar sección de compositores destacados | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.5.5 | Crear mensajes i18n para Home | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 4.5.1 | Crear `src/app/[locale]/page.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.5.2 | Implementar Hero section | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.5.3 | Añadir SearchBar en Hero | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.5.4 | Implementar sección de compositores destacados | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.5.5 | Crear mensajes i18n para Home | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 4.6 Componentes de Compositor
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 4.6.1 | Crear `src/components/composers/ComposerCard.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.6.2 | Implementar imagen, nombre, stats | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.6.3 | Añadir badges de premios | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 4.6.4 | Crear `src/components/composers/ComposerGrid.tsx` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.6.5 | Implementar grid responsivo | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 4.6.6 | Crear skeleton loading | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 4.6.1 | Crear `src/components/composers/ComposerCard.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.6.2 | Implementar imagen, nombre, stats | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.6.3 | Añadir badges de premios | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 4.6.4 | Crear `src/components/composers/ComposerGrid.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.6.5 | Implementar grid responsivo | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.6.6 | Crear skeleton loading | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 4.7 Página Listado
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 4.7.1 | Crear `src/app/[locale]/composers/page.tsx` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.7.2 | Implementar paginación | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 4.7.3 | Añadir ordenación (nombre, películas, premios) | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 4.7.4 | Crear mensajes i18n para Listado | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 4.7.1 | Crear `src/app/[locale]/composers/page.tsx` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.7.2 | Implementar paginación | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 4.7.3 | Añadir ordenación (nombre, películas, premios) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 4.7.4 | Crear mensajes i18n para Listado | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
-**Checkpoint Fase 4**: `[ ]` Completada
+**Checkpoint Fase 4**: `[x]` Completada (2026-02-03)
 
 ---
 
