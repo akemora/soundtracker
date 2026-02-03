@@ -1,0 +1,50 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "search": "Search",
+    "viewAll": "View all",
+    "back": "Back"
+  },
+  "nav": {
+    "home": "Home",
+    "composers": "Composers",
+    "about": "About"
+  },
+  "home": {
+    "title": "SOUNDTRACKER",
+    "subtitle": "Film Composers Encyclopedia",
+    "searchPlaceholder": "Search composers...",
+    "featuredComposers": "Featured Composers",
+    "exploreAll": "Explore All"
+  },
+  "composers": {
+    "title": "Composers",
+    "subtitle": "Explore our collection of film score composers",
+    "films": "films",
+    "awards": "awards",
+    "sortBy": "Sort by",
+    "sortName": "Name",
+    "sortFilms": "Films",
+    "sortAwards": "Awards",
+    "noResults": "No composers found"
+  },
+  "composer": {
+    "biography": "Biography",
+    "filmography": "Filmography",
+    "awards": "Awards",
+    "top10": "Top 10 Soundtracks",
+    "style": "Musical Style",
+    "born": "Born",
+    "died": "Died",
+    "country": "Country"
+  },
+  "search": {
+    "results": "results",
+    "noResults": "No results found for"
+  },
+  "footer": {
+    "description": "Encyclopedia dedicated to the great film score composers.",
+    "rights": "All rights reserved"
+  }
+}

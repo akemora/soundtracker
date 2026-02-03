@@ -1,0 +1,50 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "search": "Buscar",
+    "viewAll": "Ver todos",
+    "back": "Volver"
+  },
+  "nav": {
+    "home": "Inicio",
+    "composers": "Compositores",
+    "about": "Acerca de"
+  },
+  "home": {
+    "title": "SOUNDTRACKER",
+    "subtitle": "Enciclopedia de Compositores de Cine",
+    "searchPlaceholder": "Buscar compositores...",
+    "featuredComposers": "Compositores Destacados",
+    "exploreAll": "Explorar Todos"
+  },
+  "composers": {
+    "title": "Compositores",
+    "subtitle": "Explora nuestra colección de compositores de bandas sonoras",
+    "films": "películas",
+    "awards": "premios",
+    "sortBy": "Ordenar por",
+    "sortName": "Nombre",
+    "sortFilms": "Películas",
+    "sortAwards": "Premios",
+    "noResults": "No se encontraron compositores"
+  },
+  "composer": {
+    "biography": "Biografía",
+    "filmography": "Filmografía",
+    "awards": "Premios",
+    "top10": "Top 10 Bandas Sonoras",
+    "style": "Estilo Musical",
+    "born": "Nacido",
+    "died": "Fallecido",
+    "country": "País"
+  },
+  "search": {
+    "results": "resultados",
+    "noResults": "No se encontraron resultados para"
+  },
+  "footer": {
+    "description": "Enciclopedia dedicada a los grandes compositores de bandas sonoras del cine.",
+    "rights": "Todos los derechos reservados"
+  }
+}
