@@ -281,7 +281,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.8.1 | Crear `src/soundtracker/clients/spotify.py` | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
 | 1.8.2 | Extraer `spotify_get_token()` | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
 | 1.8.3 | Extraer `spotify_search_popularity()` | **Claude** | `haiku` | 🟢 | `[x]` | 2026-02-03 |
-| 1.8.4 | Crear tests para SpotifyClient | **GPT** | `4o-mini` | 🟢 | `[~]` | |
+| 1.8.4 | Crear tests para SpotifyClient | **GPT** | `4o-mini` | 🟢 | `[x]` | 2026-02-03 |
 
 ### 1.9 Cliente de Búsqueda
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
