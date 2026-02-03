@@ -28,8 +28,11 @@ class TestMarkdownGenerator:
             content = output_path.read_text()
 
             assert "# John Williams" in content
+            assert "## País o nacionalidad" in content
             assert "## Biografía" in content
             assert "A legendary composer" in content
+            assert "## Estilo musical" in content
+            assert "## Datos curiosos y técnica de composición" in content
 
     def test_with_photo(self):
         """Test generation with photo."""
@@ -79,7 +82,7 @@ class TestMarkdownGenerator:
             generator.generate(info, output_path)
 
             content = output_path.read_text()
-            assert "## Anécdotas" in content
+            assert "## Datos curiosos y técnica de composición" in content
             assert "1932" in content
 
     def test_with_top10(self):
@@ -101,6 +104,7 @@ class TestMarkdownGenerator:
             content = output_path.read_text()
             assert "## Top 10" in content
             assert "Star Wars" in content
+            assert "(1977)" in content
             assert "E.T." in content
             assert "1." in content
             assert "2." in content
@@ -123,8 +127,9 @@ class TestMarkdownGenerator:
 
             content = output_path.read_text()
             assert "## Filmografía" in content
+            assert "| Año | Título | Título original | Póster |" in content
+            assert "| 1977 |" in content
             assert "Star Wars" in content
-            assert "(1977)" in content
 
     def test_with_awards(self):
         """Test generation with awards."""
@@ -144,9 +149,8 @@ class TestMarkdownGenerator:
 
             content = output_path.read_text()
             assert "## Premios" in content
-            assert "Oscar" in content
+            assert "Premio de la Academia" in content
             assert "1978" in content
-            assert "Ganador" in content
             assert "Grammy" in content
             assert "Nominación" in content
 
@@ -339,5 +343,5 @@ class TestMarkdownFormatting:
             generator.generate(info, output_path)
 
             content = output_path.read_text()
-            assert "Ganador" in content
+            assert "Premio de la Academia" in content
             assert "Nominación" in content

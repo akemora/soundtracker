@@ -33,6 +33,7 @@ class MarkdownGenerator:
         "NOMINATION": "Nominación",
         "nomination": "Nominación",
     }
+    ACADEMY_KEYWORDS = ("academy", "oscar", "academia")
 
     def __init__(
         self,
@@ -89,20 +90,22 @@ class MarkdownGenerator:
             link = format_link(info.photo, base_path)
             lines.append(f"![{info.name}]({link})\n")
 
+        # Country / nationality
+        lines.append("## País o nacionalidad\n")
+        lines.append(f"{info.country or 'No disponible.'}\n")
+
         # Biography
         if info.biography:
             lines.append("## Biografía\n")
             lines.append(f"{info.biography}\n")
 
         # Musical style
-        if info.style:
-            lines.append("## Estilo musical\n")
-            lines.append(f"{info.style}\n")
+        lines.append("## Estilo musical\n")
+        lines.append(f"{info.style or 'No disponible.'}\n")
 
-        # Anecdotes
-        if info.anecdotes:
-            lines.append("## Anécdotas y curiosidades\n")
-            lines.append(f"{info.anecdotes}\n")
+        # Fun facts / technique
+        lines.append("## Datos curiosos y técnica de composición\n")
+        lines.append(f"{info.anecdotes or 'No disponible.'}\n")
 
         # Top 10
         if info.top_10:
@@ -144,7 +147,8 @@ class MarkdownGenerator:
 
         for idx, film in enumerate(films, 1):
             title_display = format_film_title(film.original_title, film.title_es)
-            lines.append(f"{idx}. ***{title_display}***")
+            year = f" ({film.year})" if film.year else ""
+            lines.append(f"{idx}. ***{title_display}***{year}")
 
             poster = film.poster_local or film.poster_url
             if poster:
@@ -174,19 +178,28 @@ class MarkdownGenerator:
         if self.max_filmography:
             film_list = films[: self.max_filmography]
 
+        lines.append("| Año | Título | Título original | Póster |")
+        lines.append("| --- | --- | --- | --- |")
+
         for film in film_list:
-            title = format_film_title(film.original_title, film.title_es)
-            line = f"- {title}"
-
-            if film.year:
-                line += f" ({film.year})"
-
+            year = str(film.year) if film.year else "—"
+            title_es = film.title_es or film.title or film.original_title or "—"
+            original = film.original_title or film.title or "—"
+            if title_es == original:
+                original = "—"
             poster = film.poster_local or film.poster_url
             if poster:
                 link = format_link(poster, base_path)
-                line += f" · [Póster]({link})"
+                poster_cell = f"[Póster]({link})"
+            else:
+                poster_cell = "—"
 
-            lines.append(line)
+            lines.append(
+                f"| {self._escape_table_cell(year)} | "
+                f"{self._escape_table_cell(title_es)} | "
+                f"{self._escape_table_cell(original)} | "
+                f"{self._escape_table_cell(poster_cell)} |"
+            )
 
         lines.append("")
         return lines
@@ -208,19 +221,45 @@ class MarkdownGenerator:
             if award.year:
                 parts.append(str(award.year))
             if award.award:
-                parts.append(award.award)
+                is_academy = self._is_academy_award(award.award)
+                parts.append(self._format_award_label(award.award, award.status))
+            else:
+                is_academy = False
+            if award.category:
+                parts.append(award.category)
             if award.film:
                 parts.append(f"por *{award.film}*")
             if award.status:
                 status_str = award.status.value if hasattr(award.status, "value") else str(award.status)
                 translated = self.STATUS_MAP.get(status_str, status_str)
-                parts.append(f"({translated})")
+                if not is_academy:
+                    parts.append(f"({translated})")
 
             if parts:
                 lines.append(f"* {' – '.join(parts)}")
 
         lines.append("")
         return lines
+
+    def _is_academy_award(self, award_name: str) -> bool:
+        """Check if award is an Academy Award (Oscar)."""
+        return any(keyword in award_name.lower() for keyword in self.ACADEMY_KEYWORDS)
+
+    def _format_award_label(self, award_name: str, status: object) -> str:
+        """Format award label, mapping Academy wins/nominations."""
+        if self._is_academy_award(award_name):
+            status_str = status.value if hasattr(status, "value") else str(status)
+            translated = self.STATUS_MAP.get(status_str, status_str)
+            if translated == "Ganador":
+                return "Premio de la Academia"
+            if translated == "Nominación":
+                return "Nominación de la Academia"
+        return award_name
+
+    @staticmethod
+    def _escape_table_cell(value: str) -> str:
+        """Escape pipes in Markdown table cells."""
+        return value.replace("|", "\\|")
 
     def _build_sources(
         self,
