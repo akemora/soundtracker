@@ -397,7 +397,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 2.2.7 | Implementar `parse_awards()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 2.2.8 | Implementar `parse_sources()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 | 2.2.9 | Implementar `extract_photo_path()` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
-| 2.2.10 | Crear tests para parser | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 2.2.10 | Crear tests para parser | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 2.3 Script ETL
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
