@@ -698,7 +698,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 6.5.1 | Crear `scripts/deploy.sh` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
-| 6.5.2 | Documentar proceso de deploy | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 6.5.2 | Documentar proceso de deploy | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 **Checkpoint Fase 6**: `[x]` Completada (2026-02-03)
 
