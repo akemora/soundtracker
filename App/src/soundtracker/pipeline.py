@@ -135,6 +135,11 @@ class ComposerPipeline:
             info.biography = bio_data
             info.style = self.biography_service.get_musical_style(info.name)
             info.anecdotes = self.biography_service.get_anecdotes(info.name)
+            if not info.anecdotes:
+                info.anecdotes = self.biography_service.derive_fun_facts(
+                    info.biography or "",
+                    info.style or "",
+                )
 
         # Get TMDB profile image if available
         if not info.image_url and settings.is_tmdb_available:

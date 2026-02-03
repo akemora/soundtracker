@@ -70,6 +70,27 @@ ANECDOTE_HINTS = [
     "murió",
 ]
 
+FUN_FACT_HINTS = [
+    "premio",
+    "nomin",
+    "gan",
+    "oscar",
+    "academia",
+    "compuso",
+    "compositor",
+    "orquesta",
+    "orquestal",
+    "tema",
+    "melod",
+    "colabor",
+    "trabaj",
+    "director",
+    "dirig",
+    "innov",
+    "pioner",
+    "destac",
+]
+
 
 class BiographyService:
     """Service for fetching and assembling composer biographies.
@@ -239,6 +260,55 @@ class BiographyService:
             f"{composer} compositor curiosidades vida personal",
             ANECDOTE_HINTS,
         )
+
+    def derive_fun_facts(self, biography: str, style: str) -> str:
+        """Derive fun facts from available biography/style text.
+
+        Args:
+            biography: Biography text.
+            style: Musical style text.
+
+        Returns:
+            Short facts text or empty string.
+        """
+        for text in [style, biography]:
+            selected = self._select_sentences(text, FUN_FACT_HINTS, max_sentences=2)
+            if selected:
+                return "\n\n".join(selected)
+        return ""
+
+    def _select_sentences(
+        self,
+        text: str,
+        keywords: list[str],
+        max_sentences: int = 2,
+    ) -> list[str]:
+        """Select sentences containing any keyword.
+
+        Args:
+            text: Source text.
+            keywords: Keywords to match.
+            max_sentences: Maximum number of sentences to return.
+
+        Returns:
+            List of selected sentences.
+        """
+        if not text:
+            return []
+
+        sentences = re.split(r"(?<=[.!?])\s+", text.strip())
+        selected: list[str] = []
+
+        for sentence in sentences:
+            lowered = sentence.lower()
+            if any(keyword in lowered for keyword in keywords):
+                cleaned = self._clean_text(sentence)
+                if len(cleaned) >= self.min_paragraph_len:
+                    selected.append(cleaned)
+            if len(selected) >= max_sentences:
+                break
+
+        return selected
 
     def _extract_section(self, html: str, keywords: list[str]) -> str:
         """Extract a section from HTML based on heading keywords.
