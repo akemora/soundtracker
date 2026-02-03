@@ -130,6 +130,8 @@ function FilmDetailModal({ film }: { film: FilmDetail }) {
             alt={film.title}
             fill
             className="object-cover"
+            sizes="(max-width: 640px) 100vw, 200px"
+            priority
           />
         </div>
       )}
