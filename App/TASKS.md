@@ -58,15 +58,17 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 0.2 Configuración del Proyecto
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 0.2.1 | Crear `pyproject.toml` con metadata del proyecto | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 0.2.2 | Configurar dependencias en pyproject.toml | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 0.2.3 | Configurar `[tool.ruff]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 0.2.4 | Configurar `[tool.black]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 0.2.5 | Configurar `[tool.mypy]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 0.2.6 | Configurar `[tool.pytest]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 0.2.7 | Crear `.pre-commit-config.yaml` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 0.2.8 | Crear `.env.example` con todas las variables | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
-| 0.2.9 | Actualizar `.gitignore` | **GPT** | `4o-mini` | 🟢 | `[ ]` | |
+| 0.2.1 | Crear `pyproject.toml` con metadata del proyecto | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 0.2.2 | Configurar dependencias en pyproject.toml | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 0.2.3 | Configurar `[tool.ruff]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 0.2.4 | Configurar `[tool.black]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 0.2.5 | Configurar `[tool.mypy]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 0.2.6 | Configurar `[tool.pytest]` en pyproject.toml | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 0.2.7 | Crear `.pre-commit-config.yaml` | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
+| 0.2.8 | Crear `.env.example` con todas las variables | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 0.2.9 | Actualizar `.gitignore` | **GPT** | `4o-mini` | 🟢 | `[x]` | 2026-02-03 |
+
+> **Resultados 0.2**: Creados pyproject.toml (metadata + deps + tools), .pre-commit-config.yaml, .env.example, .gitignore
 
 ### 0.3 Estructura de Directorios
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
