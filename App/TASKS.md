@@ -291,7 +291,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.9.3 | Extraer `search_web()` (Google) | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.9.4 | Extraer `search_duckduckgo()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.9.5 | Implementar fallback chain en SearchClient | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
-| 1.9.6 | Crear tests para SearchClient | **GPT** | `4o-mini` | 🟡 | `[~]` | |
+| 1.9.6 | Crear tests para SearchClient | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.10 Servicios de Negocio
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
