@@ -1,5 +1,7 @@
 # SOUNDTRACKER - Guía de Despliegue
 
+**Versión**: 3.0 | **Actualizado**: 2026-02-03
+
 ## Requisitos
 
 - Docker 20.10+ y Docker Compose v2
@@ -13,8 +15,11 @@
 git clone <repo-url>
 cd App
 
-# Desplegar
-./scripts/deploy.sh
+# Iniciar aplicación (build + up + abre navegador)
+./start.sh
+
+# Detener aplicación
+./stop.sh
 ```
 
 El script automáticamente:
@@ -171,6 +176,19 @@ chmod -R 755 data/ outputs/
                         └─────────────────┘
 ```
 
+## Scripts de Mantenimiento
+
+```bash
+# Actualizar países en base de datos desde master list
+python scripts/update_countries.py
+
+# Gestionar master list (sincronización)
+python scripts/manage_master_list.py --sync-check
+
+# Reconstruir base de datos desde Markdown
+python scripts/build_database.py
+```
+
 ## CI/CD
 
 El proyecto incluye GitHub Actions (`.github/workflows/ci.yml`) que ejecuta:
@@ -180,3 +198,7 @@ El proyecto incluye GitHub Actions (`.github/workflows/ci.yml`) que ejecuta:
 3. **Docker**: Verificación de build de imágenes
 
 Los checks se ejecutan en cada push a `main` y en pull requests.
+
+---
+
+**Versión**: 3.0 | **Actualizado**: 2026-02-03

@@ -1,6 +1,6 @@
 # TASKS.md - Lista de Tareas de Desarrollo
 
-**Control de Progreso del Proyecto SOUNDTRACKER** | v1.2 | 2026-02-03
+**Control de Progreso del Proyecto SOUNDTRACKER** | v1.3 | 2026-02-03
 
 ---
 
@@ -704,18 +704,91 @@ Cuando una tarea requiera una IA diferente a la actual:
 
 ---
 
+## FASE 7: UI Polish & Refinamientos
+
+**Duración estimada**: 1 día
+**Estado**: `[x]` Completada 2026-02-03
+**Dependencias**: Fase 6 completada
+
+### 7.1 Correcciones de Carga de Imágenes
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 7.1.1 | Fix API_URL para Docker (server vs browser) | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.1.2 | Fix getAssetUrl para usar localhost:8000 en browser | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.1.3 | Añadir `unoptimized` a todos los Image components | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+
+### 7.2 Rediseño Visual
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 7.2.1 | Nombres estilizados: Nombre blanco + Apellidos rojos | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.2.2 | Logo: SOUND blanco + TRACKER rojo | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.2.3 | Filtros con color accent cuando seleccionados | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 7.2.4 | Botón CTA con color accent | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 7.2.5 | Separadores de sección en color accent (rojo) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 7.2.6 | Menú inactivo en blanco (foreground) | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+
+### 7.3 Correcciones de Iconos
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 7.3.1 | Cambiar emoji 🏆 a ★ texto (visibilidad) | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.3.2 | Cambiar badges gold a primary color | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.3.3 | Quitar badge Top 10 de FilmographyList | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+
+### 7.4 Página de Inicio
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 7.4.1 | Quitar header "Compositores destacados" | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 7.4.2 | Quitar botón extra "Explorar todos" | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 7.4.3 | Actualizar subtítulo a "Enciclopedia de Compositores de Bandas Sonoras" | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+
+### 7.5 Datos de Países
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 7.5.1 | Crear script `update_countries.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.5.2 | Parsear países desde master list | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 7.5.3 | Actualizar 164 compositores con país correcto | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+
+### 7.6 Página de Compositores
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 7.6.1 | Añadir SearchBar en sección compositores | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+
+**Checkpoint Fase 7**: `[x]` Completada (2026-02-03)
+
+---
+
+## FASE 8: Futuras Mejoras (Pendiente)
+
+**Estado**: `[ ]` Pendiente
+
+### 8.1 Filtros Adicionales
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 8.1.1 | Añadir filtro por país en compositores | **Claude** | `opus` | 🟡 | `[ ]` | |
+| 8.1.2 | Añadir filtro por tipo de premio | **Claude** | `opus` | 🟢 | `[ ]` | |
+
+### 8.2 Secciones Adicionales
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 8.2.1 | Sección de series de TV | **Claude** | `opus` | 🟢 | `[ ]` | |
+| 8.2.2 | Sección de videojuegos | **Claude** | `opus` | 🟢 | `[ ]` | |
+
+---
+
 ## Resumen de Progreso
 
 | Fase | Total Tareas | Completadas | Progreso |
 |------|--------------|-------------|----------|
-| Fase 0 | 75 | 0 | 0% |
-| Fase 1 | 74 | 0 | 0% |
-| Fase 2 | 22 | 0 | 0% |
-| Fase 3 | 32 | 0 | 0% |
-| Fase 4 | 35 | 0 | 0% |
-| Fase 5 | 37 | 0 | 0% |
-| Fase 6 | 16 | 0 | 0% |
-| **TOTAL** | **291** | **0** | **0%** |
+| Fase 0 | 75 | 75 | 100% |
+| Fase 1 | 74 | 74 | 100% |
+| Fase 2 | 22 | 22 | 100% |
+| Fase 3 | 32 | 32 | 100% |
+| Fase 4 | 35 | 35 | 100% |
+| Fase 5 | 37 | 35 | 95% |
+| Fase 6 | 16 | 16 | 100% |
+| Fase 7 | 18 | 18 | 100% |
+| Fase 8 | 4 | 0 | 0% |
+| **TOTAL** | **313** | **307** | **98%** |
 
 ---
 
@@ -726,6 +799,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 2026-02-03 | Documento creado | - | Versión inicial |
 | 2026-02-03 | Añadidas secciones 0.4 y 0.5 | - | +16 tareas: gestión master list y scripts existentes |
 | 2026-02-03 | Expandida sección 0.4 | - | Gestor sincronizado master list ↔ outputs (+46 tareas) |
+| 2026-02-03 | Añadidas Fases 7 y 8 | v1.3 | UI polish completo, futuras mejoras (+22 tareas) |
 
 ---
 
@@ -771,4 +845,4 @@ Cuando una tarea requiera una IA diferente a la actual:
 ---
 
 **Última actualización**: 2026-02-03
-**Versión**: 1.2
+**Versión**: 1.3
