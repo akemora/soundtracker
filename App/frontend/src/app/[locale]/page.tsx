@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { SearchBar } from "@/components/search/SearchBar";
+import { HeroSearchForm } from "@/components/search/HeroSearchForm";
 import { ComposerGrid } from "@/components/composers/ComposerGrid";
 import { getComposers } from "@/lib/api";
 
@@ -39,7 +39,10 @@ export default async function HomePage({ params }: Props) {
 
           {/* Search Bar */}
           <div className="w-full max-w-lg mt-4">
-            <SearchBar placeholder={t("searchPlaceholder")} />
+            <HeroSearchForm
+              placeholder={t("searchPlaceholder")}
+              buttonLabel={t("searchButton")}
+            />
           </div>
 
           {/* CTA */}

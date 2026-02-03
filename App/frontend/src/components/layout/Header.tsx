@@ -1,14 +1,11 @@
-"use client";
-
-import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { LanguageSelector } from "./LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export function Header() {
-  const t = useTranslations("nav");
-  const pathname = usePathname();
+export async function Header() {
+  const t = await getTranslations("nav");
 
   const navLinks = [
     { href: "/", label: t("home") },
@@ -31,11 +28,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-accent ${
-                pathname === link.href
-                  ? "text-accent"
-                  : "text-foreground"
-              }`}
+              className="text-sm font-medium transition-colors hover:text-accent text-foreground"
             >
               {link.label}
             </Link>
