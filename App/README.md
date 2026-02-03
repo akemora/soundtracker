@@ -16,7 +16,8 @@ Titulo original (Titulo en Espana: Titulo)
   - listas web (Perplexity/Google/DDG),
   - "known_for" de TMDB,
   - popularidad y votos de TMDB,
-  - premios (Oscar, BAFTA, etc.) forzados en el Top 10.
+  - premios (Oscar, BAFTA, etc.) forzados en el Top 10,
+  - **views de YouTube** como criterio adicional.
 - **Posters locales** para toda la filmografia (descarga masiva y concurrente).
 - **Foto del compositor** en local: `photo_nombre_apellido.jpg`.
 - **Fuentes externas**: MundoBSO, Film Score Monthly, SoundtrackCollector, WhatSong + otras fuentes generales.
@@ -28,7 +29,8 @@ Titulo original (Titulo en Espana: Titulo)
 - **Wikidata** (filmografia + premios).
 - **TMDB** (creditos, posters, titulos en espanol, popularidad).
 - **Perplexity** (busquedas principales) con fallback a Google y DuckDuckGo.
-- **Spotify/YouTube**: preparado para enriquecer Top 10 con popularidad y views (requiere credenciales).
+- **YouTube**: views para enriquecer Top 10 (requiere API key).
+- **Spotify**: preparado para popularidad (pendiente de credenciales).
 
 ## Estructura del proyecto
 
@@ -37,6 +39,7 @@ App/
   scripts/
   outputs/
   intermediate_research/
+  DEVELOPMENT_PLAN.md
 ```
 
 ## Uso rapido
@@ -50,12 +53,25 @@ pip install requests beautifulsoup4 google
 ```
 export TMDB_API_KEY=...
 export PPLX_API_KEY=...
+export YOUTUBE_API_KEY=...
 ```
 
 3) Ejecutar:
 ```
 python3 App/scripts/create_composer_files.py
 ```
+
+## Actualizar solo el Top 10 con YouTube (sin rehacer datos)
+
+```
+export YOUTUBE_API_KEY=...
+export TMDB_API_KEY=...
+export PPLX_API_KEY=...
+python3 App/scripts/update_top10_youtube.py
+```
+
+Opcional:
+- `START_INDEX=41` para reanudar desde un indice.
 
 ## Configuracion avanzada (env vars)
 
@@ -96,10 +112,4 @@ python3 App/scripts/create_composer_files.py
 - Las salidas viven en `App/outputs/` y se versionan en Git.
 - Algunos dominios bloquean scraping (lista negra interna) para evitar ruido y acelerar.
 - YouTube Music no tiene API oficial; Amazon Music Web API es beta cerrada.
-
-## Mejoras futuras
-
-- Integracion completa con Spotify/YouTube (cuando haya credenciales).
-- Auto-resume por log (en lugar de `START_INDEX`).
-- Filtrado mas estricto de posters ruidosos y titulos erroneos.
-- Poblado en MongoDB / API REST.
+- Ver `App/DEVELOPMENT_PLAN.md` para el plan del frontend/backend.

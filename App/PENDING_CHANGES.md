@@ -4,7 +4,7 @@
 
 - Generacion de Markdown por compositor con:
   - Biografia, estilo musical, anecdotas (siempre presentes).
-  - Top 10 con ranking por listas web + TMDB + premios.
+  - Top 10 con ranking por listas web + TMDB + premios + YouTube.
   - Filmografia completa con posters locales.
   - Premios y nominaciones con normalizacion en espanol.
   - Fuentes externas (MundoBSO, Film Score Monthly, SoundtrackCollector, WhatSong).
@@ -15,13 +15,13 @@
 - Filtros de dominios bloqueados para evitar 403/404 repetidos.
 - Reanudar batch con `START_INDEX`.
 - Nombre de foto local: `photo_nombre_apellido.jpg`.
+- Script dedicado para recalcular solo Top 10 con YouTube sin rehacer datos:
+  - `App/scripts/update_top10_youtube.py`.
 
 ## Pendientes / Necesitan credenciales
 
 - **Spotify**: usar popularidad (0-100) para enriquecer el Top 10.
-  - Requiere `SPOTIFY_CLIENT_ID` y `SPOTIFY_CLIENT_SECRET`.
-- **YouTube**: views de videos para Top 10.
-  - Requiere `YOUTUBE_API_KEY`.
+  - Requiere `SPOTIFY_CLIENT_ID` y `SPOTIFY_CLIENT_SECRET` (actualmente alta de apps en pausa).
 - **Amazon Music**: API oficial en beta cerrada (si hay acceso).
 - **YouTube Music**: no hay API oficial (solo librerias no oficiales).
 
@@ -30,4 +30,5 @@
 - Auto-resume por log (sin `START_INDEX`).
 - Lista negra de dominios configurable por env.
 - Filtrado mas agresivo de posters ruidosos.
-- Validacion de Top 10 por compositor (sanity checks y alertas).
+- Validacion de Top 10 con sanity checks.
+- Integracion UI + backend (ver `App/DEVELOPMENT_PLAN.md`).
