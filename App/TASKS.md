@@ -265,7 +265,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.6.2 | Extraer `get_wikidata_qid()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.6.3 | Extraer `fetch_wikidata_filmography()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.6.4 | Extraer `fetch_wikidata_awards()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
-| 1.6.5 | Crear tests para WikidataClient | **GPT** | `4o-mini` | 🟡 | `[~]` | |
+| 1.6.5 | Crear tests para WikidataClient | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 1.7 Cliente YouTube
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
