@@ -33,9 +33,13 @@ class TestSearchClient:
     def test_search_falls_back_to_duckduckgo(self, monkeypatch) -> None:
         """search should fall back to DuckDuckGo when others fail."""
         monkeypatch.setattr(settings, "search_web_enabled", True)
+        monkeypatch.setattr(settings, "pplx_api_key", None)
+        monkeypatch.setattr(settings, "perplexity_api_key", None)
+        monkeypatch.setattr(SearchClient, "_search_google", lambda *_: [])
+        monkeypatch.setattr(
+            SearchClient, "_search_duckduckgo", lambda *_: ["http://ddg"]
+        )
         client = SearchClient(perplexity_api_key=None)
-        client._search_google = Mock(return_value=[])
-        client._search_duckduckgo = Mock(return_value=["http://ddg"])
 
         result = client.search("query", num=1)
 
