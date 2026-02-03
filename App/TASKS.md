@@ -353,9 +353,11 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 1.15 Tests y Cobertura
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 1.15.1 | Verificar cobertura actual con `pytest --cov` | Manual | - | 🔴 | `[ ]` | |
+| 1.15.1 | Verificar cobertura actual con `pytest --cov` | Manual | - | 🔴 | `[x]` | 2026-02-03 |
 | 1.15.2 | Alcanzar >50% cobertura global | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 | 1.15.3 | Documentar tests faltantes | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
+
+> **Nota 2026-02-03**: `pytest --cov=src --cov-report=term-missing` falla con 14 tests fallidos en `tests/test_manage_master_list.py` (error de parsing de filas con columna vacía). Cobertura actual: 39.79% (fail_under=50).
 
 > **Resultados Fase 1**: Creada arquitectura modular completa con 7 clientes API, 6 servicios de negocio, sistema de caché thread-safe, generador Markdown, utilidades de texto/URLs, logging estructurado, y pipeline de orquestación. Tests creados para models, config, cache, utils, generators. Nuevo CLI `scripts/generate_composers.py` reemplaza el script monolítico original.
 
