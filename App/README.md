@@ -1,64 +1,105 @@
 # Soundtrackers: Film Composer Research Application
 
-## Introduction
+## Resumen
 
-This application is designed to automate the process of conducting deep-dive research on influential film composers. Its primary goal is to gather comprehensive information for a curated list of composers, generate a detailed markdown file for each, and prepare this data for integration into a robust, searchable database. This systematic approach ensures a rich and well-structured knowledge base for film music enthusiasts and researchers.
+Este proyecto automatiza la investigacion profunda de compositores de cine. Genera un Markdown por compositor con biografia, estilo musical, anecdotas, filmografia completa, top 10 de bandas sonoras, premios, fuentes externas y enlaces a posters locales. Todo el texto se normaliza a espanol (Espana) y los titulos de peliculas se muestran como:
 
-## Core Functionality
+```
+Titulo original (Titulo en Espana: Titulo)
+```
 
-The heart of the application lies in its ability to meticulously collect and organize information about each composer. This is achieved through several key steps orchestrated by Python scripts:
+## Caracteristicas clave
 
-### 1. Composer Data Extraction
-The application extracts a wide array of data points for every composer, including:
-*   **Biography & Career Details:** A concise overview of their life and professional journey.
-*   **Anecdotes & Trivia:** Interesting facts and stories that provide unique insights into their lives and work.
-*   **Musical Style:** A description of their distinctive compositional approach.
-*   **Top 10 Film Scores:** A curated list of their most significant film scores.
-*   **Detailed Awards & Nominations:** Comprehensive information on awards won and nominations received, including the specific films associated with these accolades.
+- **Biografia, estilo musical y anecdotas** siempre presentes (si no hay datos, se rellena con texto de apoyo).
+- **Filmografia completa** desde TMDB + Wikidata + Wikipedia + buscadores.
+- **Top 10** por compositor con criterios combinados:
+  - listas web (Perplexity/Google/DDG),
+  - "known_for" de TMDB,
+  - popularidad y votos de TMDB,
+  - premios (Oscar, BAFTA, etc.) forzados en el Top 10.
+- **Posters locales** para toda la filmografia (descarga masiva y concurrente).
+- **Foto del compositor** en local: `photo_nombre_apellido.jpg`.
+- **Fuentes externas**: MundoBSO, Film Score Monthly, SoundtrackCollector, WhatSong + otras fuentes generales.
+- **Traduccion automatica** con deteccion de idioma a espanol.
 
-### 2. Web Scraping & Data Collection
-To gather this information, the application leverages web scraping techniques:
-*   **`google_web_search`:** Used to perform targeted searches for composer biographies, filmographies, awards, and image links.
-*   **`requests` & `BeautifulSoup`:** These Python libraries are employed to fetch the content of web pages (primarily Wikipedia and other authoritative sources) and parse their HTML to extract structured data.
-*   **Image & Poster Sourcing:** The system actively searches for:
-    *   A high-quality **photo of each composer** to be included in their profile.
-    *   **Poster links for all films** listed in their "Top 10 Film Scores" section, prioritizing direct image links from reliable sources like `themoviedb.org` or `wikimedia.org`. Placeholder links are used if a direct image cannot be found immediately.
+## Fuentes y APIs
 
-### 3. Markdown File Generation
-For each composer, a dedicated markdown file is generated (`001_composer_name.md`). These files are meticulously structured, incorporating all the gathered information in a human-readable and easily parseable format. This includes the composer's photo and links to film posters, enhancing the visual richness of each profile.
+- **Wikipedia ES/EN** (biografia, secciones, infobox).
+- **Wikidata** (filmografia + premios).
+- **TMDB** (creditos, posters, titulos en espanol, popularidad).
+- **Perplexity** (busquedas principales) con fallback a Google y DuckDuckGo.
+- **Spotify/YouTube**: preparado para enriquecer Top 10 con popularidad y views (requiere credenciales).
 
-### 4. Data Enrichment & Consistency
-The application ensures that all generated entries are consistent in their format and content. Special attention is paid to:
-*   **Detailed Award Information:** Awards and nominations are now broken down by specific films and categories, providing granular insight into their recognition.
-*   **Comprehensive Visuals:** Efforts are made to include a composer photo and a poster for every top film, improving the overall quality of the data.
+## Estructura del proyecto
 
-## Project Structure
+```
+App/
+  scripts/
+  outputs/
+  intermediate_research/
+```
 
-The application maintains a clear and organized folder structure:
+## Uso rapido
 
-*   **`App/`**: The main application directory.
-    *   **`scripts/`**: Contains all Python scripts responsible for data collection, processing, and file generation.
-    *   **`intermediate_research/`**: Stores any intermediate research files, raw data, or source documents used during the process.
-    *   **`outputs/`**: The destination for all generated markdown files (e.g., `001_herbert_stothart.md`), as well as the master list of composers (`composers_master_list.md`).
+1) Instalar dependencias:
+```
+pip install requests beautifulsoup4 google
+```
 
-## Database Integration (Future)
+2) Exportar claves necesarias:
+```
+export TMDB_API_KEY=...
+export PPLX_API_KEY=...
+```
 
-Following the successful generation of all markdown files, the next phase of this project will involve integrating the collected data into a **MongoDB** database. MongoDB was chosen for its flexibility, scalability, and ease of integration with web applications. Its document-oriented nature (storing data in JSON-like BSON documents) makes it ideal for exporting data directly to a frontend application via a RESTful API, supporting a robust, modular, and scalable architecture.
+3) Ejecutar:
+```
+python3 App/scripts/create_composer_files.py
+```
 
-## How to Use (Script)
+## Configuracion avanzada (env vars)
 
-To generate or update the composer markdown files:
-1.  Ensure you have Python installed.
-2.  Install the required Python libraries: `pip install requests beautifulsoup4 google`.
-3.  Navigate to the project root directory.
-4.  Run the main script: `python3 App/scripts/create_composer_files.py`.
+- **Busqueda web**
+  - `SEARCH_WEB_ENABLED=1|0`
+  - `PPLX_API_KEY` o `PERPLEXITY_API_KEY`
+  - `PPLX_MODEL=sonar` (modelo mas barato)
 
-The script will read `App/outputs/composers_master_list.md`, process each composer, and create/update their respective markdown files in `App/outputs/`.
+- **Posters**
+  - `DOWNLOAD_POSTERS=1|0`
+  - `POSTER_WEB_FALLBACK=1|0`
+  - `POSTER_WORKERS=8`
+  - `POSTER_LIMIT=0` (0 = ilimitado)
 
-## Future Enhancements
+- **Filmografia**
+  - `FILM_LIMIT=200`
 
-*   **Database Population Script:** Develop the script to parse the generated markdown files and populate the MongoDB database.
-*   **Frontend Development:** Create a web-based user interface to browse, search, and visualize the composer data.
-*   **Improved Web Scraping:** Refine the scraping logic for more robust data extraction and error handling, especially for awards and poster links.
-*   **Listen Links:** Implement a more robust method to find listen links for soundtracks.
-*   **Anecdote & Musical Style Extraction:** Automate the extraction of anecdotes and musical style descriptions directly from web sources.
+- **Texto y profundidad**
+  - `EXTERNAL_SNIPPET_SOURCES=12`
+  - `EXTERNAL_SNIPPET_MAX_CHARS=700`
+  - `MAX_BIO_PARAGRAPHS=6`
+  - `EXTERNAL_DOMAIN_RESULTS=3`
+
+- **Top 10**
+  - `TOP_MIN_VOTE_COUNT=50`
+  - `TOP_FORCE_AWARDS=1`
+
+- **Reanudar batch**
+  - `START_INDEX=41` (arranca desde el compositor 041)
+
+- **Streaming (opcional)**
+  - `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_ENABLED=1`
+  - `YOUTUBE_API_KEY`, `YOUTUBE_ENABLED=1`
+  - `STREAMING_CANDIDATE_LIMIT=30`
+
+## Notas
+
+- Las salidas viven en `App/outputs/` y se versionan en Git.
+- Algunos dominios bloquean scraping (lista negra interna) para evitar ruido y acelerar.
+- YouTube Music no tiene API oficial; Amazon Music Web API es beta cerrada.
+
+## Mejoras futuras
+
+- Integracion completa con Spotify/YouTube (cuando haya credenciales).
+- Auto-resume por log (en lugar de `START_INDEX`).
+- Filtrado mas estricto de posters ruidosos y titulos erroneos.
+- Poblado en MongoDB / API REST.
