@@ -8,81 +8,83 @@ Estados Unidos
 
 ## Biografía
 
-### Infancia y Formación
+### Orígenes y Formación
 
-Herbert Pope Stothart nació el 11 de septiembre de 1885 en Milwaukee, Wisconsin, en una familia humilde donde desarrolló tempranamente su pasión por la música al unirse a un coro episcopal. Estudió en la Universidad de Wisconsin-Madison, donde compuso y dirigió musicales para el Haresfoot Dramatic Club, y posteriormente perfeccionó su formación musical en Europa. Esta etapa formativa le inculcó un amor profundo por la música teatral y orquestal, sentando las bases de su carrera. [1]
+Herbert Stothart nació el 11 de septiembre de 1885 en Milwaukee, Wisconsin, en una familia de origen escocés que fomentó su temprana pasión por la música. Desde niño mostró talento excepcional, uniéndose a un coro episcopal que encendió su amor por el canto y la composición. En la Universidad de Wisconsin, compuso y dirigió musicales para el Haresfoot Dramatic Club, lo que definió su camino hacia el teatro musical. [1]
 
-### Inicios en Broadway
+### Ascenso en Broadway
 
-En 1920, Stothart debutó en Broadway con *Always You*, con letras de Oscar Hammerstein II, bajo la producción de Arthur Hammerstein. Colaboró con compositores destacados como Sigmund Romberg, Rudolph Friml y George Gershwin en éxitos como *Rose-Marie*, *Marjorie*, *Twilight Rose* y *Song of the Flame* (1925). Su trabajo incluyó musicales como *Golden Dawn* y *Good Boy* (1928), con el hit 'I Wanna Be Loved By You'. [2]
+Stothart se mudó a Nueva York donde Arthur Hammerstein lo contrató como director musical para giras de Broadway. Pronto compuso para Oscar Hammerstein II, creando música para la exitosa operetta *Rose-Marie*. Colaboró con gigantes como Vincent Youmans, George Gershwin y Franz Lehár, consolidándose en la escena teatral neoyorquina. [2]
 
-| Colaboraciones Clave en Broadway | Año | Compositores Asociados |
-|--------------------------------|-----|-----------------------|
-| Always You                     | 1920 | Oscar Hammerstein II |
-| Rose-Marie                     | 1924 | Rudolph Friml     |
-| Song of the Flame              | 1925 | George Gershwin    |
-| Good Boy                       | 1928 | Kalmar y Ruby      |
+| Cronología Inicial |
+|--------------------|
+| **Año** | **Hito** |
+| 1885 | Nace en Milwaukee |
+| 1900s | Coro episcopal y universidad |
+| 1910s | Broadway con Hammerstein |
+| 1924 | *Rose-Marie* éxito |
 
-### Transición al Cine y MGM
+### Llegada a Hollywood y MGM
 
-En 1929, con la llegada del cine sonoro, Louis B. Mayer lo contrató para MGM, donde pasó 20 años como director musical y compositor principal. Su primera asignación fue la banda sonora para *End of St. Petersburg* (1927), seguida de *The Rogue Song* (1930). Rápidamente se convirtió en el compositor preferido para producciones de prestigio. [3]
+En 1928, Stothart llegó a MGM para puntuar el silencioso *End of St. Petersburg*. Rápidamente se convirtió en el compositor principal del estudio, trabajando en más de 100 películas durante dos décadas. Su versatilidad abarcó desde comedias Marx Brothers hasta dramas épicos. [3]
 
-### Carrera en Hollywood (1930s)
+### Éxitos Cinematográficos
 
-Stothart compuso más de 100 scores para MGM, incluyendo *Rasputin and the Empress* (1932), *Queen Christina* (1933), *Mutiny on the Bounty* (1935), *The Good Earth* (1937) y *Marie Antoinette* (1938). Destacan adaptaciones como *David Copperfield* (1935), *Romeo and Juliet* (1936) y *A Tale of Two Cities*. Su estilo elevó el estándar de la música cinematográfica. [4]
+Destacó en filmes como *Mutiny on the Bounty* (1935), *The Good Earth* (1937) y *Captains Courageous* (1937). Su partitura para *A Tale of Two Cities* (1935) y *David Copperfield* (1935) capturó la esencia dickensiana con maestría. En *Anna Karenina* (1935), orquestó pasiones tolstoianas con lirismo inolvidable. [4]
 
-| Obras Clave 1930s             | Año | Notas                          |
-|-------------------------------|-----|--------------------------------|
-| Mutiny on the Bounty          | 1935| Uso de himnos nacionales   |
-| Romeo and Juliet              | 1936| Strings lush               |
-| The Good Earth                | 1937| Escalas pentatónicas       |
-| Marie Antoinette              | 1938| Nominado Oscar             |
+### El Oscar por *The Wizard of Oz*
 
-### El Triunfo con *The Wizard of Oz*
+El clímax de su carrera llegó en 1939 con *The Wizard of Oz*, donde ganó el Oscar por Mejor Banda Sonora Original. Su score, combinando canciones de Harold Arlen con leitmotivs orquestales, inmortalizó el viaje de Dorothy. Usó efectos innovadores como la 'Voz de la Bruja' con coros y arpas. [5]
 
-En 1939, Stothart ganó el Oscar a Mejor Banda Sonora Original por *The Wizard of Oz*, orquestando canciones de Harold Arlen y E.Y. Harburg como 'Over the Rainbow'. Interpoló temas como Mendelssohn para Glinda y creó leitmotifs para Dorothy, el Mago y la Bruja Malvada, con highlights como 'March of the Winkies'. Su score es considerado sublime por unir melodía y narrativa. [5]
+| Obras Clave en MGM |
+|--------------------|
+| **Película** | **Año** | **Notas** |
+| *Night at the Opera* | 1935 | Marx Brothers |
+| *Romeo and Juliet* | 1936 | Shakespeare |
+| *Wizard of Oz* | 1939 | Oscar |
+| *Random Harvest* | 1942 | Melodía emotiva |
 
-### Carrera Tardía (1940s)
+### Colaboraciones Frecuentes
 
-Continuó con *Northwest Passage* (1940), *Mrs. Miniver* (1942), *National Velvet* (1945), *The Yearling* (1946) y *The Three Musketeers* (1948). Fue nominado múltiples veces al Oscar, incluyendo *Sweethearts* (1938). En 1947, sufrió un infarto en Escocia, inspirando *Heart Attack: A Symphonic Poem* y *Voices of Liberation*. [6]
+Stothart colaboró con directores como Clarence Brown y George Cukor, adaptando música a estrellas como Greta Garbo y Spencer Tracy. Su trabajo en *Queen Christina* (1933) y *The Barretts of Wimpole Street* (1934) mostró su sensibilidad romántica. [1]
 
-| Cronología Seleccionada 1940s | Año | Película                  |
-|------------------------------|-----|---------------------------|
-| 1940                         | Northwest Passage     |
-| 1942                         | Mrs. Miniver          |
-| 1945                         | National Velvet       |
-| 1947                         | The Yearling          |
-| 1948                         | The Three Musketeers  |
+| Colaboraciones Destacadas |
+|---------------------------|
+| **Artista/Compositor** | **Proyecto** |
+| Oscar Hammerstein II | *Rose-Marie* |
+| Harold Arlen | *Wizard of Oz* |
+| Jeanette MacDonald | *Rose-Marie* (1936) |
+| Marx Brothers | *Night at the Opera* |
 
-### Vida Personal y Legado
+### Declive y Legado Final
 
-Stothart se casó con Dorothy, cuya muerte repentina lo devastó emocionalmente, aunque retomó su carrera. Nunca se recuperó del todo. Murió el 1 de febrero de 1949 a los 63 años en Hollywood. Es recordado como pilar de los compositores de Hollywood, con un legado en más de 100 films. [7]
+En 1947, un infarto en Escocia inspiró su poema sinfónico *Heart Attack*. Compuso *Voices of Liberation* para el Roger Wagner Chorale. Murió el 1 de febrero de 1949 en Los Ángeles, a los 63 años, dejando un legado de innovación en Hollywood. [2]
+
+Su influencia perdura en la música de cine, con reediciones de sus scores y reconocimientos póstumos. [3]
 
 ## Estilo musical
 
-Stothart prefería un enfoque contenido, evitando lo grandioso europeo, con raíces en Broadway y uso frecuente de leitmotifs sutiles protagonizados por violines lush y fluidos. Empleaba quirks en woodwinds para comedia, violines melódicos para romance y acordes crashing con himnos nacionales para exaltación, como en *Mutiny on the Bounty*. [1]
+Herbert Stothart revolucionó la música cinematográfica con un estilo arraigado en Broadway, evitando el dramatismo europeo grandioso por un enfoque sutil y leitmotiv-based. Sus temas, protagonizados por violines exuberantes, fluyen con lush strings y horns suaves, creando texturas envolventes sin intrusiones obvias. [1]
 
-En *The Wizard of Oz*, orquestó magistralmente temas como 'Over the Rainbow' para Dorothy, Glinda con Mendelssohn, y 'March of the Winkies' con coros oscuros y percusión pulsing. Colaboró con equipos como Georgie Stoll y Conrad Salinger para un score glorioso. [2]
+Sus técnicas de composición incluían pentatonic scales para 'orientalismos' en filmes como *The Good Earth*, fusionando percusión asiática con brass patriótico y strings sumptuosos. En dramas, motivaba tramas con episodios musicales vitales, como en *National Velvet* (1944). [2]
 
-Usaba escalas pentatónicas y 'orientalismos' con percusión asiática, brass patriótico y strings sumptuosos, fusionando Oriente y Occidente en *The Good Earth*. Su orquestación adaptaba música existente, elevando canciones a narrativa sin intrusividad. [3]
+La orquestación de Stothart era maestra en generar moods: tonos rojos (clashes orquestales) para ira, melodías fluidas para tranquilidad, armonías chocantes para alarma, y tomtoms monótonos para inquietud. Esta teoría de 'elementos generadores de emociones' provenía de su experiencia práctica. [3]
 
-Influenciado por Broadway y clásicos, su estilo era efectivo y melódico, ganando el Oscar por innovación en underscoring alrededor de canciones. Técnicas incluían interpolaciones clásicas y medleys temáticos en openings. [4]
+Influenciado por Gershwin y Lehár, adaptó Broadway al cine, interpolando himnos como *O Perfect Love* en *Random Harvest*. Su estilo restrained elevaba emociones sin dominar la narrativa, definiendo el Hollywood clásico. [4]
 
-Su legado radica en la sutileza emocional, haciendo la música inseparable de la imagen. [5]
+En *Whistle* (1944), su tema juguetón para el perro Laddie usa líneas gentiles y ornamentales, mostrando versatilidad whimsy. Stothart priorizaba temas sutiles efectivos, marcando la transición del teatro al score sinfónico. [5]
+
+Su legado estilístico radica en equilibrar oriente-occidente y drama-lirismo, influyendo en generaciones de compositores de cine. [1]
 
 ## Datos curiosos y técnica de composición
 
-- Nació en Milwaukee y amó la música desde niño en un coro episcopal. [1]
-- Estudió en Europa y enseñó en University of Wisconsin. [2]
-- Colaboró con Gershwin, Friml y Hammerstein en Broadway hits. [3]
-- Viudo joven por muerte repentina de Dorothy, nunca se recuperó fully. [4]
-- Firmó con MGM en 1929, componiendo +100 scores. [5]
-- Ganó 1 Oscar (*Wizard of Oz* 1939), 9 nominaciones. [6]
-- Sufrió infarto en Escocia 1947, inspirando poema sinfónico *Heart Attack*. [7]
-- Usaba leitmotifs de clásicos como Mendelssohn en scores. [8]
-- Prefería strings lush y woodwinds para efectos emocionales. [1]
-- Compuso *Voices of Liberation* para Roger Wagner Chorale. [2]
-- Murió a 63 años, dedicado toda carrera Hollywood a MGM. [3]
+Stothart era un trabajador incansable en MGM, componiendo para prestigio del estudio con primera opción en proyectos top, lo que reflejaba su dedicación absoluta durante 20 años. Visitando Escocia en 1947, sufrió un infarto que lo inspiró a crear *Heart Attack: A Symphonic Poem*, revelando un lado vulnerable que transformaba dolor personal en arte orquestal. [1]
+
+Respecto a la teoría de los 'tonos rojos', Stothart la documentó explícitamente en entrevistas: 'Anger can be generated by what I call red tones, which slightly clash in orchestrations, y así irritan mentalmente', contrastando con melodías tranquilas o tomtoms para inquietud; esta idea, citada en fuentes como MUBI de archivos de 1941, confirma su pensamiento innovador sobre colores sinestésicos en música. [2]
+
+Su personalidad apasionada se forjó en coros juveniles y universitarios, donde dirigía con fervor, llevando esa energía a Hollywood pese a rechazos como el score de *Gone with the Wind*. Excentrista en su fusión cultural, prefería métodos prácticos sobre teoría académica, haciendo memorable su humanización del score épico. [3]
+
+Aunque reservado, su legado personal brilla en anécdotas como rechazar pompa europea por sutileza broadwayana, y en composiciones tardías que mostraban resiliencia post-infarto. [4]
 
 ## Top 10 bandas sonoras
 
@@ -245,14 +247,11 @@ Su legado radica en la sutileza emocional, haciendo la música inseparable de la
 
 ## Citas
 
-[1]: https://moviemusicuk.us/2016/06/29/the-wizard-of-oz-herbert-stothart/
-[2]: https://moviemusicuk.us/2015/07/01/herbert-stothart-fathers-of-film-music-part-11/
-[3]: https://www.youtube.com/watch?v=uroMZofgnsk
-[4]: https://es.wikipedia.org/wiki/Herbert_Stothart
-[5]: https://kids.kiddle.co/Herbert_Stothart
-[6]: https://en.wikipedia.org/wiki/Herbert_Stothart
-[7]: https://www.encyclopedia.com/movies/dictionaries-thesauruses-pictures-and-press-releases/stothart-herbert
-[8]: https://silverscenesblog.blogspot.com/2015/01/herbert-stothart-composer.html
+[1]: https://en.wikipedia.org/wiki/Herbert_Stothart
+[2]: https://silverscenesblog.blogspot.com/2015/01/herbert-stothart-composer.html
+[3]: https://mubi.com/es/cast/herbert-stothart
+[4]: https://mubi.com/en/cast/herbert-stothart
+[5]: https://moviemusicuk.us/2015/07/01/herbert-stothart-fathers-of-film-music-part-11/
 
 ## Fuentes adicionales
 
@@ -277,9 +276,9 @@ Su legado radica en la sutileza emocional, haciendo la música inseparable de la
 * WhatSong: Vic Mizzy - La familia Addams (música original del programa de televisión) Sheldon Harnick, Jerry Bock, Douglas Gamely, Douglas Gamley Orchestra - Baladas de Broadway
 * WhatSong (2): Ramin Djawadi - Prison Break: Temporadas 3 y 4 (Banda sonora original de televisión) Ramin Djawadi - Prison Break: Temporadas 3 y 4 (Banda sonora original de televisión)
 * WhatSong (3): Trevor Morris, Einar Selvik, Steve Tavaglione y Brian Kilgore - Los vikingos II (banda sonora original de la película) Trevor Morris - Los vikingos II (banda sonora original de la película)
-* classical.music.apple.com: Campoli - The Decca 78s, Volumen 1 (Remasterizado por Mark Obert-Thorn, 2024) Campoli - The Decca 78s, Volumen 1 (Remasterizado por Mark Obert-Thorn, 2024) Alfredo Campoli, Sidney Crooke Joyas del romance Joyas del romance André Rieu, Johann Strauss Orchestra
-* themoviescores.com: Milwakee, Wisconsin, Estados Unidos, 11 de septiembre de 1885 – Los Angeles, California, Estados Unidos, 1 de febrero de 1949 (63 años) Herbert Pope Stothart fue un arreglista, director de orquesta y compositor estadounidense, de ascendencia escocesa y alemana, de extensa e importante performance en la música de cine, considerado el más trascendente de la MGM de los años treinta y cuarenta, estudio para el que trabajó como director musical durante toda su carrera.
+* www.rottentomatoes.com: -- The Great American Baking Show: Celebrity Big Game: Temporada 2 89% Shrinking: Temporada 3 Enlace a Shrinking: Temporada 3
 * music.apple.com: Dragon Seed (banda sonora original) [1944]âÂ·â2013 Puedo matar a Dragon Seed (banda sonora original) [1944]âÂ·â2013
-* www.allocine.fr: Ej.: Olivia Wilde, Robert De Niro, Dakota Johnson, Brad Pitt Encuentra todos los horarios e información de tu cine en el número de AlloCiné: 0 892 892 892 (0,90 €/minuto)
-* moviemusicuk.us: Tras el enorme éxito comercial de “Blancanieves y los siete enanitos” de Walt Disney (1937), Louis Mayer, ejecutivo de MGM Studio, estaba decidido a sacar provecho y duplicar su éxito. Encontró la historia que consideraba necesaria y compró los derechos de la novela de L. Frank Baum, "El maravilloso mago de Oz" (1900). Noel Langley, Florence Ryerson y Edgar Allan Woolf fueron los encargados de escribir el guión. El veterano director Victor Fleming fue contratado para el proyecto y reunió un elenco, que ahora es leyenda; Judy Garland (Dorothy), Frank Morgan (Profesor Marvel/Mago de Oz), Ray Bolger (Hunk/Scarecrow), Jack Haley (Hickory/Tin Man), Bert Lahr (Zeke/Cowardly Lion), Billie Burke (Glinda) y...
+* classical.music.apple.com: Campoli - The Decca 78s, Volumen 1 (Remasterizado por Mark Obert-Thorn, 2024) Campoli - The Decca 78s, Volumen 1 (Remasterizado por Mark Obert-Thorn, 2024) Alfredo Campoli, Sidney Crooke Joyas del romance Joyas del romance André Rieu, Johann Strauss Orchestra
 * moviemusicuk.us: Nacido: 11 de septiembre de 1885, Milwaukee, Wisconsin. Fallecido: 1 de febrero de 1949. Herbert Stothart nació de ascendencia escocesa y alemana en Milwaukee, Wisconsin, en 1885. Estudió en la Escuela Normal de Milwaukee con un plan de estudios diseñado para prepararlo para una carrera académica como profesor de historia. Ayudó a pagar su educación trabajando como acomodador de teatro, lo que también provocó una fascinación por el cine que duraría toda su vida. Sucedió que se unió al coro de la Iglesia Episcopal, lo que despertó un ferviente amor por la música. Cuando ingresó a la Universidad de Wisconsin, continuó por este camino componiendo y dirigiendo musicales para el Haresfoot Dramatic Club. Su exposición a las artes musicales y su...
+* music.apple.com: Dragon Seed (banda sonora original) [1944]âÂ·â2013 Puedo matar a Dragon Seed (banda sonora original) [1944]âÂ·â2013
+* themoviescores.com: Milwakee, Wisconsin, Estados Unidos, 11 de septiembre de 1885 – Los Angeles, California, Estados Unidos, 1 de febrero de 1949 (63 años) Herbert Pope Stothart fue un arreglista, director de orquesta y compositor estadounidense, de ascendencia escocesa y alemana, de extensa e importante performance en la música de cine, considerado el más trascendente de la MGM de los años treinta y cuarenta, estudio para el que trabajó como director musical durante toda su carrera.

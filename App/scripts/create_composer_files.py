@@ -587,18 +587,20 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
         return None
     outline = _build_research_outline(composer)
     system_prompt = (
-        'Eres un investigador musical. Responde SOLO con JSON válido. '
+        'Eres un investigador musical y divulgador. Responde SOLO con JSON válido. '
         'Estructura: {"biography": {"text": "..."}, '
         '"style": {"text": "..."}, "facts": {"text": "..."}, '
         '"citations": ["url", ...]}. '
-        'Texto en español. '
+        'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
         'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta), '
         'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
         '(cronología, colaboraciones, obras clave). '
         'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
-        'facts.text: 8-12 ítems en viñetas sobre hábitos, método de trabajo, excentricidades '
-        'o rasgos humanos. '
-        'Cada párrafo o ítem debe terminar con citas [1], [2] usando la lista global "citations". '
+        'facts.text: 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
+        'excentricidades o rasgos humanos que lo hagan memorable. '
+        'Incluye, si está documentado con fuentes fiables, la mención a la teoría de los "tonos rojos" '
+        'en su forma de pensar la música; si no hay fuentes claras, indícalo explícitamente. '
+        'Cada párrafo debe terminar con citas [1], [2] usando la lista global "citations". '
         'Usa fuentes fiables y no inventes. '
         'Si hay incertidumbre, indícalo.'
     )
