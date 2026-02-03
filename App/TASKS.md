@@ -246,7 +246,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.4.7 | Extraer `tmdb_search_movie_details()` a TMDBClient | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.4.8 | Extraer `tmdb_person_profile()` a TMDBClient | **Claude** | `haiku` | 🟡 | `[x]` | 2026-02-03 |
 | 1.4.9 | Integrar FileCache en TMDBClient | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
-| 1.4.10 | Crear tests para TMDBClient con mocks | **Claude** | `sonnet` | 🔴 | `[~]` | |
+| 1.4.10 | Crear tests para TMDBClient con mocks | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 
 ### 1.5 Cliente Wikipedia
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
