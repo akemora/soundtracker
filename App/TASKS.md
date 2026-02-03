@@ -435,9 +435,9 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 3.1 Setup FastAPI
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 3.1.1 | Crear `backend/` directorio | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 3.1.2 | Crear `backend/requirements.txt` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 3.1.3 | Crear `backend/app/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
+| 3.1.1 | Crear `backend/` directorio | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 3.1.2 | Crear `backend/requirements.txt` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
+| 3.1.3 | Crear `backend/app/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
 | 3.1.4 | Crear `backend/app/main.py` con FastAPI app | **Claude** | `sonnet` | 🔴 | `[ ]` | |
 | 3.1.5 | Configurar CORS | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
 | 3.1.6 | Crear `backend/app/config.py` | **Claude** | `haiku` | 🔴 | `[ ]` | |
@@ -446,7 +446,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 3.2 Modelos Pydantic API
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 3.2.1 | Crear `backend/app/models/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
+| 3.2.1 | Crear `backend/app/models/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
 | 3.2.2 | Crear `backend/app/models/composer.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
 | 3.2.3 | Implementar `ComposerSummary` | **Claude** | `haiku` | 🔴 | `[ ]` | |
 | 3.2.4 | Implementar `ComposerDetail` | **Claude** | `haiku` | 🔴 | `[ ]` | |
@@ -457,7 +457,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 3.3 Servicios Backend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 3.3.1 | Crear `backend/app/services/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
+| 3.3.1 | Crear `backend/app/services/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
 | 3.3.2 | Crear `backend/app/services/composer_service.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
 | 3.3.3 | Implementar `list_composers()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
 | 3.3.4 | Implementar `get_composer_by_slug()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
@@ -469,7 +469,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 3.4 Routers (Endpoints)
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 3.4.1 | Crear `backend/app/routers/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
+| 3.4.1 | Crear `backend/app/routers/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
 | 3.4.2 | Crear `backend/app/routers/composers.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
 | 3.4.3 | Implementar `GET /api/composers` | **Claude** | `haiku` | 🔴 | `[ ]` | |
 | 3.4.4 | Implementar `GET /api/composers/{slug}` | **Claude** | `haiku` | 🔴 | `[ ]` | |
@@ -483,7 +483,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 3.5 Tests Backend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 3.5.1 | Crear `backend/tests/` directorio | **GPT** | `4o-mini` | 🟡 | `[ ]` | |
+| 3.5.1 | Crear `backend/tests/` directorio | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 | 3.5.2 | Crear `backend/tests/conftest.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
 | 3.5.3 | Crear tests para endpoints de compositores | **Claude** | `sonnet` | 🟡 | `[ ]` | |
 | 3.5.4 | Crear tests para endpoint de búsqueda | **Claude** | `haiku` | 🟡 | `[ ]` | |
