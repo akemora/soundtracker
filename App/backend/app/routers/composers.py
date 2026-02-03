@@ -19,15 +19,19 @@ async def api_list_composers(
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
     sort_by: str = Query("name", description="Sort field"),
     order: str = Query("asc", description="Sort order (asc/desc)"),
+    decade: int | None = Query(None, description="Filter by birth decade (e.g., 1930)"),
+    has_awards: bool | None = Query(None, description="Filter by award status"),
     db: DatabaseManager = Depends(get_database),
 ) -> ComposerListResponse:
-    """List composers with pagination.
+    """List composers with pagination and filters.
 
     Args:
         page: Page number (1-based).
         per_page: Number of items per page (max 100).
         sort_by: Field to sort by (name, film_count, wins, birth_year).
         order: Sort order (asc or desc).
+        decade: Filter by birth decade (e.g., 1930 for composers born in the 1930s).
+        has_awards: Filter by whether composer has awards (true/false).
         db: Database manager dependency.
 
     Returns:
@@ -39,6 +43,8 @@ async def api_list_composers(
         per_page=per_page,
         sort_by=sort_by,
         order=order,
+        decade=decade,
+        has_awards=has_awards,
     )
 
 

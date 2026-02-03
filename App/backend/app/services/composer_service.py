@@ -28,8 +28,10 @@ async def list_composers(
     per_page: int = 20,
     sort_by: str = "name",
     order: str = "asc",
+    decade: int | None = None,
+    has_awards: bool | None = None,
 ) -> ComposerListResponse:
-    """List composers with pagination and sorting.
+    """List composers with pagination, sorting, and filtering.
 
     Args:
         db: Database manager instance.
@@ -37,6 +39,8 @@ async def list_composers(
         per_page: Number of items per page.
         sort_by: Field to sort by (name, film_count, wins, career_start).
         order: Sort order (asc/desc).
+        decade: Filter by birth decade (e.g., 1930 for 1930s).
+        has_awards: Filter by whether composer has awards (True/False).
 
     Returns:
         Paginated list of composers with statistics.
@@ -50,21 +54,35 @@ async def list_composers(
 
     order_dir = "DESC" if order.lower() == "desc" else "ASC"
 
-    # Get total count
-    count_result = await db.execute_query(
-        "SELECT COUNT(*) as total FROM composers",
-        fetch_one=True,
-    )
+    # Build WHERE clause for filters
+    where_clauses: list[str] = []
+    params: list[int | str] = []
+
+    if decade is not None:
+        where_clauses.append("birth_year >= ? AND birth_year < ?")
+        params.extend([decade, decade + 10])
+
+    if has_awards is True:
+        where_clauses.append("total_awards > 0")
+    elif has_awards is False:
+        where_clauses.append("total_awards = 0")
+
+    where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
+
+    # Get total count with filters
+    count_query = f"SELECT COUNT(*) as total FROM v_composer_stats WHERE {where_sql}"
+    count_result = await db.execute_query(count_query, tuple(params), fetch_one=True)
     total = count_result["total"] if count_result else 0
 
-    # Get paginated results from stats view
+    # Get paginated results from stats view with filters
     query = f"""
         SELECT *
         FROM v_composer_stats
+        WHERE {where_sql}
         ORDER BY {sort_by} {order_dir}
         LIMIT ? OFFSET ?
     """
-    rows = await db.execute_query(query, (per_page, offset))
+    rows = await db.execute_query(query, (*params, per_page, offset))
 
     composers = [ComposerWithStats.model_validate(row) for row in rows]
 
