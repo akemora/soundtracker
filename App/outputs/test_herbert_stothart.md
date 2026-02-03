@@ -8,240 +8,175 @@ Estados Unidos
 
 ## Biografía
 
-### Orígenes y Formación
+### Infancia y Formación Musical
 
-Herbert Stothart nació el 11 de septiembre de 1885 en Milwaukee, Wisconsin, en una familia de origen escocés que fomentó su temprana pasión por la música. Desde niño mostró talento excepcional, uniéndose a un coro episcopal que encendió su amor por el canto y la composición. En la Universidad de Wisconsin, compuso y dirigió musicales para el Haresfoot Dramatic Club, lo que definió su camino hacia el teatro musical. [1]
+Herbert Stothart nació el 11 de septiembre de 1885 en Milwaukee, Wisconsin, en una familia de origen escocés-irlandés que fomentó su pasión por la música desde pequeño. De niño, mostró un talento innato para el piano y la composición, aprendiendo de forma autodidacta y debutando en orquestas locales a los 14 años. Su educación formal incluyó estudios en el Milwaukee College of Music y más tarde en Europa, donde absorbió influencias clásicas de compositores como Wagner y Strauss. [1]
 
-### Ascenso en Broadway
+### Ascenso en el Teatro Musical
 
-Stothart se mudó a Nueva York donde Arthur Hammerstein lo contrató como director musical para giras de Broadway. Pronto compuso para Oscar Hammerstein II, creando música para la exitosa operetta *Rose-Marie*. Colaboró con gigantes como Vincent Youmans, George Gershwin y Franz Lehár, consolidándose en la escena teatral neoyorquina. [2]
-
-| Cronología Inicial |
-|--------------------|
-| **Año** | **Hito** |
-| 1885 | Nace en Milwaukee |
-| 1900s | Coro episcopal y universidad |
-| 1910s | Broadway con Hammerstein |
-| 1924 | *Rose-Marie* éxito |
+A principios del siglo XX, Stothart se mudó a Nueva York, donde brilló como director musical en Broadway. Colaboró con Victor Herbert en óperas ligeras y compuso su primer éxito, *The Magic Knight* en 1908. Durante la década de 1910-1920, dirigió más de 30 producciones, incluyendo *The Velvet Lady* (1919) con Irving Berlin, consolidándose como un nombre clave en el teatro estadounidense. [2]
 
 ### Llegada a Hollywood y MGM
 
-En 1928, Stothart llegó a MGM para puntuar el silencioso *End of St. Petersburg*. Rápidamente se convirtió en el compositor principal del estudio, trabajando en más de 100 películas durante dos décadas. Su versatilidad abarcó desde comedias Marx Brothers hasta dramas épicos. [3]
+En 1929, con la llegada del cine sonoro, Stothart fue reclutado por Metro-Goldwyn-Mayer (MGM) como director musical principal. Allí formó parte de un élite de compositores junto a figuras como Conrad Salinger. Su rol incluía no solo componer, sino dirigir orquestas de hasta 100 músicos para las bandas sonoras de la época dorada de Hollywood. [3]
 
-### Éxitos Cinematográficos
+### Éxitos Iniciales en el Cine
 
-Destacó en filmes como *Mutiny on the Bounty* (1935), *The Good Earth* (1937) y *Captains Courageous* (1937). Su partitura para *A Tale of Two Cities* (1935) y *David Copperfield* (1935) capturó la esencia dickensiana con maestría. En *Anna Karenina* (1935), orquestó pasiones tolstoianas con lirismo inolvidable. [4]
+Stothart firmó partituras para films icónicos como *The Cuban Love Song* (1931), *Mutiny on the Bounty* (1935) y *The Good Earth* (1937). Su trabajo en adaptaciones literarias, como *Anna Karenina* (1935) y *A Tale of Two Cities* (1935), destacó por fusionar drama con melodías emotivas. También aportó a comedias de los Marx Brothers en *A Night at the Opera* (1935). [4]
 
-### El Oscar por *The Wizard of Oz*
+| Año | Película                  | Rol Principal          |
+|-----|---------------------------|------------------------|
+| 1931| The Cuban Love Song      | Compositor y director |
+| 1935| Mutiny on the Bounty     | Banda sonora original |
+| 1935| A Night at the Opera     | Música incidental     |
+| 1937| The Good Earth           | Score dramático       |
 
-El clímax de su carrera llegó en 1939 con *The Wizard of Oz*, donde ganó el Oscar por Mejor Banda Sonora Original. Su score, combinando canciones de Harold Arlen con leitmotivs orquestales, inmortalizó el viaje de Dorothy. Usó efectos innovadores como la 'Voz de la Bruja' con coros y arpas. [5]
+### El Oscar por El Mago de Oz
 
-| Obras Clave en MGM |
-|--------------------|
-| **Película** | **Año** | **Notas** |
-| *Night at the Opera* | 1935 | Marx Brothers |
-| *Romeo and Juliet* | 1936 | Shakespeare |
-| *Wizard of Oz* | 1939 | Oscar |
-| *Random Harvest* | 1942 | Melodía emotiva |
+El punto álgido de su carrera llegó en 1939 con *The Wizard of Oz*, donde compuso la legendaria banda sonora que acompañó las canciones de Harold Arlen. Su orquestación magistral, con leitmotivs para Dorothy y el Camino de Ladrillos Amarillos, le valió el único Oscar de su carrera (Mejor Banda Sonora Original). Fue nominado en otras 14 ocasiones, un récord para la época. [5]
 
-### Colaboraciones Frecuentes
+| Año | Película              | Categoría                          | Resultado  |
+|-----|-----------------------|------------------------------------|------------|
+| 1938| Marie Antoinette     | Mejor Banda Sonora Original       | Nominado  |
+| 1939| The Wizard of Oz     | Mejor Banda Sonora Original       | Ganador   |
+| 1940| Waterloo Bridge      | Mejor Banda Sonora Original       | Nominado  |
+| 1942| Random Harvest       | Mejor Banda Sonora Dramática      | Nominado  |
 
-Stothart colaboró con directores como Clarence Brown y George Cukor, adaptando música a estrellas como Greta Garbo y Spencer Tracy. Su trabajo en *Queen Christina* (1933) y *The Barretts of Wimpole Street* (1934) mostró su sensibilidad romántica. [1]
+### Colaboraciones Clave
 
-| Colaboraciones Destacadas |
-|---------------------------|
-| **Artista/Compositor** | **Proyecto** |
-| Oscar Hammerstein II | *Rose-Marie* |
-| Harold Arlen | *Wizard of Oz* |
-| Jeanette MacDonald | *Rose-Marie* (1936) |
-| Marx Brothers | *Night at the Opera* |
+Stothart trabajó frecuentemente con estrellas como Jeanette MacDonald y Nelson Eddy en musicales como *Rose-Marie* (1936) y *Sweethearts* (1938). Su asociación con productores como Irving Thalberg fue crucial para MGM. Hacia los 1940s, compuso para dramas bélicos como *Mrs. Miniver* (1942), adaptándose al contexto de la Segunda Guerra Mundial. [1]
 
-### Declive y Legado Final
+### Declive y Últimos Años
 
-En 1947, un infarto en Escocia inspiró su poema sinfónico *Heart Attack*. Compuso *Voices of Liberation* para el Roger Wagner Chorale. Murió el 1 de febrero de 1949 en Los Ángeles, a los 63 años, dejando un legado de innovación en Hollywood. [2]
+En 1947, un infarto en Escocia inspiró su poema sinfónico *Heart Attack*, una de sus pocas obras fuera del cine. Regresó a MGM para proyectos como *The Green Years* (1946), pero su salud decayó. Falleció el 1 de febrero de 1949 en Los Ángeles, a los 63 años, por complicaciones cardíacas, dejando un legado de más de 150 scores. [2]
 
-Su influencia perdura en la música de cine, con reediciones de sus scores y reconocimientos póstumos. [3]
+### Legado Duradero
+
+Hoy, Stothart es reconocido como pilar de la música cinematográfica, influyendo en generaciones de compositores de Hollywood. Su trabajo en *The Wizard of Oz* sigue siendo referencia en estudios de bandas sonoras. Archivos de sus partituras se conservan en la USC y la Biblioteca del Congreso. [3]
 
 ## Estilo musical
 
-Herbert Stothart revolucionó la música cinematográfica con un estilo arraigado en Broadway, evitando el dramatismo europeo grandioso por un enfoque sutil y leitmotiv-based. Sus temas, protagonizados por violines exuberantes, fluyen con lush strings y horns suaves, creando texturas envolventes sin intrusiones obvias. [1]
+Herbert Stothart definió un estilo lush y cinematográfico, dominado por cuerdas exuberantes que fluían como ríos emocionales, puntuadas por trompas suaves para añadir calidez. Usaba leitmotivs clásicos, inspirados en Wagner, asignando temas recurrentes a personajes o emociones, como el delicado violín para escenas románticas. [1]
 
-Sus técnicas de composición incluían pentatonic scales para 'orientalismos' en filmes como *The Good Earth*, fusionando percusión asiática con brass patriótico y strings sumptuosos. En dramas, motivaba tramas con episodios musicales vitales, como en *National Velvet* (1944). [2]
+Sus técnicas de composición priorizaban la narrativa visual: quirks en maderas para comedia, acordes crash con himnos nacionales para épica, como en *Mutiny on the Bounty*. Orquestaba grandes ensembles, fusionando sinfonismo romántico con jazz ligero de la era. [2]
 
-La orquestación de Stothart era maestra en generar moods: tonos rojos (clashes orquestales) para ira, melodías fluidas para tranquilidad, armonías chocantes para alarma, y tomtoms monótonos para inquietud. Esta teoría de 'elementos generadores de emociones' provenía de su experiencia práctica. [3]
+La orquestación era magistral en dinámicas; contrastes entre pianissimo etéreo y fortissimo heroico amplificaban el drama. En *The Wizard of Oz*, superpuso coros, arpas y percusión exótica para evocar Oz, mostrando maestría en coloración tímbrica. [3]
 
-Influenciado por Gershwin y Lehár, adaptó Broadway al cine, interpolando himnos como *O Perfect Love* en *Random Harvest*. Su estilo restrained elevaba emociones sin dominar la narrativa, definiendo el Hollywood clásico. [4]
+Influencias clave incluyen Strauss por los valses opulentos, Tchaikovsky en melodías líricas y música folclórica escocesa de su herencia. Adaptó estos a Hollywood, creando un 'sonido MGM' grandioso pero accesible. [4]
 
-En *Whistle* (1944), su tema juguetón para el perro Laddie usa líneas gentiles y ornamentales, mostrando versatilidad whimsy. Stothart priorizaba temas sutiles efectivos, marcando la transición del teatro al score sinfónico. [5]
+Stothart innovó en sincronía con imagen, usando montajes sonoros para transiciones emocionales. Su frase en The New York Times (1941) resume su enfoque: 'La experiencia enseña qué elementos generan moods'. [5]
 
-Su legado estilístico radica en equilibrar oriente-occidente y drama-lirismo, influyendo en generaciones de compositores de cine. [1]
+En resúmen, su estilo es sinfónico pero flexible, priorizando emoción sobre complejidad armónica, perfecto para el cine clásico. [1]
 
 ## Datos curiosos y técnica de composición
 
-Stothart era un trabajador incansable en MGM, componiendo para prestigio del estudio con primera opción en proyectos top, lo que reflejaba su dedicación absoluta durante 20 años. Visitando Escocia en 1947, sufrió un infarto que lo inspiró a crear *Heart Attack: A Symphonic Poem*, revelando un lado vulnerable que transformaba dolor personal en arte orquestal. [1]
+Stothart era un trabajador incansable en MGM, componiendo hasta 10 scores al año bajo presión de deadlines ajustados, dirigiendo orquestas en sesiones maratónicas que duraban noches enteras. Prefería improvisar al piano antes de orquestar, un método intuitivo que le permitía capturar la esencia emocional de cada escena rápidamente. [1]
 
-Respecto a la teoría de los 'tonos rojos', Stothart la documentó explícitamente en entrevistas: 'Anger can be generated by what I call red tones, which slightly clash in orchestrations, y así irritan mentalmente', contrastando con melodías tranquilas o tomtoms para inquietud; esta idea, citada en fuentes como MUBI de archivos de 1941, confirma su pensamiento innovador sobre colores sinestésicos en música. [2]
+Su excentricidad más famosa es la teoría de los 'tonos rojos' (red tones), documentada en entrevistas donde explicaba que ciertos choques orquestales leves generaban ira al 'irritar mentalmente', mientras melodías fluidas calmaban. 'Anger can be generated by what I call red tones, which slightly clash', dijo, asociando colores sinestésicos a timbres para manipular moods. [2]
 
-Su personalidad apasionada se forjó en coros juveniles y universitarios, donde dirigía con fervor, llevando esa energía a Hollywood pese a rechazos como el score de *Gone with the Wind*. Excentrista en su fusión cultural, prefería métodos prácticos sobre teoría académica, haciendo memorable su humanización del score épico. [3]
+A pesar de su éxito, Stothart era modesto y evitaba reflectores, prefiriendo el anonimato tras bambalinas; tras su Oscar, donó partituras a escuelas de música. Su pasión por Escocia lo llevó a componer *Voices of Liberation* para coros, un raro desvío de Hollywood influido por su infarto. [3]
 
-Aunque reservado, su legado personal brilla en anécdotas como rechazar pompa europea por sutileza broadwayana, y en composiciones tardías que mostraban resiliencia post-infarto. [4]
+Humanamente, luchó con la fama efímera del cine, lamentando que sus scores fueran eclipsados por canciones; aún así, su dedicación lo hizo querido entre colegas como Miklós Rózsa. [4]
 
 ## Top 10 bandas sonoras
 
-1. ***The Valley of Decision (Título en España: El valle del destino)*** (1945)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_the_valley_of_decision_1945.jpg)
-2. ***Kismet (Título en España: El príncipe mendigo)*** (1944)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_kismet_1944.jpg)
-3. ***Madame Curie (Título en España: Madame Curie)*** (1943)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_madame_curie_1943.jpg)
-4. ***Random Harvest (Título en España: Niebla en el pasado)*** (1942)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_random_harvest_1942.jpg)
-5. ***Waterloo Bridge (Título en España: El puente de Waterloo)*** (1940)
+1. ***Waterloo Bridge (Título en España: El puente de Waterloo)*** (1940)
     * **Póster:** [link](test_herbert_stothart/posters/poster_waterloo_bridge_1940.jpg)
-6. ***Marie Antoinette (Título en España: María Antonieta)*** (1938)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_marie_antoinette_1938.jpg)
-7. ***Sweethearts (Título en España: Enamorados)*** (1938)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_sweethearts_1938.jpg)
-8. ***Devil-May-Care (Título en España: Devil-May-Care)*** (1929)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_devil_may_care_1929.jpg)
-9. ***Anna Karenina (Título en España: Ana Karenina)*** (1935)
+2. ***Anna Karenina (Título en España: Ana Karenina)*** (1935)
     * **Póster:** [link](test_herbert_stothart/posters/poster_anna_karenina_1935.jpg)
-10. ***China Seas (Título en España: Mares de China)*** (1935)
-    * **Póster:** [link](test_herbert_stothart/posters/poster_china_seas_1935.jpg)
+3. ***Mutiny on the Bounty (Título en España: La tragedia de la Bounty)*** (1935)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_mutiny_on_the_bounty_1935.jpg)
+4. ***A Tale of Two Cities (Título en España: Historia de dos ciudades)*** (1935)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_a_tale_of_two_cities_1935.jpg)
+5. ***The Picture of Dorian Gray (Título en España: El retrato de Dorian Gray)*** (1945)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_the_picture_of_dorian_gray_1945.jpg)
+6. ***National Velvet (Título en España: Fuego de juventud)*** (1945)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_national_velvet_1945.jpg)
+7. ***The Three Musketeers (Título en España: Los tres mosqueteros)*** (1948)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_the_three_musketeers_1948.jpg)
+8. ***Mrs. Miniver (Título en España: La señora Miniver)*** (1942)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_mrs_miniver_1942.jpg)
+9. ***After the Thin Man (Título en España: Ella, él y Asta)*** (1936)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_after_the_thin_man_1936.jpg)
+10. ***Treasure Island (Título en España: La isla del tesoro)*** (1934)
+    * **Póster:** [link](test_herbert_stothart/posters/poster_treasure_island_1934.jpg)
 
 ## Filmografía completa
 
 | Año | Título | Título original | Póster |
 | --- | --- | --- | --- |
-| 1928 | I Wanna Be Loved by You | — | [Póster](test_herbert_stothart/posters/poster_i_wanna_be_loved_by_you_1928.jpg) |
-| 1929 | Devil-May-Care | — | [Póster](test_herbert_stothart/posters/poster_devil_may_care_1929.jpg) |
-| 1929 | Dinamita | Dynamite | [Póster](test_herbert_stothart/posters/poster_dynamite_1929.jpg) |
-| 1930 | Aurora dorada | Golden Dawn | [Póster](test_herbert_stothart/posters/poster_golden_dawn_1930.jpg) |
-| 1930 | En el alegre Madrid | In Gay Madrid | [Póster](test_herbert_stothart/posters/poster_in_gay_madrid_1930.jpg) |
 | 1930 | The Florodora Girl | — | [Póster](test_herbert_stothart/posters/poster_the_florodora_girl_1930.jpg) |
-| 1930 | La canción de la estepa | The Rogue Song | [Póster](test_herbert_stothart/posters/poster_the_rogue_song_1930.jpg) |
-| 1931 | The Cuban Love Song | — | [Póster](test_herbert_stothart/posters/poster_the_cuban_love_song_1931.jpg) |
-| 1931 | The Prodigal | — | [Póster](test_herbert_stothart/posters/poster_the_prodigal_1931.jpg) |
-| 1931 | El prófugo | The Squaw Man | [Póster](test_herbert_stothart/posters/poster_the_squaw_man_1931.jpg) |
-| 1932 | Como tú me deseas | As You Desire Me | [Póster](test_herbert_stothart/posters/poster_as_you_desire_me_1932.jpg) |
-| 1932 | Rasputin y la zarina | Rasputin and the Empress | [Póster](test_herbert_stothart/posters/poster_rasputin_and_the_empress_1932.jpg) |
-| 1932 | Sevilla de mis Amores | — | [Póster](test_herbert_stothart/posters/poster_sevilla_de_mis_amores_1932.jpg) |
-| 1932 | Canción del oriente | The Son-Daughter | [Póster](test_herbert_stothart/posters/poster_the_son_daughter_1932.jpg) |
-| 1933 | El difunto Christopher Bean | Christopher Bean | [Póster](test_herbert_stothart/posters/poster_christopher_bean_1933.jpg) |
-| 1933 | Amores en Hollywood | Going Hollywood | [Póster](test_herbert_stothart/posters/poster_going_hollywood_1933.jpg) |
-| 1933 | Night Flight | — | [Póster](test_herbert_stothart/posters/poster_night_flight_1933.jpg) |
-| 1933 | Peggy de mi corazón | Peg o' My Heart | [Póster](test_herbert_stothart/posters/poster_peg_o_my_heart_1933.jpg) |
-| 1933 | La reina Cristina de Suecia | Queen Christina | [Póster](test_herbert_stothart/posters/poster_queen_christina_1933.jpg) |
-| 1933 | Una noche en El Cairo | The Barbarian | [Póster](test_herbert_stothart/posters/poster_the_barbarian_1933.jpg) |
-| 1933 | El gato y el violín | The Cat and the Fiddle | [Póster](test_herbert_stothart/posters/poster_the_cat_and_the_fiddle_1933.jpg) |
-| 1933 | The White Sister | — | [Póster](test_herbert_stothart/posters/poster_the_white_sister_1933.jpg) |
-| 1933 | Turn Back the Clock | — | [Póster](test_herbert_stothart/posters/poster_turn_back_the_clock_1933.jpg) |
-| 1934 | Chained | — | [Póster](test_herbert_stothart/posters/poster_chained_1934.jpg) |
-| 1934 | Raza de bronce | Laughing Boy | [Póster](test_herbert_stothart/posters/poster_laughing_boy_1934.jpg) |
-| 1934 | Deslices | Riptide | [Póster](test_herbert_stothart/posters/poster_riptide_1934.jpg) |
-| 1934 | Sequoia | — | [Póster](test_herbert_stothart/posters/poster_sequoia_1934.jpg) |
-| 1934 | The Barretts of Wimpole Street | — | [Póster](test_herbert_stothart/posters/poster_the_barretts_of_wimpole_street_1934.jpg) |
-| 1934 | La viuda alegre | The Merry Widow | [Póster](test_herbert_stothart/posters/poster_the_merry_widow_1934.jpg) |
+| 1931 | Bajo el cielo de Cuba | The Cuban Love Song | [Póster](test_herbert_stothart/posters/poster_the_cuban_love_song_1931.jpg) |
+| 1932 | The Son-Daughter | — | [Póster](test_herbert_stothart/posters/poster_the_son_daughter_1932.jpg) |
+| 1934 | El Gato y el Violín | The Cat and the Fiddle | [Póster](test_herbert_stothart/posters/poster_the_cat_and_the_fiddle_1934.jpg) |
 | 1934 | El velo pintado | The Painted Veil | [Póster](test_herbert_stothart/posters/poster_the_painted_veil_1934.jpg) |
+| 1934 | Encadenada | Chained | [Póster](test_herbert_stothart/posters/poster_chained_1934.jpg) |
 | 1934 | La isla del tesoro | Treasure Island | [Póster](test_herbert_stothart/posters/poster_treasure_island_1934.jpg) |
+| 1934 | Laughing Boy | — | [Póster](test_herbert_stothart/posters/poster_laughing_boy_1934.jpg) |
 | 1934 | Viva Villa! | — | [Póster](test_herbert_stothart/posters/poster_viva_villa_1934.jpg) |
 | 1934 | What Every Woman Knows | — | [Póster](test_herbert_stothart/posters/poster_what_every_woman_knows_1934.jpg) |
-| 1935 | Una noche en la ópera | A Night at the Opera | [Póster](test_herbert_stothart/posters/poster_a_night_at_the_opera_1935.jpg) |
-| 1935 | Historia de dos ciudades | A Tale of Two Cities | [Póster](test_herbert_stothart/posters/poster_a_tale_of_two_cities_1935.jpg) |
-| 1935 | Ayer como hoy | Ah, Wilderness! | [Póster](test_herbert_stothart/posters/poster_ah_wilderness_1935.jpg) |
 | 1935 | Ana Karenina | Anna Karenina | [Póster](test_herbert_stothart/posters/poster_anna_karenina_1935.jpg) |
-| 1935 | Biografía de una soltera | Biography of a Bachelor Girl | [Póster](test_herbert_stothart/posters/poster_biography_of_a_bachelor_girl_1935.jpg) |
-| 1935 | Mares de China | China Seas | [Póster](test_herbert_stothart/posters/poster_china_seas_1935.jpg) |
-| 1935 | David Copperfield | — | [Póster](test_herbert_stothart/posters/poster_david_copperfield_1935.jpg) |
-| 1935 | La marca del vampiro | Mark of the Vampire | [Póster](test_herbert_stothart/posters/poster_mark_of_the_vampire_1935.jpg) |
-| 1935 | Mutiny on the Bounty | — | [Póster](test_herbert_stothart/posters/poster_mutiny_on_the_bounty_1935.jpg) |
-| 1935 | La indómita | Reckless | [Póster](test_herbert_stothart/posters/poster_reckless_1935.jpg) |
-| 1935 | Vanessa | Vanessa: Her Love Story | [Póster](test_herbert_stothart/posters/poster_vanessa_her_love_story_1935.jpg) |
-| 1936 | Camille | — | [Póster](test_herbert_stothart/posters/poster_camille_1936.jpg) |
+| 1935 | Ayer como hoy | Ah, Wilderness! | [Póster](test_herbert_stothart/posters/poster_ah_wilderness_1935.jpg) |
+| 1935 | David Copperfield | The Personal History, Adventures, Experience, & Observation of David Copperfield the Younger | [Póster](test_herbert_stothart/posters/poster_the_personal_history_adventures_experience_observation_of_david_copperfield_the_younger_1935.jpg) |
+| 1935 | Historia de dos ciudades | A Tale of Two Cities | [Póster](test_herbert_stothart/posters/poster_a_tale_of_two_cities_1935.jpg) |
+| 1935 | La tragedia de la Bounty | Mutiny on the Bounty | [Póster](test_herbert_stothart/posters/poster_mutiny_on_the_bounty_1935.jpg) |
+| 1935 | Los mares de China | China Seas | [Póster](test_herbert_stothart/posters/poster_china_seas_1935.jpg) |
+| 1935 | Sequoia | — | [Póster](test_herbert_stothart/posters/poster_sequoia_1935.jpg) |
+| 1936 | Ella, él y Asta | After the Thin Man | [Póster](test_herbert_stothart/posters/poster_after_the_thin_man_1936.jpg) |
+| 1936 | Entre esposa y secretaria | Wife vs. Secretary | [Póster](test_herbert_stothart/posters/poster_wife_vs_secretary_1936.jpg) |
+| 1936 | La dama de las camelias | Camille | [Póster](test_herbert_stothart/posters/poster_camille_1936.jpg) |
 | 1936 | Moonlight Murder | — | [Póster](test_herbert_stothart/posters/poster_moonlight_murder_1936.jpg) |
-| 1936 | Joaquín Murrieta | Robin Hood of El Dorado | [Póster](test_herbert_stothart/posters/poster_robin_hood_of_el_dorado_1936.jpg) |
-| 1936 | Romeo y Julieta | Romeo and Juliet | [Póster](test_herbert_stothart/posters/poster_romeo_and_juliet_1936.jpg) |
-| 1936 | Small Town Girl | — | [Póster](test_herbert_stothart/posters/poster_small_town_girl_1936.jpg) |
-| 1936 | El demonio es un pobre diablo | The Devil Is a Sissy | [Póster](test_herbert_stothart/posters/poster_the_devil_is_a_sissy_1936.jpg) |
-| 1936 | La bella libertina | The Gorgeous Hussy | [Póster](test_herbert_stothart/posters/poster_the_gorgeous_hussy_1936.jpg) |
-| 1936 | Wife vs. Secretary | — | [Póster](test_herbert_stothart/posters/poster_wife_vs_secretary_1936.jpg) |
+| 1936 | Robin Hood of El Dorado | — | [Póster](test_herbert_stothart/posters/poster_robin_hood_of_el_dorado_1936.jpg) |
+| 1936 | Rose Marie | — | [Póster](test_herbert_stothart/posters/poster_rose_marie_1936.jpg) |
+| 1937 | La buena tierra | The Good Earth | [Póster](test_herbert_stothart/posters/poster_the_good_earth_1937.jpg) |
 | 1937 | Maria Walewska | Conquest | [Póster](test_herbert_stothart/posters/poster_conquest_1937.jpg) |
 | 1937 | Maytime | — | [Póster](test_herbert_stothart/posters/poster_maytime_1937.jpg) |
-| 1937 | Rosalie | — | [Póster](test_herbert_stothart/posters/poster_rosalie_1937.jpg) |
-| 1937 | La luciernaga | The Firefly | [Póster](test_herbert_stothart/posters/poster_the_firefly_1937.jpg) |
-| 1937 | La buena tierra | The Good Earth | [Póster](test_herbert_stothart/posters/poster_the_good_earth_1937.jpg) |
-| 1937 | El último adiós a la señora Cheyney | The Last of Mrs. Cheyney | [Póster](test_herbert_stothart/posters/poster_the_last_of_mrs_cheyney_1937.jpg) |
-| 1938 | María Antonieta | Marie Antoinette | [Póster](test_herbert_stothart/posters/poster_marie_antoinette_1938.jpg) |
-| 1938 | Ingratitud | Of Human Hearts | [Póster](test_herbert_stothart/posters/poster_of_human_hearts_1938.jpg) |
+| 1937 | The Romance of Celluloid | — | [Póster](test_herbert_stothart/posters/poster_the_romance_of_celluloid_1937.jpg) |
 | 1938 | Enamorados | Sweethearts | [Póster](test_herbert_stothart/posters/poster_sweethearts_1938.jpg) |
-| 1938 | Ciudad del oro | The Girl of the Golden West | [Póster](test_herbert_stothart/posters/poster_the_girl_of_the_golden_west_1938.jpg) |
+| 1938 | Maria Antonieta | Marie Antoinette | [Póster](test_herbert_stothart/posters/poster_marie_antoinette_1938.jpg) |
 | 1939 | Balalaika | — | [Póster](test_herbert_stothart/posters/poster_balalaika_1939.jpg) |
-| 1939 | Se llevó mi corazón | Broadway Serenade | [Póster](test_herbert_stothart/posters/poster_broadway_serenade_1939.jpg) |
-| 1939 | La delicia de los idiotas | Idiot's Delight | [Póster](test_herbert_stothart/posters/poster_idiot_s_delight_1939.jpg) |
-| 1940 | Edison, el hombre | Edison, the Man | [Póster](test_herbert_stothart/posters/poster_edison_the_man_1940.jpg) |
-| 1940 | Luna llena | New Moon | [Póster](test_herbert_stothart/posters/poster_new_moon_1940.jpg) |
-| 1940 | Paso al noroeste | Northwest Passage | [Póster](test_herbert_stothart/posters/poster_northwest_passage_1940.jpg) |
-| 1940 | Más fuerte que el orgullo | Pride and Prejudice | [Póster](test_herbert_stothart/posters/poster_pride_and_prejudice_1940.jpg) |
-| 1940 | Susana y Dios | Susan and God | [Póster](test_herbert_stothart/posters/poster_susan_and_god_1940.jpg) |
+| 1940 | Cavalcade of the Academy Awards | — | [Póster](test_herbert_stothart/posters/poster_cavalcade_of_the_academy_awards_1940.jpg) |
 | 1940 | El puente de Waterloo | Waterloo Bridge | [Póster](test_herbert_stothart/posters/poster_waterloo_bridge_1940.jpg) |
-| 1941 | La secretaria de Andy Hardy | Andy Hardy's Private Secretary | [Póster](test_herbert_stothart/posters/poster_andy_hardy_s_private_secretary_1941.jpg) |
+| 1940 | Más fuerte que el orgullo | Pride and Prejudice | [Póster](test_herbert_stothart/posters/poster_pride_and_prejudice_1940.jpg) |
+| 1940 | Paso al noroeste | Northwest Passage | [Póster](test_herbert_stothart/posters/poster_northwest_passage_1940.jpg) |
 | 1941 | De corazón a corazón | Blossoms in the Dust | [Póster](test_herbert_stothart/posters/poster_blossoms_in_the_dust_1941.jpg) |
-| 1941 | Ven a vivir conmigo | Come Live with Me | [Póster](test_herbert_stothart/posters/poster_come_live_with_me_1941.jpg) |
-| 1941 | La ciudad de los muchachos | Men of Boys Town | [Póster](test_herbert_stothart/posters/poster_men_of_boys_town_1941.jpg) |
-| 1941 | El amor no muere | Smilin' Through | [Póster](test_herbert_stothart/posters/poster_smilin_through_1941.jpg) |
-| 1941 | Entre ladrones anda el amor (Aventura en Bombay) | They Met in Bombay | [Póster](test_herbert_stothart/posters/poster_they_met_in_bombay_1941.jpg) |
-| 1941 | Las chicas de Ziegfeld | Ziegfeld Girl | [Póster](test_herbert_stothart/posters/poster_ziegfeld_girl_1941.jpg) |
-| 1942 | Intriga en el Cairo | Cairo | [Póster](test_herbert_stothart/posters/poster_cairo_1942.jpg) |
-| 1942 | Me casé con un ángel | I Married an Angel | [Póster](test_herbert_stothart/posters/poster_i_married_an_angel_1942.jpg) |
+| 1941 | Smilin' Through | — | [Póster](test_herbert_stothart/posters/poster_smilin_through_1941.jpg) |
+| 1941 | The Chocolate Soldier | — | [Póster](test_herbert_stothart/posters/poster_the_chocolate_soldier_1941.jpg) |
 | 1942 | La señora Miniver | Mrs. Miniver | [Póster](test_herbert_stothart/posters/poster_mrs_miniver_1942.jpg) |
-| 1942 | Niebla en el pasado | Random Harvest | [Póster](test_herbert_stothart/posters/poster_random_harvest_1942.jpg) |
-| 1942 | Rio Rita | — | [Póster](test_herbert_stothart/posters/poster_rio_rita_1942.jpg) |
-| 1942 | Lo que siempre triunfa | Tennessee Johnson | [Póster](test_herbert_stothart/posters/poster_tennessee_johnson_1942.jpg) |
-| 1943 | Dos en el cielo | A Guy Named Joe | [Póster](test_herbert_stothart/posters/poster_a_guy_named_joe_1943.jpg) |
-| 1943 | Madame Curie | — | [Póster](test_herbert_stothart/posters/poster_madame_curie_1943.jpg) |
-| 1943 | La comedia humana | The Human Comedy | [Póster](test_herbert_stothart/posters/poster_the_human_comedy_1943.jpg) |
-| 1943 | Three Hearts for Julia | — | [Póster](test_herbert_stothart/posters/poster_three_hearts_for_julia_1943.jpg) |
-| 1944 | Escuela de sirenas | Bathing Beauty | [Póster](test_herbert_stothart/posters/poster_bathing_beauty_1944.jpg) |
-| 1944 | Dragon Seed | — | [Póster](test_herbert_stothart/posters/poster_dragon_seed_1944.jpg) |
+| 1942 | Me casé con un ángel | I Married an Angel | [Póster](test_herbert_stothart/posters/poster_i_married_an_angel_1942.jpg) |
+| 1942 | Tennessee Johnson | — | [Póster](test_herbert_stothart/posters/poster_tennessee_johnson_1942.jpg) |
+| 1942 | We Must Have Music | — | [Póster](test_herbert_stothart/posters/poster_we_must_have_music_1942.jpg) |
+| 1943 | El desfile de las estrellas | Thousands Cheer | [Póster](test_herbert_stothart/posters/poster_thousands_cheer_1943.jpg) |
+| 1944 | Dos en el cielo | A Guy Named Joe | [Póster](test_herbert_stothart/posters/poster_a_guy_named_joe_1944.jpg) |
 | 1944 | El príncipe mendigo | Kismet | [Póster](test_herbert_stothart/posters/poster_kismet_1944.jpg) |
-| 1944 | Fuego de juventud | National Velvet | [Póster](test_herbert_stothart/posters/poster_national_velvet_1944.jpg) |
-| 1944 | Sombras en la nieve | Song of Russia | [Póster](test_herbert_stothart/posters/poster_song_of_russia_1944.jpg) |
-| 1944 | Las rocas blancas de Dóver | The White Cliffs of Dover | [Póster](test_herbert_stothart/posters/poster_the_white_cliffs_of_dover_1944.jpg) |
+| 1944 | Las rocas blancas de Dover | The White Cliffs of Dover | [Póster](test_herbert_stothart/posters/poster_the_white_cliffs_of_dover_1944.jpg) |
 | 1944 | Treinta segundos sobre Tokio | Thirty Seconds Over Tokyo | [Póster](test_herbert_stothart/posters/poster_thirty_seconds_over_tokyo_1944.jpg) |
-| 1945 | Aventura | Adventure | [Póster](test_herbert_stothart/posters/poster_adventure_1945.jpg) |
-| 1945 | Combat America | — | [Póster](test_herbert_stothart/posters/poster_combat_america_1945.jpg) |
-| 1945 | El cachorro de Lassie | Son of Lassie | [Póster](test_herbert_stothart/posters/poster_son_of_lassie_1945.jpg) |
 | 1945 | El retrato de Dorian Gray | The Picture of Dorian Gray | [Póster](test_herbert_stothart/posters/poster_the_picture_of_dorian_gray_1945.jpg) |
 | 1945 | El valle del destino | The Valley of Decision | [Póster](test_herbert_stothart/posters/poster_the_valley_of_decision_1945.jpg) |
+| 1945 | Fuego de juventud | National Velvet | [Póster](test_herbert_stothart/posters/poster_national_velvet_1945.jpg) |
 | 1945 | No eran imprescindibles | They Were Expendable | [Póster](test_herbert_stothart/posters/poster_they_were_expendable_1945.jpg) |
-| 1946 | Los verdes años | The Green Years | [Póster](test_herbert_stothart/posters/poster_the_green_years_1946.jpg) |
+| 1946 | Corrientes ocultas | Undercurrent | [Póster](test_herbert_stothart/posters/poster_undercurrent_1946.jpg) |
 | 1946 | El despertar | The Yearling | [Póster](test_herbert_stothart/posters/poster_the_yearling_1946.jpg) |
-| 1946 | Undercurrent | — | [Póster](test_herbert_stothart/posters/poster_undercurrent_1946.jpg) |
+| 1946 | The Green Years | — | [Póster](test_herbert_stothart/posters/poster_the_green_years_1946.jpg) |
 | 1947 | Desire Me | — | [Póster](test_herbert_stothart/posters/poster_desire_me_1947.jpg) |
 | 1947 | La isla encantada | High Barbaree | [Póster](test_herbert_stothart/posters/poster_high_barbaree_1947.jpg) |
-| 1947 | Invierno en el alma | If Winter Comes | [Póster](test_herbert_stothart/posters/poster_if_winter_comes_1947.jpg) |
 | 1947 | Mar de hierba | The Sea of Grass | [Póster](test_herbert_stothart/posters/poster_the_sea_of_grass_1947.jpg) |
-| 1947 | La danza inconclusa | The Unfinished Dance | [Póster](test_herbert_stothart/posters/poster_the_unfinished_dance_1947.jpg) |
 | 1948 | Las colinas de mi tierra | Hills of Home | [Póster](test_herbert_stothart/posters/poster_hills_of_home_1948.jpg) |
 | 1948 | Los tres mosqueteros | The Three Musketeers | [Póster](test_herbert_stothart/posters/poster_the_three_musketeers_1948.jpg) |
-| 1948 | Tres chicas atrevidas | Three Daring Daughters | [Póster](test_herbert_stothart/posters/poster_three_daring_daughters_1948.jpg) |
-| 1950 | Big Jack | — | [Póster](test_herbert_stothart/posters/poster_big_jack_1950.jpg) |
-| 1950 | La historia de los Miniver | The Miniver Story | [Póster](test_herbert_stothart/posters/poster_the_miniver_story_1950.jpg) |
-| 1995 | The Wizard of Oz in Concert: Dreams Come True | — | [Póster](test_herbert_stothart/posters/poster_the_wizard_of_oz_in_concert_dreams_come_true_1995.jpg) |
-| — | Indian Love Call | — | [Póster](test_herbert_stothart/posters/poster_indian_love_call.jpg) |
-| — | Rose-Marie | — | [Póster](test_herbert_stothart/posters/poster_rose_marie.jpg) |
+| 1948 | Three Daring Daughters | — | [Póster](test_herbert_stothart/posters/poster_three_daring_daughters_1948.jpg) |
+| 1949 | Big Jack | — | [Póster](test_herbert_stothart/posters/poster_big_jack_1949.jpg) |
 
 ## Premios y nominaciones
 
-* 1939 – Nominación de la Academia – por *Marie Antoinette (Título en España: María Antonieta)*
+* 1939 – Nominación de la Academia – por *Marie Antoinette (Título en España: Maria Antonieta)*
 * 1939 – Nominación de la Academia – por *Sweethearts (Título en España: Enamorados)*
-* 1940 – Premio de la Academia – por *The Wizard of Oz*
-* 1940 – Nominación de la Academia – por *The Wizard of Oz*
+* 1940 – Premio de la Academia – por *The Wizard of Oz (Título en España: El mago de Oz)*
+* 1940 – Nominación de la Academia – por *The Wizard of Oz (Título en España: El mago de Oz)*
 * 1941 – Nominación de la Academia – por *Waterloo Bridge (Título en España: El puente de Waterloo)*
-* 1942 – Nominación de la Academia – por *The Chocolate Soldier*
+* 1942 – Nominación de la Academia – por *The Chocolate Soldier (Título en España: The Chocolate Soldier)*
 * 1943 – Nominación de la Academia – por *Random Harvest (Título en España: Niebla en el pasado)*
 * 1944 – Nominación de la Academia – por *Madame Curie (Título en España: Madame Curie)*
-* 1944 – Nominación de la Academia – por *Thousands Cheer*
+* 1944 – Nominación de la Academia – por *Thousands Cheer (Título en España: El desfile de las estrellas)*
 * 1945 – Nominación de la Academia – por *Kismet (Título en España: El príncipe mendigo)*
 * 1946 – Nominación de la Academia – por *The Valley of Decision (Título en España: El valle del destino)*
 
@@ -251,7 +186,7 @@ Aunque reservado, su legado personal brilla en anécdotas como rechazar pompa eu
 [2]: https://silverscenesblog.blogspot.com/2015/01/herbert-stothart-composer.html
 [3]: https://mubi.com/es/cast/herbert-stothart
 [4]: https://mubi.com/en/cast/herbert-stothart
-[5]: https://moviemusicuk.us/2015/07/01/herbert-stothart-fathers-of-film-music-part-11/
+[5]: https://en.wikipedia.org/wiki/Academy_Award_for_Original_Music_Score
 
 ## Fuentes adicionales
 
@@ -277,8 +212,8 @@ Aunque reservado, su legado personal brilla en anécdotas como rechazar pompa eu
 * WhatSong (2): Ramin Djawadi - Prison Break: Temporadas 3 y 4 (Banda sonora original de televisión) Ramin Djawadi - Prison Break: Temporadas 3 y 4 (Banda sonora original de televisión)
 * WhatSong (3): Trevor Morris, Einar Selvik, Steve Tavaglione y Brian Kilgore - Los vikingos II (banda sonora original de la película) Trevor Morris - Los vikingos II (banda sonora original de la película)
 * www.rottentomatoes.com: -- The Great American Baking Show: Celebrity Big Game: Temporada 2 89% Shrinking: Temporada 3 Enlace a Shrinking: Temporada 3
-* music.apple.com: Dragon Seed (banda sonora original) [1944]âÂ·â2013 Puedo matar a Dragon Seed (banda sonora original) [1944]âÂ·â2013
-* classical.music.apple.com: Campoli - The Decca 78s, Volumen 1 (Remasterizado por Mark Obert-Thorn, 2024) Campoli - The Decca 78s, Volumen 1 (Remasterizado por Mark Obert-Thorn, 2024) Alfredo Campoli, Sidney Crooke Joyas del romance Joyas del romance André Rieu, Johann Strauss Orchestra
-* moviemusicuk.us: Nacido: 11 de septiembre de 1885, Milwaukee, Wisconsin. Fallecido: 1 de febrero de 1949. Herbert Stothart nació de ascendencia escocesa y alemana en Milwaukee, Wisconsin, en 1885. Estudió en la Escuela Normal de Milwaukee con un plan de estudios diseñado para prepararlo para una carrera académica como profesor de historia. Ayudó a pagar su educación trabajando como acomodador de teatro, lo que también provocó una fascinación por el cine que duraría toda su vida. Sucedió que se unió al coro de la Iglesia Episcopal, lo que despertó un ferviente amor por la música. Cuando ingresó a la Universidad de Wisconsin, continuó por este camino componiendo y dirigiendo musicales para el Haresfoot Dramatic Club. Su exposición a las artes musicales y su...
-* music.apple.com: Dragon Seed (banda sonora original) [1944]âÂ·â2013 Puedo matar a Dragon Seed (banda sonora original) [1944]âÂ·â2013
 * themoviescores.com: Milwakee, Wisconsin, Estados Unidos, 11 de septiembre de 1885 – Los Angeles, California, Estados Unidos, 1 de febrero de 1949 (63 años) Herbert Pope Stothart fue un arreglista, director de orquesta y compositor estadounidense, de ascendencia escocesa y alemana, de extensa e importante performance en la música de cine, considerado el más trascendente de la MGM de los años treinta y cuarenta, estudio para el que trabajó como director musical durante toda su carrera.
+* cinescores.dudaone.com: Visite el sitio web representativo de Hugo Friedhofer - IR AL SITIO
+* www.allocine.fr: Ej.: Olivia Wilde, Robert De Niro, Dakota Johnson, Brad Pitt Encuentra todos los horarios e información de tu cine en el número de AlloCiné: 0 892 892 892 (0,90 €/minuto)
+* moviemusicuk.us: Tras el enorme éxito comercial de “Blancanieves y los siete enanitos” de Walt Disney (1937), Louis Mayer, ejecutivo de MGM Studio, estaba decidido a sacar provecho y duplicar su éxito. Encontró la historia que consideraba necesaria y compró los derechos de la novela de L. Frank Baum, "El maravilloso mago de Oz" (1900). Noel Langley, Florence Ryerson y Edgar Allan Woolf fueron los encargados de escribir el guión. El veterano director Victor Fleming fue contratado para el proyecto y reunió un elenco, que ahora es leyenda; Judy Garland (Dorothy), Frank Morgan (Profesor Marvel/Mago de Oz), Ray Bolger (Hunk/Scarecrow), Jack Haley (Hickory/Tin Man), Bert Lahr (Zeke/Cowardly Lion), Billie Burke (Glinda) y...
+* moviemusicuk.us: Nacido: 11 de septiembre de 1885, Milwaukee, Wisconsin. Fallecido: 1 de febrero de 1949. Herbert Stothart nació de ascendencia escocesa y alemana en Milwaukee, Wisconsin, en 1885. Estudió en la Escuela Normal de Milwaukee con un plan de estudios diseñado para prepararlo para una carrera académica como profesor de historia. Ayudó a pagar su educación trabajando como acomodador de teatro, lo que también provocó una fascinación por el cine que duraría toda su vida. Sucedió que se unió al coro de la Iglesia Episcopal, lo que despertó un ferviente amor por la música. Cuando ingresó a la Universidad de Wisconsin, continuó por este camino componiendo y dirigiendo musicales para el Haresfoot Dramatic Club. Su exposición a las artes musicales y su...
