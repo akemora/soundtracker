@@ -438,65 +438,65 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 3.1.1 | Crear `backend/` directorio | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
 | 3.1.2 | Crear `backend/requirements.txt` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
 | 3.1.3 | Crear `backend/app/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
-| 3.1.4 | Crear `backend/app/main.py` con FastAPI app | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 3.1.5 | Configurar CORS | **GPT** | `4o-mini` | 🔴 | `[ ]` | |
-| 3.1.6 | Crear `backend/app/config.py` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.1.7 | Crear `backend/app/database.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 3.1.4 | Crear `backend/app/main.py` con FastAPI app | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.1.5 | Configurar CORS | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.1.6 | Crear `backend/app/config.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.1.7 | Crear `backend/app/database.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 
 ### 3.2 Modelos Pydantic API
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 3.2.1 | Crear `backend/app/models/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
-| 3.2.2 | Crear `backend/app/models/composer.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 3.2.3 | Implementar `ComposerSummary` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.2.4 | Implementar `ComposerDetail` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.2.5 | Crear `backend/app/models/film.py` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.2.6 | Crear `backend/app/models/award.py` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.2.7 | Crear `backend/app/models/search.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 3.2.2 | Crear `backend/app/models/composer.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.2.3 | Implementar `ComposerSummary` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.2.4 | Implementar `ComposerDetail` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.2.5 | Crear `backend/app/models/film.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.2.6 | Crear `backend/app/models/award.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.2.7 | Crear `backend/app/models/search.py` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 3.3 Servicios Backend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 3.3.1 | Crear `backend/app/services/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
-| 3.3.2 | Crear `backend/app/services/composer_service.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 3.3.3 | Implementar `list_composers()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.3.4 | Implementar `get_composer_by_slug()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.3.5 | Implementar `get_filmography()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.3.6 | Implementar `get_awards()` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.3.7 | Crear `backend/app/services/search_service.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 3.3.8 | Implementar búsqueda FTS5 | **Claude** | `sonnet` | 🔴 | `[ ]` | |
+| 3.3.2 | Crear `backend/app/services/composer_service.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.3.3 | Implementar `list_composers()` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.3.4 | Implementar `get_composer_by_slug()` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.3.5 | Implementar `get_filmography()` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.3.6 | Implementar `get_awards()` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.3.7 | Crear `backend/app/services/search_service.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.3.8 | Implementar búsqueda FTS5 | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 
 ### 3.4 Routers (Endpoints)
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 3.4.1 | Crear `backend/app/routers/__init__.py` | **GPT** | `4o-mini` | 🔴 | `[x]` | 2026-02-03 |
-| 3.4.2 | Crear `backend/app/routers/composers.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 3.4.3 | Implementar `GET /api/composers` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.4.4 | Implementar `GET /api/composers/{slug}` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.4.5 | Implementar `GET /api/composers/{slug}/filmography` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.4.6 | Implementar `GET /api/composers/{slug}/awards` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 3.4.7 | Crear `backend/app/routers/search.py` | **Claude** | `sonnet` | 🔴 | `[ ]` | |
-| 3.4.8 | Implementar `GET /api/search` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.4.9 | Crear `backend/app/routers/assets.py` | **Claude** | `haiku` | 🔴 | `[ ]` | |
-| 3.4.10 | Implementar `GET /api/assets/{path}` | **Claude** | `haiku` | 🔴 | `[ ]` | |
+| 3.4.2 | Crear `backend/app/routers/composers.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.4.3 | Implementar `GET /api/composers` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.4.4 | Implementar `GET /api/composers/{slug}` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.4.5 | Implementar `GET /api/composers/{slug}/filmography` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.4.6 | Implementar `GET /api/composers/{slug}/awards` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 3.4.7 | Crear `backend/app/routers/search.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.4.8 | Implementar `GET /api/search` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.4.9 | Crear `backend/app/routers/assets.py` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.4.10 | Implementar `GET /api/assets/{path}` | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 
 ### 3.5 Tests Backend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 3.5.1 | Crear `backend/tests/` directorio | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
-| 3.5.2 | Crear `backend/tests/conftest.py` | **Claude** | `haiku` | 🟡 | `[ ]` | |
-| 3.5.3 | Crear tests para endpoints de compositores | **Claude** | `sonnet` | 🟡 | `[ ]` | |
-| 3.5.4 | Crear tests para endpoint de búsqueda | **Claude** | `haiku` | 🟡 | `[ ]` | |
+| 3.5.2 | Crear `backend/tests/conftest.py` | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
+| 3.5.3 | Crear tests para endpoints de compositores | **Codex** | `o3-mini` | 🟡 | `[x]` | 2026-02-03 |
+| 3.5.4 | Crear tests para endpoint de búsqueda | **Claude** | `opus` | 🟡 | `[x]` | 2026-02-03 |
 
 ### 3.6 Validación Backend
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 3.6.1 | Ejecutar backend localmente | Manual | - | 🔴 | `[ ]` | |
+| 3.6.1 | Ejecutar backend localmente | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 | 3.6.2 | Verificar documentación OpenAPI en `/docs` | Manual | - | 🔴 | `[ ]` | |
-| 3.6.3 | Probar endpoints con curl/httpie | Manual | - | 🔴 | `[ ]` | |
-| 3.6.4 | Verificar respuestas de búsqueda FTS5 | Manual | - | 🔴 | `[ ]` | |
+| 3.6.3 | Probar endpoints con curl/httpie | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
+| 3.6.4 | Verificar respuestas de búsqueda FTS5 | **Claude** | `opus` | 🔴 | `[x]` | 2026-02-03 |
 
-**Checkpoint Fase 3**: `[ ]` Completada
+**Checkpoint Fase 3**: `[x]` Completada (2026-02-03)
 
 ---
 
