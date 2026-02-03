@@ -1,234 +1,441 @@
-# Plan de desarrollo detallado: Frontend + Backend para la base de datos de compositores
+# Plan de Desarrollo - SOUNDTRACKER
 
-## 1. Proposito del frontend
-El frontend sera la interfaz principal para explorar y consultar la base de datos de compositores de bandas sonoras. Permitira:
-- Buscar compositores por nombre, pais, periodo, premios, estilos y obras.
-- Consultar fichas completas con biografia, estilo musical, anecdotas, filmografia, top 10 y premios.
-- Navegar filmografias con posters locales.
-- Visualizar fuentes y notas externas.
-- Acceso controlado por roles (admin / user).
-- Interfaz bonita, moderna y dinamica, preparada para publicar en web.
+**Versión**: 2.0 | **Actualizado**: 2026-02-03
 
-## 2. Requisitos funcionales
-- Backend en servidor propio.
-- Datos locales (sin depender de servicios externos en tiempo real).
-- Busqueda avanzada y rapida.
-- Autenticacion con roles.
-- Multi-idioma UI: ES (principal), EN (secundario).
-- Exportable a web (frontend web + API local).
-- Sincronizacion de datos mediante Git (versionado y rollback).
+> Este documento define el roadmap completo para transformar SOUNDTRACKER de un pipeline de generación de datos a una aplicación web completa.
 
-## 3. Arquitectura recomendada (razones)
+---
 
-### 3.1 Backend: FastAPI + SQLite (FTS5)
-- **Motivo**: ya tenemos pipeline Python; FastAPI es rapido, moderno y facil de mantener.
-- **SQLite con FTS5**: busqueda full-text sin servidor adicional, portable y versionable.
-- **Ventaja**: base de datos en un solo fichero (`soundtrackers.db`).
+## 1. Visión del Proyecto
 
-### 3.2 Frontend: Next.js + Tailwind + shadcn/ui
-- **Motivo**: UI moderna y estetica, componentes listos, facil de personalizar.
-- **Soporte i18n**: integrado en Next.
-- **Experiencia**: rapido para construir un frontend elegante y dinamico.
+### 1.1 Estado Actual
+- Pipeline Python funcional (1,968 líneas en archivo monolítico)
+- 164 compositores documentados con biografía, filmografía, Top 10 y premios
+- ~970 MB de datos (Markdown + pósters)
+- Integración con TMDB, Wikipedia, Wikidata, YouTube, Perplexity
 
-### 3.3 Sincronizacion
-- **Recomendado**: generar `soundtrackers.db` localmente y versionarlo con Git.
-- **Poster assets**: pueden versionarse en Git (si no es demasiado grande) o Git LFS.
-- **Ventaja**: historial de datos, rollback, y despliegue simple al servidor.
+### 1.2 Estado Objetivo
+- **Backend**: FastAPI + SQLite (FTS5) con API REST documentada
+- **Frontend**: Next.js 14 + Tailwind + shadcn/ui
+- **Pipeline**: Código modular, testeable y mantenible
+- **Datos**: Base de datos estructurada con búsqueda full-text
 
-## 4. Tamaño de datos (estimacion y gestion)
-- Markdown: 164 compositores + metadatos.
-- Posters: potencialmente miles de imagenes (GBs).
-- Estrategia:
-  - si < 2-3 GB: Git normal.
-  - si > 3-5 GB: Git LFS recomendado.
+---
 
-## 5. Diseño de datos (esquema)
+## 2. Arquitectura
 
-### 5.1 Tabla `composers`
-- id (PK)
-- name
-- slug
-- photo_path
-- biography_es
-- biography_en
-- style_es
-- style_en
-- anecdotes_es
-- anecdotes_en
-- created_at
-- updated_at
+### 2.1 Stack Tecnológico
 
-### 5.2 Tabla `films`
-- id (PK)
-- composer_id (FK)
-- title_original
-- title_es
-- year
-- poster_path
-- is_top10
-- top10_rank
-- tmdb_popularity
-- tmdb_vote_count
-- tmdb_vote_average
-- youtube_views
-- created_at
+| Capa | Tecnología | Justificación |
+|------|------------|---------------|
+| **Pipeline** | Python 3.11+ | Continuidad con código existente |
+| **Backend** | FastAPI | Async, tipado, OpenAPI automático |
+| **Base de datos** | SQLite + FTS5 | Portable, versionable, sin servidor |
+| **Frontend** | Next.js 14 | App Router, RSC, optimización de imágenes |
+| **Estilos** | Tailwind CSS | Utilidades, design tokens, responsive |
+| **Componentes** | shadcn/ui | Accesibles, personalizables |
+| **i18n** | next-intl | ES (principal), EN (secundario) |
 
-### 5.3 Tabla `awards`
-- id (PK)
-- composer_id (FK)
-- award_name
-- year
-- film_title
-- status (Win/Nomination)
+### 2.2 Estructura de Directorios (Objetivo)
 
-### 5.4 Tabla `sources`
-- id (PK)
-- composer_id (FK)
-- source_name
-- url
-- snippet
+```
+App/
+├── src/                          # Código fuente Python refactorizado
+│   └── soundtracker/
+│       ├── __init__.py
+│       ├── config.py             # Configuración centralizada
+│       ├── models.py             # Dataclasses/Pydantic
+│       ├── clients/              # Clientes de APIs
+│       │   ├── tmdb.py
+│       │   ├── wikipedia.py
+│       │   ├── wikidata.py
+│       │   ├── youtube.py
+│       │   └── search.py
+│       ├── services/             # Lógica de negocio
+│       │   ├── biography.py
+│       │   ├── filmography.py
+│       │   ├── top10.py
+│       │   └── awards.py
+│       ├── generators/           # Generación de salidas
+│       │   └── markdown.py
+│       └── cache/                # Sistema de caché
+│           └── file_cache.py
+├── backend/                      # API FastAPI
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── routers/
+│   │   ├── models/
+│   │   └── services/
+│   └── tests/
+├── frontend/                     # Next.js
+│   ├── src/
+│   │   ├── app/
+│   │   ├── components/
+│   │   └── lib/
+│   └── public/
+├── scripts/                      # Scripts de orquestación
+│   ├── create_composer_files.py  # Refactorizado (~50 líneas)
+│   ├── build_database.py         # ETL Markdown → SQLite
+│   └── update_top10.py
+├── tests/                        # Tests del pipeline
+├── outputs/                      # Datos generados (existente)
+├── data/                         # Base de datos SQLite
+│   └── soundtrackers.db
+├── pyproject.toml
+├── AGENTS.md
+├── CONVENTIONS.md
+├── CONVENTIONS_FRONTEND.md
+└── README.md
+```
 
-### 5.5 Tabla `notes`
-- id (PK)
-- composer_id (FK)
-- text
-- source_name
+---
 
-### 5.6 Tabla `fts_composers`
-- FTS5 index sobre:
-  - name
-  - biography_es
-  - style_es
-  - anecdotes_es
-  - film titles
-  - awards
+## 3. Esquema de Base de Datos
 
-## 6. ETL (Markdown -> SQLite)
+### 3.1 Tablas Principales
 
-### 6.1 Parser
-- Lee `App/outputs/*.md`.
-- Identifica secciones:
-  - Biografia
-  - Estilo musical
-  - Anecdotas
-  - Top 10
-  - Filmografia completa
-  - Premios y nominaciones
-  - Fuentes adicionales
-  - Notas externas
+```sql
+-- Compositores
+CREATE TABLE composers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    photo_path TEXT,
+    biography_es TEXT,
+    style_es TEXT,
+    anecdotes_es TEXT,
+    birth_year INTEGER,
+    death_year INTEGER,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+);
 
-### 6.2 Normalizacion
-- Titulos: `Original (Titulo en Espana: ... )` se separa en dos campos.
-- Posters: rutas locales se convierten a rutas relativas.
-- Premios: se normalizan y se asocian con peliculas.
+-- Películas
+CREATE TABLE films (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    composer_id INTEGER NOT NULL REFERENCES composers(id),
+    title_original TEXT NOT NULL,
+    title_es TEXT,
+    year INTEGER,
+    poster_path TEXT,
+    is_top10 INTEGER DEFAULT 0,
+    top10_rank INTEGER,
+    tmdb_popularity REAL,
+    tmdb_vote_count INTEGER,
+    tmdb_vote_average REAL,
+    youtube_views INTEGER,
+    score REAL
+);
 
-### 6.3 Resultado
-- Genera `soundtrackers.db` listo para consultas y API.
+-- Premios
+CREATE TABLE awards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    composer_id INTEGER NOT NULL REFERENCES composers(id),
+    award_name TEXT NOT NULL,
+    year INTEGER,
+    film_title TEXT,
+    status TEXT CHECK(status IN ('Win', 'Nomination'))
+);
 
-## 7. Backend API
+-- Fuentes externas
+CREATE TABLE sources (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    composer_id INTEGER NOT NULL REFERENCES composers(id),
+    source_name TEXT NOT NULL,
+    url TEXT NOT NULL,
+    snippet TEXT
+);
 
-### 7.1 Endpoints principales
-- `GET /api/search`
-  - params: q, year, award, country, style, has_award, has_top10, etc.
-- `GET /api/composers`
-  - listado paginado con filtros.
-- `GET /api/composers/{id}`
-  - detalle completo + filmografia + premios.
-- `GET /api/films`
-  - filtros por year, top10, composer.
-- `GET /api/awards`
-  - filtros por award/year.
-- `GET /api/assets/{path}`
-  - entrega posters locales.
+-- FTS5 para búsqueda full-text
+CREATE VIRTUAL TABLE fts_composers USING fts5(
+    name,
+    biography_es,
+    style_es,
+    film_titles,
+    award_names,
+    tokenize='porter unicode61'
+);
+```
 
-### 7.2 Auth
-- Login con usuario/clave.
-- Roles:
-  - admin: acceso completo + panel de mantenimiento.
-  - user: solo lectura.
+### 3.2 Vista de Estadísticas
 
-## 8. Frontend UI (detallado)
+```sql
+CREATE VIEW v_composer_stats AS
+SELECT
+    c.id, c.name, c.slug, c.photo_path,
+    COUNT(DISTINCT f.id) as film_count,
+    COUNT(DISTINCT CASE WHEN a.status = 'Win' THEN a.id END) as wins,
+    COUNT(DISTINCT CASE WHEN a.status = 'Nomination' THEN a.id END) as nominations,
+    MIN(f.year) as career_start,
+    MAX(f.year) as career_end
+FROM composers c
+LEFT JOIN films f ON f.composer_id = c.id
+LEFT JOIN awards a ON a.composer_id = c.id
+GROUP BY c.id;
+```
 
-### 8.1 Paginas
-- **Home**: buscador global + acceso a filtros.
-- **Listado compositores**: cards con foto, top 3 y premios.
-- **Detalle compositor**:
-  - foto, biografia, estilo, anecdotas
-  - top 10 con posters
-  - filmografia completa con posters
-  - premios
-- **Buscador avanzado**:
-  - filtros por periodo, premio, pais, estilo, etc.
+---
 
-### 8.2 UX / UI
-- Diseno moderno (cards, tipografia elegante, colores neutros, sombras suaves).
-- UI dinamica con filtros en tiempo real.
-- Soporte responsive (desktop/tablet/movil).
+## 4. API Backend
 
-### 8.3 i18n
-- Espanol como default.
-- Ingles opcional.
+### 4.1 Endpoints
 
-## 9. Sincronizacion y despliegue
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/composers` | Lista paginada con filtros |
+| GET | `/api/composers/{slug}` | Detalle completo |
+| GET | `/api/composers/{slug}/filmography` | Filmografía paginada |
+| GET | `/api/composers/{slug}/awards` | Premios |
+| GET | `/api/search` | Búsqueda FTS5 |
+| GET | `/api/films` | Lista de películas |
+| GET | `/api/assets/{path}` | Servir pósters |
 
-- Pipeline:
-  1) generar outputs
-  2) construir DB (`soundtrackers.db`)
-  3) commit/push a Git (o Git LFS)
-  4) pull en servidor propio
-  5) reiniciar backend/servicio
+### 4.2 Filtros Soportados
 
-## 10. Riesgos y mitigacion
+```
+GET /api/composers?
+  page=1&
+  per_page=20&
+  sort_by=name|film_count|wins&
+  order=asc|desc&
+  has_awards=true&
+  decade=1980&
+  q=williams
+```
 
-- **Poster gigantes**: usar Git LFS o almacenamiento separado.
-- **Busquedas lentas**: FTS5 + indices.
-- **Errores en parsing**: validadores y logs.
-- **Credenciales externas**: fallback sin APIs.
+---
 
-## 11. Resultado final esperado
-- Aplicacion web moderna, local y estetica.
-- Busqueda avanzada rapida.
-- Acceso controlado por roles.
-- Datos versionados y sincronizables.
+## 5. Frontend
 
-## 12. Roadmap detallado
+### 5.1 Páginas
 
-### Fase 0: Preparacion (1-2 dias)
-- Medir tamano real de `App/outputs` y posters.
-- Definir si se necesita Git LFS.
-- Confirmar entorno objetivo del servidor.
+| Ruta | Descripción |
+|------|-------------|
+| `/` | Home con buscador y compositores destacados |
+| `/composers` | Listado con filtros y paginación |
+| `/composers/[slug]` | Detalle: bio, Top 10, filmografía, premios |
+| `/search` | Búsqueda avanzada con facetas |
 
-### Fase 1: Modelado de datos y ETL (3-5 dias)
-- Definir esquema SQLite + FTS5.
-- Implementar parser Markdown.
-- Generar `soundtrackers.db` inicial.
-- Validacion de integridad (conteo de compositores/films).
+### 5.2 Componentes Principales
 
-### Fase 2: Backend API (4-6 dias)
-- Montar FastAPI.
-- Endpoints de busqueda, listado, detalle.
-- Autenticacion y roles.
-- Tests basicos de API.
+- **ComposerCard**: Tarjeta con foto, nombre, stats
+- **ComposerGrid**: Grid responsivo de tarjetas
+- **ComposerDetail**: Página de detalle completa
+- **Top10Gallery**: Galería de pósters con modal
+- **FilmographyList**: Lista paginada con pósters
+- **AwardsList**: Premios con badges
+- **SearchBar**: Buscador con autocompletado
+- **FilterPanel**: Filtros de búsqueda
 
-### Fase 3: Frontend base (5-7 dias)
-- Setup Next.js + Tailwind + shadcn/ui.
-- Layout principal + i18n.
-- Pagina home + listado compositores.
+### 5.3 Design System
 
-### Fase 4: Frontend avanzado (7-10 dias)
-- Detalle de compositor completo.
-- Buscador avanzado con facetas.
-- Paginacion y filtros dinamicos.
-- Integracion con API.
+**Paleta de colores** (cinematográfica cálida):
+- Primary: `#C96A40` (terracota)
+- Secondary: `#5A7499` (azul grisáceo)
+- Accent Gold: `#D4AF37` (premios)
 
-### Fase 5: Admin y mantenimiento (3-4 dias)
-- Login admin/user.
-- Panel admin basico (ver stats, recargar DB).
+**Tipografía**:
+- Display: Playfair Display (títulos)
+- Body: Inter (texto)
 
-### Fase 6: Deploy y sincronizacion (2-3 dias)
-- Script de build + deploy.
-- Configurar pipeline Git -> servidor.
+---
 
-### Total estimado
-- 25-37 dias laborables (dependiendo de feedback y revision UI).
+## 6. Roadmap de Implementación
 
+### Fase 0: Preparación (1-2 días)
+
+| Tarea | Prioridad | Estado |
+|-------|-----------|--------|
+| Medir tamaño real de outputs | Alta | Pendiente |
+| Evaluar necesidad de Git LFS | Alta | Pendiente |
+| Crear pyproject.toml | Media | Pendiente |
+| Configurar pre-commit hooks | Media | Pendiente |
+
+**Entregables**:
+- Decisión sobre Git LFS
+- pyproject.toml configurado
+- .pre-commit-config.yaml
+
+### Fase 1: Refactorización Python (5-7 días)
+
+| Tarea | Prioridad | Estimación |
+|-------|-----------|------------|
+| Crear modelos de datos | Alta | 1 día |
+| Extraer TMDBClient | Alta | 1 día |
+| Extraer WikipediaClient | Alta | 0.5 días |
+| Extraer WikidataClient | Alta | 0.5 días |
+| Extraer YouTubeClient | Media | 0.5 días |
+| Extraer SearchClient | Alta | 0.5 días |
+| Extraer servicios de negocio | Alta | 1.5 días |
+| Implementar logging estructurado | Media | 0.5 días |
+| Tests unitarios (50%+ cobertura) | Alta | 2 días |
+
+**Entregables**:
+- `src/soundtracker/` con módulos separados
+- `tests/` con cobertura >50%
+- `scripts/create_composer_files.py` refactorizado (<100 líneas)
+
+### Fase 2: Base de Datos + ETL (3-4 días)
+
+| Tarea | Prioridad | Estimación |
+|-------|-----------|------------|
+| Implementar esquema SQLite | Alta | 0.5 días |
+| Implementar FTS5 | Alta | 0.5 días |
+| Desarrollar parser de Markdown | Alta | 1.5 días |
+| Script ETL completo | Alta | 1 día |
+| Validación de integridad | Media | 0.5 días |
+
+**Entregables**:
+- `data/soundtrackers.db` con 164 compositores
+- `scripts/build_database.py`
+- Tests de integridad
+
+### Fase 3: Backend API (4-5 días)
+
+| Tarea | Prioridad | Estimación |
+|-------|-----------|------------|
+| Setup FastAPI | Alta | 0.5 días |
+| Endpoints de compositores | Alta | 1.5 días |
+| Endpoint de búsqueda FTS5 | Alta | 1 día |
+| Servir assets (pósters) | Alta | 0.5 días |
+| Autenticación JWT (opcional) | Baja | 1 día |
+| Tests de API | Media | 1 día |
+
+**Entregables**:
+- `backend/` con API funcional
+- Documentación OpenAPI automática
+- Tests de integración
+
+### Fase 4: Frontend Base (5-7 días)
+
+| Tarea | Prioridad | Estimación |
+|-------|-----------|------------|
+| Setup Next.js + Tailwind | Alta | 0.5 días |
+| Configurar shadcn/ui | Alta | 0.5 días |
+| Design tokens en Tailwind | Alta | 0.5 días |
+| Layout principal | Alta | 1 día |
+| Página Home | Alta | 1 día |
+| Listado de compositores | Alta | 1.5 días |
+| Configurar i18n (ES/EN) | Media | 1 día |
+
+**Entregables**:
+- `frontend/` con Home y Listado
+- Responsive mobile-first
+- i18n configurado
+
+### Fase 5: Frontend Avanzado (7-10 días)
+
+| Tarea | Prioridad | Estimación |
+|-------|-----------|------------|
+| Página de detalle | Alta | 2 días |
+| Galería Top 10 | Alta | 1.5 días |
+| Filmografía con paginación | Alta | 1.5 días |
+| Lista de premios | Media | 1 día |
+| Búsqueda con filtros | Alta | 2 días |
+| Dark mode | Media | 1 día |
+| Optimización de imágenes | Media | 1 día |
+
+**Entregables**:
+- Frontend completo
+- Dark mode funcional
+- Imágenes optimizadas
+
+### Fase 6: Deploy y CI/CD (2-3 días)
+
+| Tarea | Prioridad | Estimación |
+|-------|-----------|------------|
+| Dockerizar backend | Alta | 0.5 días |
+| Dockerizar frontend | Alta | 0.5 días |
+| docker-compose | Alta | 0.5 días |
+| Script de deploy | Alta | 0.5 días |
+| GitHub Actions CI | Media | 1 día |
+
+**Entregables**:
+- Dockerfiles
+- docker-compose.yml
+- .github/workflows/ci.yml
+
+---
+
+## 7. Estimación Total
+
+| Fase | Duración | Acumulado |
+|------|----------|-----------|
+| Fase 0: Preparación | 1-2 días | 2 días |
+| Fase 1: Refactorización | 5-7 días | 9 días |
+| Fase 2: Base de datos | 3-4 días | 13 días |
+| Fase 3: Backend | 4-5 días | 18 días |
+| Fase 4: Frontend base | 5-7 días | 25 días |
+| Fase 5: Frontend avanzado | 7-10 días | 35 días |
+| Fase 6: Deploy | 2-3 días | 38 días |
+
+**Total estimado**: 27-38 días laborables
+
+---
+
+## 8. Riesgos y Mitigación
+
+| Riesgo | Probabilidad | Impacto | Mitigación |
+|--------|--------------|---------|------------|
+| Pósters exceden límites de Git | Alta | Alto | Git LFS o almacenamiento externo |
+| APIs externas cambian | Media | Medio | Caché agresivo + fallbacks |
+| FTS5 lento con datos grandes | Baja | Medio | Índices optimizados + límites |
+| Refactorización introduce bugs | Media | Alto | Tests antes de migrar |
+| Credenciales Spotify no disponibles | Alta | Bajo | YouTube como único streaming |
+
+---
+
+## 9. Criterios de Éxito
+
+### Código
+- [ ] 100% archivos < 1,000 líneas
+- [ ] Cobertura tests > 70%
+- [ ] `ruff` sin warnings
+- [ ] `mypy --strict` sin errores
+
+### Datos
+- [ ] 164 compositores en SQLite
+- [ ] Búsqueda FTS5 < 100ms
+- [ ] Pósters servidos correctamente
+
+### Frontend
+- [ ] Lighthouse Performance > 90
+- [ ] Lighthouse Accessibility > 95
+- [ ] Responsive en móvil/tablet/desktop
+- [ ] Dark mode funcional
+
+### Deploy
+- [ ] Docker build exitoso
+- [ ] CI/CD configurado
+- [ ] Documentación API generada
+
+---
+
+## 10. Control de Progreso
+
+> **IMPORTANTE**: El progreso del desarrollo se controla en `TASKS.md`.
+> Este archivo debe mantenerse **SIEMPRE ACTUALIZADO** después de cada tarea completada.
+
+Ver `TASKS.md` para:
+- Lista detallada de 229 tareas numeradas
+- Asignación de IA óptima para cada tarea (Claude, GPT, Gemini, Perplexity)
+- Modelo recomendado para minimizar costes
+- Checklist de progreso por fase
+
+---
+
+## 11. Documentación Relacionada
+
+| Documento | Propósito |
+|-----------|-----------|
+| `TASKS.md` | **Lista de tareas con checklist** (control de progreso) |
+| `AGENTS.md` | Protocolo operativo para agentes IA |
+| `CONVENTIONS.md` | Estándares de código Python |
+| `CONVENTIONS_FRONTEND.md` | Estándares de código frontend |
+| `AUDIT_AND_PROPOSAL.md` | Auditoría técnica detallada |
+| `README.md` | Documentación de usuario |
+
+---
+
+**Última actualización**: 2026-02-03
+**Versión**: 2.0
