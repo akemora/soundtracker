@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+
+# Virtualenv
+.venv/
+venv/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# Project outputs
+App/outputs/
+App/intermediate_research/
+
+# Cache
+*.sqlite
+*.db
+
+# Environment
+.env
+.env.*
+

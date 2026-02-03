@@ -1,0 +1,1968 @@
+import base64
+import json
+import math
+import os
+import re
+import sys
+import time
+from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+from typing import Dict, List, Optional
+from urllib.parse import quote_plus, urlparse, parse_qs, unquote
+
+try:
+    import requests
+    from bs4 import BeautifulSoup
+    from googlesearch import search
+except ImportError:
+    print("Please install dependencies: pip install requests beautifulsoup4 google")
+    sys.exit(1)
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+OUTPUT_DIR = BASE_DIR / 'outputs'
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+PLACEHOLDER_IMAGE = 'https://example.com/placeholder.jpg'
+AWARD_KEYWORDS = [
+    'Academy Award',
+    'Oscar',
+    'Golden Globe',
+    'Globo de Oro',
+    'BAFTA',
+    'Grammy',
+    'Emmy',
+    'Premio de la Academia',
+]
+STYLE_SECTION_KEYWORDS = [
+    'musical style',
+    'style and influence',
+    'style',
+    'influence',
+    'influences',
+    'compositions',
+    'estilo',
+    'estilo musical',
+    'influencia',
+    'influencias',
+]
+ANECDOTE_SECTION_KEYWORDS = [
+    'personal life',
+    'legacy',
+    'later life',
+    'death',
+    'trivia',
+    'anecdote',
+    'vida personal',
+    'legado',
+    'muerte',
+    'curiosidades',
+]
+STYLE_HINTS = [
+    'style',
+    'influence',
+    'sound',
+    'orchestration',
+    'melody',
+    'theme',
+    'estilo',
+    'música',
+    'musical',
+    'bandas sonoras',
+    'orquesta',
+]
+ANECDOTE_HINTS = [
+    'born',
+    'died',
+    'career',
+    'personal',
+    'known for',
+    'worked',
+    'collaborated',
+    'nacio',
+    'murio',
+    'nació',
+    'murió',
+]
+EXTERNAL_DOMAINS = {
+    'MundoBSO': 'mundobso.com',
+    'Film Score Monthly': 'filmscoremonthly.com',
+    'SoundtrackCollector': 'soundtrackcollector.com',
+    'WhatSong': 'whatsong.org',
+}
+HEADERS = {'User-Agent': 'Soundtracker/1.0'}
+REQUEST_TIMEOUT = 10
+POSTER_LIMIT = int(os.getenv('POSTER_LIMIT', '0'))
+POSTER_SEARCH_RESULTS = 2
+POSTER_WEB_FALLBACK = os.getenv('POSTER_WEB_FALLBACK', '1') == '1'
+TMDB_API_KEY = os.getenv('TMDB_API_KEY')
+TMDB_API = 'https://api.themoviedb.org/3'
+TMDB_IMAGE = 'https://image.tmdb.org/t/p/w500'
+PPLX_API_KEY = os.getenv('PPLX_API_KEY') or os.getenv('PERPLEXITY_API_KEY')
+PPLX_MODEL = os.getenv('PPLX_MODEL', 'sonar')
+PPLX_API = 'https://api.perplexity.ai/v2'
+EXTERNAL_SNIPPET_MAX_CHARS = int(os.getenv('EXTERNAL_SNIPPET_MAX_CHARS', '700'))
+EXTERNAL_SNIPPET_SOURCES = int(os.getenv('EXTERNAL_SNIPPET_SOURCES', '12'))
+MIN_PARAGRAPH_LEN = int(os.getenv('MIN_PARAGRAPH_LEN', '50'))
+MAX_BIO_PARAGRAPHS = int(os.getenv('MAX_BIO_PARAGRAPHS', '6'))
+EXTERNAL_DOMAIN_RESULTS = int(os.getenv('EXTERNAL_DOMAIN_RESULTS', '3'))
+TOP_MIN_VOTE_COUNT = int(os.getenv('TOP_MIN_VOTE_COUNT', '50'))
+SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+SPOTIFY_ENABLED = os.getenv('SPOTIFY_ENABLED', '1') == '1' and SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET
+YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
+YOUTUBE_ENABLED = os.getenv('YOUTUBE_ENABLED', '1') == '1' and YOUTUBE_API_KEY
+STREAMING_CANDIDATE_LIMIT = int(os.getenv('STREAMING_CANDIDATE_LIMIT', '30'))
+TOP_FORCE_AWARDS = os.getenv('TOP_FORCE_AWARDS', '1') == '1'
+STREAMING_CACHE_PATH = OUTPUT_DIR / 'streaming_cache.json'
+NOISE_HINTS = [
+    'cookie',
+    'privacy',
+    'subscribe',
+    'newsletter',
+    'sign up',
+    'terms of use',
+    'otras secciones',
+    'bso news',
+    'news',
+    'entrevistas',
+    'reviews',
+    'miniaturas',
+    'soundtracks',
+    'festivales',
+    'conciertos',
+    'participaciones',
+    'menu',
+]
+BLOCKED_DOMAINS = {
+    'shutterstock.com',
+    'letterboxd.com',
+    'remix.berklee.edu',
+    'movieposters.com',
+    'etsy.com',
+    'impawards.com',
+}
+TMDB_CACHE_PATH = OUTPUT_DIR / 'tmdb_cache.json'
+TRANSLATE_ENDPOINT = 'https://translate.googleapis.com/translate_a/single'
+TRANSLATE_TARGET = 'es'
+DOWNLOAD_POSTERS = os.getenv('DOWNLOAD_POSTERS', '1') == '1'
+SEARCH_WEB_ENABLED = os.getenv('SEARCH_WEB_ENABLED', '1') == '1'
+FILM_LIMIT = int(os.getenv('FILM_LIMIT', '200'))
+POSTER_WORKERS = int(os.getenv('POSTER_WORKERS', '8'))
+SPANISH_CHARS = set('áéíóúñü¿¡')
+SPANISH_HINTS = [' el ', ' la ', ' de ', ' y ', ' que ', ' en ', ' los ', ' las ', ' un ', ' una ', ' del ']
+ENGLISH_HINTS = [
+    ' the ',
+    ' and ',
+    ' was ',
+    ' were ',
+    ' born ',
+    ' composer ',
+    ' died ',
+    ' in ',
+    ' he ',
+    ' she ',
+    ' award ',
+    ' best ',
+    ' original ',
+    ' score ',
+]
+
+BAD_TITLES = {
+    'main page', 'contents', 'current events', 'random article', 'about wikipedia',
+    'contact us', 'help', 'learn to edit', 'community portal', 'recent changes',
+    'donate', 'contribute', 'privacy policy', 'terms of use', 'disclaimers',
+}
+
+
+def slugify(name: str) -> str:
+    slug = re.sub(r'[^a-z0-9]+', '_', name.strip().lower())
+    return slug.strip('_') or 'composer'
+
+
+def poster_filename(title: str, year: Optional[int] = None) -> str:
+    base = slugify(title or 'poster')
+    if base == 'composer':
+        base = 'poster'
+    if year:
+        return f"poster_{base}_{year}.jpg"
+    return f"poster_{base}.jpg"
+
+
+def get_composers_from_file(path: Path) -> List[str]:
+    composers: List[str] = []
+    if not path.exists():
+        print(f"Master list not found at {path}")
+        return composers
+    with path.open('r', encoding='utf-8') as fh:
+        for line in fh:
+            if not line.startswith('|'):
+                continue
+            parts = [col.strip() for col in line.split('|') if col.strip()]
+            if not parts:
+                continue
+            name = parts[0]
+            if name == 'Name' or re.fullmatch(r'-+', name):
+                continue
+            composers.append(name)
+    return composers
+
+
+def fetch_url_text(url: str) -> str:
+    netloc = urlparse(url).netloc.lower()
+    if netloc in BLOCKED_DOMAINS:
+        return ''
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        return resp.text
+    except requests.RequestException as exc:
+        print(f"    - failed to fetch {url}: {exc}")
+        return ''
+
+
+def clean_text(text: str) -> str:
+    cleaned = re.sub(r'\s+', ' ', text).strip()
+    cleaned = re.sub(r'\s+([,.;:!?])', r'\1', cleaned)
+    return cleaned
+
+
+def truncate_text(text: str, max_chars: int) -> str:
+    if len(text) <= max_chars:
+        return text
+    trimmed = text[:max_chars].rsplit(' ', 1)[0]
+    return trimmed.rstrip() + '...'
+
+
+def load_tmdb_cache() -> Dict[str, Dict]:
+    if not TMDB_CACHE_PATH.exists():
+        return {}
+    try:
+        return json.loads(TMDB_CACHE_PATH.read_text(encoding='utf-8'))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def save_tmdb_cache(cache: Dict[str, Dict]) -> None:
+    try:
+        TMDB_CACHE_PATH.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding='utf-8')
+    except OSError:
+        pass
+
+
+def load_streaming_cache() -> Dict[str, Dict]:
+    if not STREAMING_CACHE_PATH.exists():
+        return {}
+    try:
+        return json.loads(STREAMING_CACHE_PATH.read_text(encoding='utf-8'))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def save_streaming_cache(cache: Dict[str, Dict]) -> None:
+    try:
+        STREAMING_CACHE_PATH.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding='utf-8')
+    except OSError:
+        pass
+
+
+def download_image(url: str, path: Path) -> Optional[str]:
+    if not url:
+        return None
+    path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        resp = requests.get(
+            url,
+            headers={
+                'User-Agent': HEADERS['User-Agent'],
+                'Referer': 'https://en.wikipedia.org',
+            },
+            timeout=REQUEST_TIMEOUT,
+            stream=True,
+        )
+        resp.raise_for_status()
+        with path.open('wb') as fh:
+            for chunk in resp.iter_content(8192):
+                fh.write(chunk)
+        return str(path)
+    except requests.RequestException as exc:
+        print(f"    - image download error {url}: {exc}")
+        if path.exists():
+            path.unlink()
+        return None
+
+
+def download_posters_bulk(entries: List[Dict], composer_folder: Path) -> None:
+    if not DOWNLOAD_POSTERS:
+        return
+    tasks = {}
+    with ThreadPoolExecutor(max_workers=POSTER_WORKERS) as executor:
+        for entry in entries:
+            poster_url = entry.get('poster_url')
+            if not poster_url:
+                continue
+            poster_file = Path(entry.get('poster_file') or (composer_folder / 'posters' / poster_filename(
+                entry.get('original_title') or entry.get('title') or '',
+                entry.get('year'),
+            )))
+            if poster_file.exists():
+                entry['poster_local'] = str(poster_file)
+                continue
+            entry['poster_file'] = str(poster_file)
+            tasks[executor.submit(download_image, poster_url, poster_file)] = entry
+        for future in as_completed(tasks):
+            entry = tasks[future]
+            try:
+                saved = future.result()
+            except Exception:
+                saved = None
+            if saved:
+                entry['poster_local'] = saved
+
+
+def search_duckduckgo(query: str, num: int = 5) -> List[str]:
+    if not SEARCH_WEB_ENABLED:
+        return []
+    endpoints = [
+        f"https://duckduckgo.com/html/?q={quote_plus(query)}",
+        f"https://html.duckduckgo.com/html/?q={quote_plus(query)}",
+        f"https://lite.duckduckgo.com/lite/?q={quote_plus(query)}",
+    ]
+    for url in endpoints:
+        html = fetch_url_text(url)
+        if not html:
+            continue
+        soup = BeautifulSoup(html, 'html.parser')
+        results: List[str] = []
+        anchors = soup.select('a.result__a') or soup.find_all('a')
+        for a in anchors:
+            href = a.get('href')
+            if not href or not href.startswith('http'):
+                continue
+            parsed = urlparse(href)
+            if parsed.netloc.endswith('duckduckgo.com') and parsed.path == '/l/':
+                params = parse_qs(parsed.query)
+                redirect = params.get('uddg', [])
+                if redirect:
+                    href = unquote(redirect[0])
+            if href not in results:
+                results.append(href)
+            if len(results) >= num:
+                break
+        if results:
+            return results
+    return []
+
+
+def search_perplexity(query: str, num: int = 5) -> List[str]:
+    if not (SEARCH_WEB_ENABLED and PPLX_API_KEY):
+        return []
+    payload = {
+        'model': PPLX_MODEL,
+        'messages': [
+            {'role': 'system', 'content': 'Devuelve resultados de busqueda con URLs fiables.'},
+            {'role': 'user', 'content': query},
+        ],
+        'max_tokens': 128,
+        'temperature': 0.2,
+    }
+    try:
+        resp = requests.post(
+            f"{PPLX_API}/chat/completions",
+            headers={
+                'Authorization': f"Bearer {PPLX_API_KEY}",
+                'Content-Type': 'application/json',
+            },
+            json=payload,
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        return []
+    urls: List[str] = []
+    for item in data.get('search_results') or []:
+        url = item.get('url')
+        if url and url not in urls:
+            urls.append(url)
+    if not urls:
+        for url in data.get('citations') or []:
+            if url and url not in urls:
+                urls.append(url)
+    if not urls:
+        content = ''
+        choices = data.get('choices') or []
+        if choices:
+            content = (choices[0].get('message') or {}).get('content') or ''
+        for match in re.findall(r'https?://\\S+', content):
+            cleaned = match.strip(').,;]\"\'')
+            if cleaned not in urls:
+                urls.append(cleaned)
+    return urls[:num]
+
+
+def search_web(query: str, num: int = 3, pause: float = 1.2) -> List[str]:
+    if not SEARCH_WEB_ENABLED:
+        return []
+    if PPLX_API_KEY:
+        urls = search_perplexity(query, num=num)
+        if urls:
+            return urls
+    try:
+        time.sleep(pause)
+        results = list(search(query, num=num, stop=num, pause=pause))
+        deduped = []
+        for url in results:
+            if url not in deduped:
+                deduped.append(url)
+        if deduped:
+            return deduped
+    except Exception:
+        pass
+    return search_duckduckgo(query, num=num)
+
+
+def extract_paragraphs_from_soup(soup: BeautifulSoup, max_paragraphs: int = 4) -> List[str]:
+    paragraphs: List[str] = []
+    for tag in soup.find_all(['p', 'li']):
+        text = clean_text(tag.get_text(' ', strip=True))
+        if len(text) < MIN_PARAGRAPH_LEN:
+            continue
+        lowered = text.lower()
+        if any(hint in lowered for hint in NOISE_HINTS):
+            continue
+        if is_noise_text(text):
+            continue
+        paragraphs.append(text)
+        if len(paragraphs) >= max_paragraphs:
+            break
+    return paragraphs
+
+
+def should_translate(text: str) -> bool:
+    lowered = f" {text.lower()} "
+    spanish_char_count = sum(1 for ch in text if ch in SPANISH_CHARS)
+    if spanish_char_count > 3:
+        return False
+    spanish_hits = sum(1 for marker in SPANISH_HINTS if marker in lowered)
+    english_hits = sum(1 for marker in ENGLISH_HINTS if marker in lowered)
+    return english_hits > spanish_hits + 1
+
+
+def translate_text(text: str, target: str) -> str:
+    if not text:
+        return text
+    translated, _ = translate_text_detect(text, target)
+    return translated
+
+
+def translate_text_detect(text: str, target: str) -> tuple[str, str]:
+    if not text:
+        return text, ''
+    try:
+        resp = requests.get(
+            TRANSLATE_ENDPOINT,
+            params={'client': 'gtx', 'sl': 'auto', 'tl': target, 'dt': 't', 'q': text},
+            headers=HEADERS,
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        return text, ''
+    translated = []
+    for part in data[0]:
+        if part and part[0]:
+            translated.append(part[0])
+    detected = ''
+    if len(data) > 2 and isinstance(data[2], str):
+        detected = data[2]
+    return clean_text(''.join(translated)) or text, detected
+
+
+def translate_to_spanish(text: str) -> str:
+    if not text:
+        return text
+    translated, detected = translate_text_detect(text, TRANSLATE_TARGET)
+    if detected.startswith('es'):
+        return text
+    return translated
+
+
+def ensure_spanish(text: str) -> str:
+    if not text:
+        return text
+    translated, detected = translate_text_detect(text, TRANSLATE_TARGET)
+    if detected.startswith('es'):
+        return text
+    return translated
+
+
+def translate_to_english(text: str) -> str:
+    if not text:
+        return text
+    return translate_text(text, 'en')
+
+
+def translate_paragraphs(paragraphs: List[str]) -> List[str]:
+    return [translate_to_spanish(paragraph) for paragraph in paragraphs if paragraph]
+
+
+def is_noise_text(text: str) -> bool:
+    letters = [ch for ch in text if ch.isalpha()]
+    if letters:
+        upper_ratio = sum(1 for ch in letters if ch.isupper()) / len(letters)
+        if upper_ratio > 0.6 and len(text.split()) > 6:
+            return True
+    if text == text.upper() and len(text.split()) > 8:
+        return True
+    if len(text.split()) > 20 and text.count('.') == 0 and text.count(',') == 0:
+        return True
+    return False
+
+
+def search_for_text(query: str, required_keywords: List[str]) -> str:
+    urls = search_web(query, num=4)
+    for url in urls:
+        html = fetch_url_text(url)
+        if not html:
+            continue
+        soup = BeautifulSoup(html, 'html.parser')
+        paragraphs = extract_paragraphs_from_soup(soup, max_paragraphs=4)
+        for paragraph in paragraphs:
+            lowered = paragraph.lower()
+            if any(keyword in lowered for keyword in required_keywords):
+                return translate_to_spanish(paragraph)
+    return ''
+
+
+def wikipedia_search_title(query: str, lang: str = 'en') -> Optional[str]:
+    params = {
+        'action': 'query',
+        'list': 'search',
+        'srsearch': query,
+        'format': 'json',
+        'utf8': 1,
+        'srlimit': 1,
+    }
+    try:
+        resp = requests.get(f'https://{lang}.wikipedia.org/w/api.php', params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return None
+    search_results = data.get('query', {}).get('search', [])
+    if not search_results:
+        return None
+    return search_results[0].get('title')
+
+
+def wikipedia_page_url(title: str, lang: str = 'en') -> str:
+    return f"https://{lang}.wikipedia.org/wiki/{title.replace(' ', '_')}"
+
+
+def fetch_wikipedia_html(query: str, lang: str = 'en') -> Optional[str]:
+    title = wikipedia_search_title(query, lang=lang)
+    if not title:
+        return None
+    return fetch_url_text(wikipedia_page_url(title, lang=lang))
+
+
+def fetch_wikipedia_extract(query: str, lang: str = 'en') -> str:
+    title = wikipedia_search_title(query, lang=lang)
+    if not title:
+        return ''
+    params = {
+        'action': 'query',
+        'prop': 'extracts',
+        'explaintext': 1,
+        'exintro': 1,
+        'format': 'json',
+        'titles': title,
+    }
+    try:
+        resp = requests.get(f'https://{lang}.wikipedia.org/w/api.php', params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return ''
+    pages = data.get('query', {}).get('pages', {})
+    for page in pages.values():
+        extract = page.get('extract')
+        if extract:
+            return extract.strip()
+    return ''
+
+
+def tmdb_get(path: str, params: Dict) -> Optional[Dict]:
+    if not TMDB_API_KEY:
+        return None
+    base_params = {'api_key': TMDB_API_KEY}
+    base_params.update(params)
+    try:
+        resp = requests.get(f"{TMDB_API}{path}", params=base_params, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
+        return None
+
+
+TMDB_MOVIE_CACHE = load_tmdb_cache()
+STREAMING_CACHE = load_streaming_cache()
+SPOTIFY_TOKEN = {'value': None, 'expires_at': 0}
+
+
+def tmdb_search_movie_details(title: str, year: Optional[int] = None) -> Optional[Dict[str, Optional[str]]]:
+    if not TMDB_API_KEY:
+        return None
+    cache_key = f"{title}|{year or ''}"
+    if cache_key in TMDB_MOVIE_CACHE:
+        cached = TMDB_MOVIE_CACHE.get(cache_key)
+        if cached:
+            return cached
+    chosen = None
+    for lang in ['es-ES', 'en-US']:
+        params = {'query': title, 'language': lang, 'include_adult': False}
+        if year:
+            params['year'] = year
+        data = tmdb_get('/search/movie', params)
+        if not data:
+            continue
+        results = data.get('results', [])
+        if not results:
+            continue
+        chosen = results[0]
+        if year:
+            for result in results:
+                release = result.get('release_date') or ''
+                if release.startswith(str(year)):
+                    chosen = result
+                    break
+        if chosen:
+            break
+    if not chosen:
+        alt_title = translate_to_english(title)
+        if alt_title and alt_title.lower() != title.lower():
+            params = {'query': alt_title, 'language': 'en-US', 'include_adult': False}
+            if year:
+                params['year'] = year
+            data = tmdb_get('/search/movie', params)
+            if data:
+                results = data.get('results', [])
+                if results:
+                    chosen = results[0]
+                    if year:
+                        for result in results:
+                            release = result.get('release_date') or ''
+                            if release.startswith(str(year)):
+                                chosen = result
+                                break
+    if not chosen:
+        TMDB_MOVIE_CACHE[cache_key] = {}
+        save_tmdb_cache(TMDB_MOVIE_CACHE)
+        return None
+    movie_id = chosen.get('id')
+    es_data = tmdb_get(f'/movie/{movie_id}', {'language': 'es-ES'}) if movie_id else None
+    details = {
+        'original_title': (es_data or {}).get('original_title') or chosen.get('original_title') or chosen.get('title'),
+        'title_es': (es_data or {}).get('title') or chosen.get('title') or chosen.get('original_title'),
+        'poster_path': (es_data or {}).get('poster_path') or chosen.get('poster_path'),
+        'popularity': chosen.get('popularity'),
+        'vote_count': chosen.get('vote_count'),
+        'vote_average': chosen.get('vote_average'),
+    }
+    TMDB_MOVIE_CACHE[cache_key] = details
+    save_tmdb_cache(TMDB_MOVIE_CACHE)
+    time.sleep(0.25)
+    return details
+
+
+def tmdb_search_person(name: str) -> tuple[Optional[int], List[str]]:
+    data = tmdb_get('/search/person', {'query': name})
+    if not data:
+        return None, []
+    results = data.get('results', [])
+    if not results:
+        return None, []
+    person = results[0]
+    known_for_titles: List[str] = []
+    for item in person.get('known_for', []) or []:
+        title = item.get('title') or item.get('original_title')
+        if title and title not in known_for_titles:
+            known_for_titles.append(title)
+    return person.get('id'), known_for_titles
+
+
+def tmdb_person_movie_credits(person_id: int, language: str = 'es-ES') -> List[Dict[str, Optional[int]]]:
+    data = tmdb_get(f'/person/{person_id}/movie_credits', {'language': language})
+    if not data:
+        return []
+    crew = data.get('crew', [])
+    cast = data.get('cast', [])
+    credits = []
+    for item in crew:
+        job = (item.get('job') or '').lower()
+        dept = (item.get('department') or '').lower()
+        if 'music' in dept or 'composer' in job or 'score' in job:
+            credits.append(item)
+    if len(credits) < 5:
+        credits = crew
+    credits = credits + cast
+    films: List[Dict[str, Optional[int]]] = []
+    for item in credits:
+        title = item.get('title') or item.get('original_title')
+        original_title = item.get('original_title') or title
+        if not title:
+            continue
+        year = None
+        release = item.get('release_date')
+        if release:
+            year = int(release.split('-')[0])
+        films.append({
+            'title': title,
+            'year': year,
+            'original_title': original_title,
+            'title_es': title if language.startswith('es') else None,
+            'poster_path': item.get('poster_path'),
+            'popularity': item.get('popularity'),
+            'vote_count': item.get('vote_count'),
+            'vote_average': item.get('vote_average'),
+        })
+        if len(films) >= FILM_LIMIT:
+            break
+    return films
+
+
+def tmdb_person_profile(person_id: int) -> Optional[str]:
+    data = tmdb_get(f'/person/{person_id}', {})
+    if not data:
+        return None
+    profile = data.get('profile_path')
+    if not profile:
+        return None
+    return f"{TMDB_IMAGE}{profile}"
+
+
+def tmdb_search_movie(title: str, year: Optional[int] = None) -> Optional[str]:
+    details = tmdb_search_movie_details(title, year)
+    if not details:
+        return None
+    poster = details.get('poster_path')
+    if not poster:
+        return None
+    return f"{TMDB_IMAGE}{poster}"
+
+
+def spotify_get_token() -> Optional[str]:
+    if not SPOTIFY_ENABLED:
+        return None
+    now = time.time()
+    if SPOTIFY_TOKEN['value'] and SPOTIFY_TOKEN['expires_at'] > now + 60:
+        return SPOTIFY_TOKEN['value']
+    credentials = f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode('utf-8')
+    basic = base64.b64encode(credentials).decode('utf-8')
+    try:
+        resp = requests.post(
+            'https://accounts.spotify.com/api/token',
+            data={'grant_type': 'client_credentials'},
+            headers={'Authorization': f"Basic {basic}"},
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        return None
+    token = data.get('access_token')
+    expires_in = data.get('expires_in') or 0
+    if token:
+        SPOTIFY_TOKEN['value'] = token
+        SPOTIFY_TOKEN['expires_at'] = now + int(expires_in)
+    return token
+
+
+def spotify_search_popularity(composer: str, title: str) -> Optional[float]:
+    token = spotify_get_token()
+    if not token or not title:
+        return None
+    queries = [
+        f'track:"{title}" soundtrack {composer}',
+        f'album:"{title}" soundtrack {composer}',
+        f'"{title}" "{composer}" soundtrack',
+        f'"{title}" soundtrack',
+    ]
+    headers = {'Authorization': f"Bearer {token}"}
+    best = None
+    for query in queries:
+        try:
+            resp = requests.get(
+                'https://api.spotify.com/v1/search',
+                headers=headers,
+                params={'q': query, 'type': 'track', 'limit': 5},
+                timeout=REQUEST_TIMEOUT,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+        except (requests.RequestException, ValueError):
+            continue
+        for item in data.get('tracks', {}).get('items', []) or []:
+            pop = item.get('popularity')
+            if pop is None:
+                continue
+            if best is None or pop > best:
+                best = pop
+        if best is not None:
+            break
+    return float(best) if best is not None else None
+
+
+def youtube_search_views(composer: str, title: str) -> Optional[int]:
+    if not (YOUTUBE_ENABLED and title):
+        return None
+    query = f"{title} soundtrack {composer}".strip()
+    try:
+        search_resp = requests.get(
+            'https://www.googleapis.com/youtube/v3/search',
+            params={
+                'part': 'snippet',
+                'q': query,
+                'type': 'video',
+                'maxResults': 5,
+                'order': 'viewCount',
+                'videoCategoryId': '10',
+                'key': YOUTUBE_API_KEY,
+            },
+            timeout=REQUEST_TIMEOUT,
+        )
+        search_resp.raise_for_status()
+        search_data = search_resp.json()
+    except (requests.RequestException, ValueError):
+        return None
+    video_ids = [
+        item.get('id', {}).get('videoId')
+        for item in search_data.get('items', []) or []
+        if item.get('id', {}).get('videoId')
+    ]
+    if not video_ids:
+        return None
+    try:
+        videos_resp = requests.get(
+            'https://www.googleapis.com/youtube/v3/videos',
+            params={
+                'part': 'statistics',
+                'id': ','.join(video_ids),
+                'key': YOUTUBE_API_KEY,
+            },
+            timeout=REQUEST_TIMEOUT,
+        )
+        videos_resp.raise_for_status()
+        videos_data = videos_resp.json()
+    except (requests.RequestException, ValueError):
+        return None
+    max_views = None
+    for item in videos_data.get('items', []) or []:
+        count = item.get('statistics', {}).get('viewCount')
+        if count is None:
+            continue
+        try:
+            views = int(count)
+        except (ValueError, TypeError):
+            continue
+        if max_views is None or views > max_views:
+            max_views = views
+    return max_views
+
+
+def streaming_cache_key(composer: str, title: str, year: Optional[int]) -> str:
+    return f"{composer}|{title}|{year or ''}"
+
+
+def get_streaming_signals(composer: str, entry: Dict[str, Optional[str]]) -> None:
+    title = (entry.get('original_title') or entry.get('title') or '').strip()
+    if not title:
+        return
+    cache_key = streaming_cache_key(composer, title, entry.get('year'))
+    cached = STREAMING_CACHE.get(cache_key)
+    if cached:
+        entry.update(cached)
+        return
+    payload: Dict[str, Optional[float]] = {}
+    if SPOTIFY_ENABLED:
+        payload['spotify_popularity'] = spotify_search_popularity(composer, title)
+    if YOUTUBE_ENABLED:
+        payload['youtube_views'] = youtube_search_views(composer, title)
+    STREAMING_CACHE[cache_key] = payload
+    save_streaming_cache(STREAMING_CACHE)
+    entry.update(payload)
+
+
+def normalize_title(text: str) -> Optional[str]:
+    cleaned = re.sub(r'^\d+\.?\s*', '', text.strip())
+    cleaned = re.sub(r'\s*\(\d{4}\)\s*', '', cleaned).strip(' .-–:;')
+    if not cleaned or len(cleaned) < 2 or len(cleaned) > 90:
+        return None
+    return cleaned
+
+
+def normalize_title_key(title: str) -> str:
+    return re.sub(r'[^a-z0-9]+', '', title.lower())
+
+
+def build_title_keys(entry: Dict[str, Optional[str]]) -> List[str]:
+    keys: List[str] = []
+    for field in ['original_title', 'title', 'title_es']:
+        value = entry.get(field)
+        if value:
+            key = normalize_title_key(value)
+            if key and key not in keys:
+                keys.append(key)
+    return keys
+
+
+def is_bad_title(title: str) -> bool:
+    lowered = title.strip().lower()
+    if lowered in BAD_TITLES:
+        return True
+    if 'wikipedia' in lowered or 'edit' in lowered:
+        return True
+    if re.fullmatch(r'q\d+', lowered):
+        return True
+    return False
+
+
+def extract_titles_from_lists(html: str) -> List[str]:
+    soup = BeautifulSoup(html, 'html.parser')
+    container = soup.select_one('div.mw-parser-output') or soup.select_one('article') or soup.select_one('main') or soup
+    titles: List[str] = []
+    for li in container.find_all('li'):
+        candidate = normalize_title(li.get_text(' ', strip=True))
+        if not candidate or is_bad_title(candidate):
+            continue
+        if candidate not in titles:
+            titles.append(candidate)
+        if len(titles) >= 15:
+            break
+    return titles
+
+
+def find_top_films_from_text(html: str) -> List[str]:
+    titles = extract_titles_from_lists(html)
+    if titles:
+        return titles[:10]
+    return []
+
+
+def get_top_10_films(composer: str) -> Dict[str, int]:
+    queries = [
+        f"{composer} mejores bandas sonoras lista",
+        f"{composer} mejores bandas sonoras",
+        f"{composer} best film scores ranked list",
+        f"{composer} best film scores",
+        f"{composer} best soundtrack",
+    ]
+    urls: List[str] = []
+    for query in queries:
+        urls.extend(search_web(query, num=6))
+    counts: Dict[str, int] = {}
+    for url in urls:
+        html = fetch_url_text(url)
+        if not html:
+            continue
+        for title in find_top_films_from_text(html):
+            key = normalize_title_key(title)
+            if not key:
+                continue
+            counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
+def score_film(
+    entry: Dict[str, Optional[str]],
+    boost_scores: Dict[str, int],
+    award_keys: set,
+    current_year: int,
+) -> float:
+    score = 0.0
+    popularity = entry.get('popularity')
+    vote_count = entry.get('vote_count')
+    vote_average = entry.get('vote_average')
+    spotify_popularity = entry.get('spotify_popularity')
+    youtube_views = entry.get('youtube_views')
+    year = entry.get('year')
+    if isinstance(popularity, (int, float)):
+        score += float(popularity)
+    if isinstance(vote_count, (int, float)):
+        score += math.log10(float(vote_count) + 1) * 7
+    if isinstance(vote_average, (int, float)):
+        score += float(vote_average) * 2
+    if isinstance(spotify_popularity, (int, float)):
+        score += float(spotify_popularity) * 0.6
+    if isinstance(youtube_views, (int, float)):
+        score += math.log10(float(youtube_views) + 1) * 5
+    for key in build_title_keys(entry):
+        if key in boost_scores:
+            score += 40 + (boost_scores[key] * 10)
+            break
+    for key in build_title_keys(entry):
+        if key in award_keys:
+            score += 20
+            break
+    if year:
+        score += (year % 100) * 0.05
+        if year > current_year:
+            score -= 100
+    if isinstance(vote_count, (int, float)) and vote_count < TOP_MIN_VOTE_COUNT:
+        score -= 30
+    return score
+
+
+def score_film_base(
+    entry: Dict[str, Optional[str]],
+    boost_scores: Dict[str, int],
+    award_keys: set,
+    current_year: int,
+) -> float:
+    return score_film(
+        {
+            **entry,
+            'spotify_popularity': None,
+            'youtube_views': None,
+        },
+        boost_scores,
+        award_keys,
+        current_year,
+    )
+
+
+def maybe_add_streaming_signals(
+    composer: str,
+    entries: List[Dict[str, Optional[str]]],
+    boost_scores: Dict[str, int],
+    award_keys: set,
+) -> None:
+    if not (SPOTIFY_ENABLED or YOUTUBE_ENABLED):
+        return
+    current_year = datetime.utcnow().year
+    ranked = sorted(
+        entries,
+        key=lambda entry: (score_film_base(entry, boost_scores, award_keys, current_year), entry.get('year') or 0),
+        reverse=True,
+    )
+    for entry in ranked[:STREAMING_CANDIDATE_LIMIT]:
+        get_streaming_signals(composer, entry)
+
+
+def select_top_10_films(
+    composer: str,
+    filmography: List[Dict[str, Optional[str]]],
+    awards: List[Dict],
+    boost_scores: Dict[str, int],
+) -> List[Dict[str, Optional[str]]]:
+    if not filmography:
+        return []
+    award_keys = set()
+    for award in awards:
+        film = award.get('film')
+        if film:
+            award_keys.add(normalize_title_key(film))
+    current_year = datetime.utcnow().year
+    eligible = []
+    for entry in filmography:
+        year = entry.get('year')
+        if year and year > current_year:
+            continue
+        vote_count = entry.get('vote_count')
+        if isinstance(vote_count, (int, float)) and vote_count < TOP_MIN_VOTE_COUNT:
+            continue
+        eligible.append(entry)
+    if len(eligible) < 10:
+        eligible = filmography
+    maybe_add_streaming_signals(composer, eligible, boost_scores, award_keys)
+    def has_signal(entry: Dict[str, Optional[str]]) -> bool:
+        for key in build_title_keys(entry):
+            if key in boost_scores or key in award_keys:
+                return True
+        return False
+    signaled = [entry for entry in eligible if has_signal(entry)]
+    if len(signaled) >= 6:
+        eligible = signaled
+    ranked = sorted(
+        eligible,
+        key=lambda entry: (score_film(entry, boost_scores, award_keys, current_year), entry.get('year') or 0),
+        reverse=True,
+    )
+    unique: List[Dict[str, Optional[str]]] = []
+    seen_keys = set()
+    if TOP_FORCE_AWARDS and award_keys:
+        award_entries = [entry for entry in eligible if any(key in award_keys for key in build_title_keys(entry))]
+        award_entries = sorted(
+            award_entries,
+            key=lambda entry: (score_film(entry, boost_scores, award_keys, current_year), entry.get('year') or 0),
+            reverse=True,
+        )
+        for entry in award_entries:
+            keys = build_title_keys(entry)
+            if any(key in seen_keys for key in keys):
+                continue
+            for key in keys:
+                seen_keys.add(key)
+            unique.append(entry)
+            if len(unique) >= 10:
+                return unique
+    for entry in ranked:
+        keys = build_title_keys(entry)
+        if any(key in seen_keys for key in keys):
+            continue
+        for key in keys:
+            seen_keys.add(key)
+        unique.append(entry)
+        if len(unique) >= 10:
+            break
+    return unique
+
+
+def extract_section(html: str, keywords: List[str]) -> str:
+    soup = BeautifulSoup(html, 'html.parser')
+    for heading in soup.find_all(['h2', 'h3']):
+        title = heading.get_text(' ', strip=True).lower()
+        if any(keyword in title for keyword in keywords):
+            content: List[str] = []
+            for sibling in heading.next_siblings:
+                if getattr(sibling, 'name', None) in ['h2', 'h3']:
+                    break
+                content.append(str(sibling))
+            return ''.join(content)
+    return ''
+
+
+def extract_section_text(html: str, keywords: List[str], max_paragraphs: int = 2) -> str:
+    section_html = extract_section(html, keywords)
+    if not section_html:
+        return ''
+    soup = BeautifulSoup(section_html, 'html.parser')
+    paragraphs = extract_paragraphs_from_soup(soup, max_paragraphs=max_paragraphs)
+    return '\n\n'.join(paragraphs)
+
+
+def extract_films_from_text(text: str) -> List[Dict[str, Optional[int]]]:
+    film_pattern = re.compile(r'([A-Z][A-Za-z0-9\-\'"\.\, ]{3,80})\s*\(?((19|20)\d{2})\)?')
+    seen = set()
+    films = []
+    for match in film_pattern.finditer(text):
+        title = match.group(1).strip(' .-–')
+        year = match.group(2)
+        if not title:
+            continue
+        if (title.lower(), year) in seen:
+            continue
+        seen.add((title.lower(), year))
+        films.append({'title': title, 'year': int(year) if year else None})
+        if len(films) >= 200:
+            break
+    return films
+
+
+def dedupe_films(films: List[Dict[str, Optional[int]]]) -> List[Dict[str, Optional[int]]]:
+    seen = set()
+    unique: List[Dict[str, Optional[int]]] = []
+    for film in films:
+        title = film.get('title', '').strip()
+        if not title or is_bad_title(title):
+            continue
+        key = (title.lower(), film.get('year'))
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(film)
+    return unique
+
+
+def dedupe_awards(awards: List[Dict]) -> List[Dict]:
+    seen = set()
+    unique: List[Dict] = []
+    for award in awards:
+        key = (
+            (award.get('award') or '').strip().lower(),
+            award.get('year'),
+            (award.get('film') or '').strip().lower(),
+            (award.get('status') or '').strip().lower(),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(award)
+    for award in unique:
+        if award.get('award'):
+            award['award'] = translate_to_spanish(award['award'])
+    unique.sort(key=lambda item: (item.get('year') or 9999, item.get('award') or '', item.get('film') or ''))
+    return unique
+
+
+def merge_films(base: List[Dict[str, Optional[int]]], extra: List[Dict[str, Optional[int]]]) -> List[Dict[str, Optional[int]]]:
+    existing = set()
+    for film in base:
+        title = film.get('original_title') or film.get('title') or ''
+        existing.add(normalize_title_key(title))
+    for film in extra:
+        title = film.get('original_title') or film.get('title') or ''
+        key = normalize_title_key(title)
+        if key and key not in existing:
+            base.append(film)
+            existing.add(key)
+    return base
+
+
+def extract_films_from_html(html: str) -> List[Dict[str, Optional[int]]]:
+    soup = BeautifulSoup(html, 'html.parser')
+    films: List[Dict[str, Optional[int]]] = []
+    for li in soup.find_all('li'):
+        text = li.get_text(' ', strip=True)
+        entry = extract_films_from_text(text)
+        for film in entry:
+            if film not in films:
+                films.append(film)
+            if len(films) >= 200:
+                return films
+    return dedupe_films(films)
+
+
+def get_wikidata_qid(composer: str) -> Optional[str]:
+    params = {
+        'action': 'wbsearchentities',
+        'search': composer,
+        'language': 'en',
+        'format': 'json',
+        'limit': 1,
+    }
+    try:
+        resp = requests.get('https://www.wikidata.org/w/api.php', params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return None
+    results = data.get('search', [])
+    if not results:
+        return None
+    return results[0].get('id')
+
+
+def fetch_wikidata_filmography(qid: str) -> List[Dict[str, Optional[int]]]:
+    query = f"""
+    SELECT ?film ?filmLabel ?labelEs ?labelEn ?originalTitle ?year WHERE {{
+      ?film wdt:P86 wd:{qid} .
+      OPTIONAL {{ ?film wdt:P1476 ?originalTitle . }}
+      OPTIONAL {{ ?film rdfs:label ?labelEs FILTER(LANG(?labelEs) = \"es\") }}
+      OPTIONAL {{ ?film rdfs:label ?labelEn FILTER(LANG(?labelEn) = \"en\") }}
+      OPTIONAL {{ ?film wdt:P577 ?date . BIND(YEAR(?date) as ?year) }}
+      SERVICE wikibase:label {{ bd:serviceParam wikibase:language \"en\". }}
+    }}
+    """
+    try:
+        resp = requests.get(
+            'https://query.wikidata.org/sparql',
+            params={'format': 'json', 'query': query},
+            headers=HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return []
+    films: List[Dict[str, Optional[int]]] = []
+    for item in data.get('results', {}).get('bindings', []):
+        label = item.get('filmLabel', {}).get('value')
+        label_es = item.get('labelEs', {}).get('value')
+        label_en = item.get('labelEn', {}).get('value')
+        original_title = item.get('originalTitle', {}).get('value')
+        year = item.get('year', {}).get('value')
+        title = original_title or label_en or label or label_es
+        if title and not re.fullmatch(r'Q\d+', title.strip()):
+            films.append({
+                'title': title,
+                'year': int(year) if year else None,
+                'original_title': original_title or label_en or title,
+                'title_es': label_es,
+            })
+        if len(films) >= 200:
+            break
+    return films
+
+
+def fetch_wikidata_awards(qid: str) -> List[Dict]:
+    query = f"""
+    SELECT ?award ?awardLabel ?year ?workLabel ?status WHERE {{
+      {{
+        wd:{qid} p:P166 ?awardStatement .
+        ?awardStatement ps:P166 ?award .
+        BIND(\"Win\" as ?status)
+        OPTIONAL {{ ?awardStatement pq:P585 ?date . BIND(YEAR(?date) as ?year) }}
+        OPTIONAL {{ ?awardStatement pq:P1686 ?work . }}
+      }}
+      UNION
+      {{
+        wd:{qid} p:P1411 ?awardStatement .
+        ?awardStatement ps:P1411 ?award .
+        BIND(\"Nomination\" as ?status)
+        OPTIONAL {{ ?awardStatement pq:P585 ?date . BIND(YEAR(?date) as ?year) }}
+        OPTIONAL {{ ?awardStatement pq:P1686 ?work . }}
+      }}
+      SERVICE wikibase:label {{ bd:serviceParam wikibase:language \"en\". }}
+    }}
+    """
+    try:
+        resp = requests.get(
+            'https://query.wikidata.org/sparql',
+            params={'format': 'json', 'query': query},
+            headers=HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return []
+    awards: List[Dict] = []
+    for item in data.get('results', {}).get('bindings', []):
+        award_name = item.get('awardLabel', {}).get('value')
+        year = item.get('year', {}).get('value')
+        work = item.get('workLabel', {}).get('value')
+        status = item.get('status', {}).get('value') or 'Win'
+        if award_name:
+            awards.append({
+                'award': award_name,
+                'year': int(year) if year else None,
+                'film': work,
+                'status': status,
+            })
+    return awards
+
+
+def get_complete_filmography(composer: str, composer_folder: Path) -> List[Dict]:
+    films: List[Dict] = []
+    tmdb_films: List[Dict] = []
+    if TMDB_API_KEY:
+        person_id, _ = tmdb_search_person(composer)
+        if person_id:
+            tmdb_films = tmdb_person_movie_credits(person_id, language='es-ES')
+    if tmdb_films:
+        films = tmdb_films
+    if len(films) < 8:
+        html = fetch_wikipedia_html(f"{composer} composer")
+        if html:
+            section_html = extract_section(html, ['filmography', 'selected filmography', 'works'])
+            if section_html:
+                films = merge_films(films, extract_films_from_html(section_html))
+        qid = get_wikidata_qid(composer)
+        if qid:
+            films = merge_films(films, fetch_wikidata_filmography(qid))
+        if len(films) < 8:
+            urls = search_web(f"{composer} filmography list", num=5)
+            for url in urls:
+                html = fetch_url_text(url)
+                if not html:
+                    continue
+                films = merge_films(films, extract_films_from_text(html))
+                if films:
+                    break
+    films = dedupe_films(films)
+    films.sort(key=lambda item: (item.get('year') or 9999, item.get('title') or ''))
+    for idx, entry in enumerate(films):
+        entry['original_title'] = entry.get('original_title') or entry.get('title')
+        poster_url = None
+        if TMDB_API_KEY and not (entry.get('title_es') and entry.get('poster_path')):
+            details = tmdb_search_movie_details(entry['original_title'], entry.get('year'))
+            if details:
+                entry['original_title'] = details.get('original_title') or entry['original_title']
+                entry['title_es'] = details.get('title_es') or entry.get('title_es')
+                poster_path = details.get('poster_path') or entry.get('poster_path')
+                if poster_path:
+                    poster_url = f"{TMDB_IMAGE}{poster_path}"
+                if details.get('popularity') is not None:
+                    entry['popularity'] = details.get('popularity')
+                if details.get('vote_count') is not None:
+                    entry['vote_count'] = details.get('vote_count')
+                if details.get('vote_average') is not None:
+                    entry['vote_average'] = details.get('vote_average')
+        poster_path = entry.get('poster_path')
+        if poster_path and not poster_url:
+            poster_url = f"{TMDB_IMAGE}{poster_path}"
+        if not entry.get('title_es') and entry.get('original_title'):
+            entry['title_es'] = entry['original_title']
+        entry['poster_url'] = poster_url
+        entry['poster_file'] = str(composer_folder / 'posters' / poster_filename(
+            entry.get('original_title') or entry.get('title') or '',
+            entry.get('year'),
+        ))
+        if POSTER_LIMIT and idx >= POSTER_LIMIT:
+            entry['poster_local'] = PLACEHOLDER_IMAGE
+            continue
+        if not DOWNLOAD_POSTERS:
+            entry['poster_local'] = poster_url or PLACEHOLDER_IMAGE
+            continue
+    eligible = [
+        entry for idx, entry in enumerate(films)
+        if not POSTER_LIMIT or idx < POSTER_LIMIT
+    ]
+    if DOWNLOAD_POSTERS:
+        download_posters_bulk(eligible, composer_folder)
+    missing = [entry for entry in eligible if not entry.get('poster_local')]
+    if missing:
+        with ThreadPoolExecutor(max_workers=POSTER_WORKERS) as executor:
+            tasks = {
+                executor.submit(
+                    get_film_poster,
+                    entry.get('original_title') or entry.get('title', ''),
+                    composer_folder,
+                    entry.get('poster_url'),
+                    entry.get('year'),
+                    Path(entry['poster_file']) if entry.get('poster_file') else None,
+                ): entry
+                for entry in missing
+            }
+            for future in as_completed(tasks):
+                entry = tasks[future]
+                try:
+                    entry['poster_local'] = future.result()
+                except Exception:
+                    entry['poster_local'] = PLACEHOLDER_IMAGE
+    return films
+
+
+def get_detailed_awards(composer: str) -> List[Dict]:
+    qid = get_wikidata_qid(composer)
+    if qid:
+        awards = fetch_wikidata_awards(qid)
+        if awards:
+            return dedupe_awards(awards)
+    awards: List[Dict] = []
+    html = fetch_wikipedia_html(f"{composer} compositor", lang='es') or fetch_wikipedia_html(composer, lang='es')
+    if not html:
+        html = fetch_wikipedia_html(f"{composer} composer", lang='en')
+    if html:
+        awards_html = extract_section(html, ['award', 'awards', 'honor', 'honours', 'recognition', 'premios', 'reconocimientos'])
+        if awards_html:
+            soup = BeautifulSoup(awards_html, 'html.parser')
+            lines = [li.get_text(' ', strip=True) for li in soup.find_all('li')]
+            for line in lines:
+                if any(keyword.lower() in line.lower() for keyword in AWARD_KEYWORDS):
+                    year_match = re.search(r'(19|20)\d{2}', line)
+                    year = int(year_match.group()) if year_match else None
+                    if year and (year < 1900 or year > 2026):
+                        continue
+                    film_match = re.search(r"for\s+['\"]?([^'\"\n,]+)", line, re.IGNORECASE)
+                    status = 'Win' if 'win' in line.lower() or 'winner' in line.lower() else 'Nomination'
+                    award_name = next((kw for kw in AWARD_KEYWORDS if kw.lower() in line.lower()), 'Award')
+                    award_name = translate_to_spanish(award_name)
+                    awards.append({
+                        'award': award_name,
+                        'year': year,
+                        'film': film_match.group(1).strip() if film_match else None,
+                        'status': status,
+                    })
+    if awards:
+        return dedupe_awards(awards)
+    urls = search_web(f"{composer} awards and nominations", num=5)
+    for url in urls:
+        html = fetch_url_text(url)
+        if not html:
+            continue
+        text = BeautifulSoup(html, 'html.parser').get_text('\n')
+        for line in text.splitlines():
+            if any(keyword.lower() in line.lower() for keyword in AWARD_KEYWORDS):
+                year_match = re.search(r'(19|20)\d{2}', line)
+                year = int(year_match.group()) if year_match else None
+                if year and (year < 1900 or year > 2026):
+                    continue
+                film_match = re.search(r"for\s+['\"]?([^'\"\n,]+)", line, re.IGNORECASE)
+                status = 'Win' if 'win' in line.lower() or 'winner' in line.lower() else 'Nomination'
+                award_name = next((kw for kw in AWARD_KEYWORDS if kw.lower() in line.lower()), 'Award')
+                award_name = translate_to_spanish(award_name)
+                awards.append({
+                    'award': award_name,
+                    'year': year,
+                    'film': film_match.group(1).strip() if film_match else None,
+                    'status': status,
+                })
+        if awards:
+            break
+    return dedupe_awards(awards)
+
+
+def get_external_sources(composer: str) -> List[Dict[str, str]]:
+    info: List[Dict[str, str]] = []
+    for name, domain in EXTERNAL_DOMAINS.items():
+        results = search_web(f"site:{domain} {composer}", num=EXTERNAL_DOMAIN_RESULTS)
+        if not results:
+            results = [f"https://{domain}"]
+        for idx, url in enumerate(results, start=1):
+            if not url:
+                continue
+            netloc = urlparse(url).netloc.lower()
+            if domain not in netloc:
+                url = f"https://{domain}"
+            label = name if idx == 1 else f"{name} ({idx})"
+            info.append({'name': label, 'url': url, 'snippet': f"site:{domain}"})
+    return info
+
+
+def get_general_snippets(composer: str, limit: int, existing_urls: set) -> List[Dict[str, str]]:
+    snippets: List[Dict[str, str]] = []
+    queries = [
+        f"{composer} compositor entrevista banda sonora",
+        f"{composer} compositor estilo musical",
+        f"{composer} compositor trayectoria musical",
+        f"{composer} compositor cine biografia",
+        f"{composer} film music composer biography",
+        f"{composer} soundtrack composer interview",
+        f"{composer} film score composer profile",
+        f"{composer} biographie compositeur",
+        f"{composer} komponist filmmusik biografie",
+        f"{composer} compositor cinema biografia",
+    ]
+    for query in queries:
+        urls = search_web(query, num=4)
+        for url in urls:
+            netloc = urlparse(url).netloc.lower()
+            if netloc in BLOCKED_DOMAINS:
+                continue
+            if len(snippets) >= limit:
+                return snippets
+            if not url or url in existing_urls:
+                continue
+            if 'wikipedia.org' in url or 'wikidata.org' in url:
+                continue
+            html = fetch_url_text(url)
+            if not html:
+                continue
+            soup = BeautifulSoup(html, 'html.parser')
+            paragraphs = extract_paragraphs_from_soup(soup, max_paragraphs=2)
+            if not paragraphs:
+                continue
+            text = truncate_text(' '.join(paragraphs), EXTERNAL_SNIPPET_MAX_CHARS)
+            text = translate_to_spanish(text)
+            name = urlparse(url).netloc or 'Fuente externa'
+            snippets.append({'name': name, 'url': url, 'text': text})
+            existing_urls.add(url)
+            if len(snippets) >= limit:
+                return snippets
+    return snippets
+
+
+def get_external_snippets(composer: str, sources: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    snippets: List[Dict[str, str]] = []
+    seen_urls = set()
+    for source in sources:
+        url = source.get('url') or ''
+        if not url or 'search' in url:
+            continue
+        domain = urlparse(url).netloc
+        if domain in EXTERNAL_DOMAINS.values() and url.rstrip('/') == f"https://{domain}":
+            continue
+        html = fetch_url_text(url)
+        if not html:
+            continue
+        soup = BeautifulSoup(html, 'html.parser')
+        paragraphs = extract_paragraphs_from_soup(soup, max_paragraphs=2)
+        if not paragraphs:
+            continue
+        text = truncate_text(' '.join(paragraphs), EXTERNAL_SNIPPET_MAX_CHARS)
+        text = translate_to_spanish(text)
+        snippets.append({'name': source['name'], 'url': url, 'text': text})
+        seen_urls.add(url)
+        if len(snippets) >= EXTERNAL_SNIPPET_SOURCES:
+            break
+    if len(snippets) < EXTERNAL_SNIPPET_SOURCES:
+        remaining = EXTERNAL_SNIPPET_SOURCES - len(snippets)
+        snippets.extend(get_general_snippets(composer, remaining, seen_urls))
+    return snippets
+
+
+def select_snippet_by_keywords(snippets: List[Dict[str, str]], keywords: List[str]) -> Optional[str]:
+    for snippet in snippets:
+        lowered = snippet.get('text', '').lower()
+        if any(keyword in lowered for keyword in keywords):
+            return snippet.get('text')
+    return None
+
+
+def build_enriched_text(
+    composer: str,
+    base: str,
+    snippets: List[Dict[str, str]],
+    keywords: List[str],
+    search_query: str,
+) -> str:
+    parts: List[str] = []
+    if base:
+        parts.append(base)
+    for snippet in snippets:
+        text = snippet.get('text') or ''
+        lowered = text.lower()
+        if not text or text in parts:
+            continue
+        if any(keyword in lowered for keyword in keywords):
+            parts.append(text)
+        if len(parts) >= 2:
+            break
+    if len(parts) < 2:
+        extra = search_for_text(search_query, keywords)
+        if extra and extra not in parts:
+            parts.append(extra)
+    return '\n\n'.join(parts).strip()
+
+
+def get_wikipedia_image(title: str) -> Optional[str]:
+    html = fetch_wikipedia_html(f"{title} film")
+    if not html:
+        return None
+    soup = BeautifulSoup(html, 'html.parser')
+    infobox = soup.find('table', class_='infobox')
+    if not infobox:
+        return None
+    img = infobox.find('img')
+    if not img or not img.get('src'):
+        return None
+    src = img['src']
+    if src.startswith('//'):
+        return f"https:{src}"
+    if src.startswith('/'):
+        return f"https://en.wikipedia.org{src}"
+    return src
+
+
+def get_film_poster(
+    title: str,
+    composer_folder: Path,
+    poster_url: Optional[str] = None,
+    year: Optional[int] = None,
+    poster_file: Optional[Path] = None,
+) -> str:
+    poster_file = poster_file or (composer_folder / 'posters' / poster_filename(title, year))
+    if poster_file.exists():
+        return str(poster_file)
+    if not DOWNLOAD_POSTERS:
+        if poster_url:
+            return poster_url
+        if TMDB_API_KEY:
+            tmdb_poster = tmdb_search_movie(title, year)
+            if tmdb_poster:
+                return tmdb_poster
+        wiki_img = get_wikipedia_image(title)
+        if wiki_img:
+            return wiki_img
+        return PLACEHOLDER_IMAGE
+    if poster_url:
+        saved = download_image(poster_url, poster_file)
+        if saved:
+            return saved
+    if TMDB_API_KEY:
+        tmdb_poster = tmdb_search_movie(title, year)
+        if tmdb_poster:
+            saved = download_image(tmdb_poster, poster_file)
+            if saved:
+                return saved
+    wiki_img = get_wikipedia_image(title)
+    if wiki_img:
+        saved = download_image(wiki_img, poster_file)
+        if saved:
+            return saved
+    if POSTER_WEB_FALLBACK:
+        urls = search_web(f"{title} movie poster", num=POSTER_SEARCH_RESULTS)
+        for url in urls:
+            netloc = urlparse(url).netloc.lower()
+            if netloc in BLOCKED_DOMAINS:
+                continue
+            html = fetch_url_text(url)
+            if not html:
+                continue
+            soup = BeautifulSoup(html, 'html.parser')
+            og = soup.find('meta', property='og:image')
+            img = og['content'] if og and og.get('content') else None
+            if img:
+                saved = download_image(img, poster_file)
+                return saved or PLACEHOLDER_IMAGE
+    return PLACEHOLDER_IMAGE
+
+
+def get_composer_info(composer: str, composer_folder: Path) -> Dict:
+    composer_folder.mkdir(parents=True, exist_ok=True)
+    photo_filename = f"photo_{slugify(composer)}.jpg"
+    photo_path = composer_folder / photo_filename
+    info: Dict = {'name': composer, 'folder': composer_folder}
+    html_es = fetch_wikipedia_html(f"{composer} compositor", lang='es') or fetch_wikipedia_html(composer, lang='es')
+    html_en = None
+    biography_parts: List[str] = []
+    bio_text = fetch_wikipedia_extract(f"{composer} compositor", lang='es') or fetch_wikipedia_extract(composer, lang='es')
+    if bio_text:
+        biography_parts = [
+            clean_text(p)
+            for p in bio_text.split('\n\n')
+            if len(clean_text(p)) >= MIN_PARAGRAPH_LEN
+        ][:MAX_BIO_PARAGRAPHS]
+    if not biography_parts:
+        bio_text_en = fetch_wikipedia_extract(f"{composer} composer", lang='en')
+        if bio_text_en:
+            paragraphs = [
+                clean_text(p)
+                for p in bio_text_en.split('\n\n')
+                if len(clean_text(p)) >= MIN_PARAGRAPH_LEN
+            ][:MAX_BIO_PARAGRAPHS]
+            biography_parts = translate_paragraphs(paragraphs)
+    if not biography_parts and html_es:
+        biography_parts = extract_paragraphs_from_soup(
+            BeautifulSoup(html_es, 'html.parser'),
+            max_paragraphs=MAX_BIO_PARAGRAPHS,
+        )
+    biography = '\n\n'.join(biography_parts)
+    if biography:
+        info['biography'] = biography
+
+    style_text = extract_section_text(html_es, STYLE_SECTION_KEYWORDS, max_paragraphs=2) if html_es else ''
+    if not style_text:
+        html_en = html_en or fetch_wikipedia_html(f"{composer} composer", lang='en')
+        if html_en:
+            style_text = extract_section_text(html_en, STYLE_SECTION_KEYWORDS, max_paragraphs=2)
+            style_text = translate_to_spanish(style_text)
+    if not style_text:
+        style_text = search_for_text(f"{composer} estilo musical compositor", STYLE_HINTS)
+    if biography and style_text and style_text in biography:
+        style_text = ''
+    if style_text:
+        info['style'] = style_text
+
+    anecdote_text = extract_section_text(html_es, ANECDOTE_SECTION_KEYWORDS, max_paragraphs=2) if html_es else ''
+    if not anecdote_text:
+        html_en = html_en or fetch_wikipedia_html(f"{composer} composer", lang='en')
+        if html_en:
+            anecdote_text = extract_section_text(html_en, ANECDOTE_SECTION_KEYWORDS, max_paragraphs=2)
+            anecdote_text = translate_to_spanish(anecdote_text)
+    if not anecdote_text:
+        anecdote_text = search_for_text(f"{composer} vida personal curiosidades", ANECDOTE_HINTS)
+    if biography and anecdote_text and anecdote_text in biography:
+        anecdote_text = ''
+    if anecdote_text:
+        info['anecdotes'] = anecdote_text
+
+    infobox_html = html_es or html_en
+    if infobox_html:
+        soup = BeautifulSoup(infobox_html, 'html.parser')
+        infobox = soup.find('table', class_='infobox')
+        if infobox:
+            img = infobox.find('img')
+            if img and img.get('src'):
+                photo_url = img['src']
+                if photo_url.startswith('//'):
+                    photo_url = f"https:{photo_url}"
+                elif photo_url.startswith('/'):
+                    photo_url = f"https://en.wikipedia.org{photo_url}"
+                info['photo'] = download_image(photo_url, photo_path) or photo_url
+    known_for_titles: List[str] = []
+    person_id = None
+    if TMDB_API_KEY:
+        person_id, known_for_titles = tmdb_search_person(composer)
+    if not info.get('photo') and person_id:
+        profile_url = tmdb_person_profile(person_id)
+        if profile_url:
+            info['photo'] = download_image(profile_url, photo_path) or profile_url
+    info['filmography'] = get_complete_filmography(composer, composer_folder)
+    info['awards'] = get_detailed_awards(composer)
+    top_boosts = get_top_10_films(composer)
+    for title in known_for_titles:
+        key = normalize_title_key(title)
+        if not key:
+            continue
+        top_boosts[key] = max(top_boosts.get(key, 0), 2)
+    top_entries = select_top_10_films(composer, info.get('filmography', []), info.get('awards', []), top_boosts)
+    info['top_10_films'] = []
+    for entry in top_entries:
+        poster = entry.get('poster_local') or get_film_poster(
+            entry.get('original_title') or entry.get('title', ''),
+            composer_folder,
+            entry.get('poster_url'),
+            entry.get('year'),
+            Path(entry['poster_file']) if entry.get('poster_file') else None,
+        )
+        info['top_10_films'].append({'entry': entry, 'poster': poster})
+    if info['awards'] and info['filmography']:
+        film_title_map: Dict[str, Dict[str, Optional[str]]] = {}
+        for entry in info['filmography']:
+            for key in build_title_keys(entry):
+                film_title_map[key] = entry
+        for award in info['awards']:
+            film = award.get('film')
+            if film:
+                entry = film_title_map.get(normalize_title_key(film))
+                if entry:
+                    award['film'] = format_film_title(entry)
+                elif TMDB_API_KEY and 'Título en España' not in film:
+                    details = tmdb_search_movie_details(film, None)
+                    if details:
+                        award['film'] = format_film_title({
+                            'original_title': details.get('original_title'),
+                            'title_es': details.get('title_es'),
+                        })
+    info['external_sources'] = get_external_sources(composer)
+    info['external_snippets'] = get_external_snippets(composer, info['external_sources'])
+    if info.get('biography'):
+        info['biography'] = ensure_spanish(info['biography'])
+    if info.get('style'):
+        info['style'] = ensure_spanish(info['style'])
+    if info.get('anecdotes'):
+        info['anecdotes'] = ensure_spanish(info['anecdotes'])
+    style_text = info.get('style', '')
+    if not style_text:
+        style_text = select_snippet_by_keywords(info['external_snippets'], STYLE_HINTS) or ''
+    if len(style_text) < 120:
+        style_text = build_enriched_text(
+            composer,
+            style_text,
+            info['external_snippets'],
+            STYLE_HINTS,
+            f"{composer} estilo musical compositor",
+        )
+    if biography and style_text and style_text in biography:
+        style_text = ''
+    if not style_text and info['external_snippets']:
+        style_text = info['external_snippets'][0].get('text', '')
+    if style_text:
+        info['style'] = style_text
+    else:
+        info['style'] = "Información de estilo musical en proceso de documentación."
+    anecdote_text = info.get('anecdotes', '')
+    if not anecdote_text:
+        anecdote_text = select_snippet_by_keywords(info['external_snippets'], ANECDOTE_HINTS) or ''
+    if len(anecdote_text) < 120:
+        anecdote_text = build_enriched_text(
+            composer,
+            anecdote_text,
+            info['external_snippets'],
+            ANECDOTE_HINTS,
+            f"{composer} vida personal curiosidades",
+        )
+    if biography and anecdote_text and anecdote_text in biography:
+        anecdote_text = ''
+    if not anecdote_text and info['external_snippets']:
+        anecdote_text = info['external_snippets'][-1].get('text', '')
+    if anecdote_text:
+        info['anecdotes'] = anecdote_text
+    else:
+        info['anecdotes'] = "Información de anécdotas y curiosidades en proceso de documentación."
+    return info
+
+
+def format_link(path: str, base: Path) -> str:
+    if path.startswith('http://') or path.startswith('https://'):
+        return path
+    local = Path(path)
+    if local.exists():
+        return str(local.relative_to(base))
+    return path
+
+
+def format_film_title(entry: Dict[str, Optional[str]]) -> str:
+    original = (entry.get('original_title') or entry.get('title') or '').strip()
+    spanish = (entry.get('title_es') or '').strip()
+    if not original and spanish:
+        original = spanish
+    if original and not spanish:
+        spanish = original
+    if original and spanish:
+        return f"{original} (Título en España: {spanish})"
+    return original or spanish
+
+
+def create_markdown_file(composer_info: Dict, target: Path) -> None:
+    lines = [f"# {composer_info['name']}\n"]
+    photo = composer_info.get('photo')
+    if photo:
+        lines.append(f"![{composer_info['name']}]({format_link(photo, target.parent)})\n")
+    biography = composer_info.get('biography')
+    if biography:
+        lines.append("## Biografía\n")
+        lines.append(f"{biography}\n")
+    style = composer_info.get('style')
+    if style:
+        lines.append("## Estilo musical\n")
+        lines.append(f"{style}\n")
+    anecdotes = composer_info.get('anecdotes')
+    if anecdotes:
+        lines.append("## Anécdotas y curiosidades\n")
+        lines.append(f"{anecdotes}\n")
+    films = composer_info.get('top_10_films', [])
+    if films:
+        lines.append("## Top 10 bandas sonoras\n")
+        for idx, film in enumerate(films, 1):
+            entry = film.get('entry') or {}
+            title_display = format_film_title(entry)
+            lines.append(f"{idx}. ***{title_display}***")
+            poster = film.get('poster')
+            if poster:
+                lines.append(f"    * **Póster:** [link]({format_link(poster, target.parent)})")
+        lines.append('')
+    filmography = composer_info.get('filmography', [])
+    if filmography:
+        lines.append("## Filmografía completa\n")
+        for entry in filmography:
+            title = format_film_title(entry)
+            year = entry.get('year')
+            poster = entry.get('poster_local')
+            line = f"- {title}"
+            if year:
+                line += f" ({year})"
+            if poster:
+                line += f" · [Póster]({format_link(poster, target.parent)})"
+            lines.append(line)
+        lines.append('')
+    awards = composer_info.get('awards', [])
+    if awards:
+        lines.append("## Premios y nominaciones\n")
+        status_map = {'Win': 'Ganador', 'Nomination': 'Nominación'}
+        for award in awards:
+            parts = []
+            if award.get('year'):
+                parts.append(str(award['year']))
+            if award.get('award'):
+                parts.append(award['award'])
+            if award.get('film'):
+                parts.append(f"por *{award['film']}*")
+            if award.get('status'):
+                parts.append(f"({status_map.get(award['status'], award['status'])})")
+            if parts:
+                lines.append(f"* {' – '.join(parts)}")
+        lines.append('')
+    sources = composer_info.get('external_sources', [])
+    if sources:
+        lines.append("## Fuentes adicionales\n")
+        for source in sources:
+            lines.append(f"* [{source['name']}]({source['url']}) — {source['snippet']}")
+        lines.append('')
+    snippets = composer_info.get('external_snippets', [])
+    if snippets:
+        lines.append("## Notas externas\n")
+        for snippet in snippets:
+            lines.append(f"* {snippet['name']}: {snippet['text']}")
+        lines.append('')
+    target.write_text('\n'.join(lines).strip() + '\n', encoding='utf-8')
+
+
+def main() -> None:
+    master = OUTPUT_DIR / 'composers_master_list.md'
+    composers = get_composers_from_file(master)
+    if not composers:
+        print('No composers to process.')
+        return
+    start_index = int(os.getenv('START_INDEX', '1'))
+    if start_index < 1:
+        start_index = 1
+    for idx, composer in enumerate(composers, start=1):
+        if idx < start_index:
+            continue
+        slug = slugify(composer)
+        filename = OUTPUT_DIR / f"{idx:03}_{slug}.md"
+        composer_folder = OUTPUT_DIR / f"{idx:03}_{slug}"
+        info = get_composer_info(composer, composer_folder)
+        print(f"Processing {composer} -> {filename}")
+        create_markdown_file(info, filename)
+        print(f"  saved {filename}")
+
+
+if __name__ == '__main__':
+    main()
