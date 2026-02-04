@@ -52,7 +52,7 @@ TOP100_QUERIES = [
 ]
 
 NAME_RE = re.compile(
-    r"\\b[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+(?:\\s+(?:[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+|[A-Z][a-z]+|de|del|da|dos|van|von|di|la|le|du|st\\.?)){1,4}\\b"
+    r"\b[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+(?:\s+(?:[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+|[A-Z][a-z]+|de|del|da|dos|van|von|di|la|le|du|st\.?)){1,4}\b"
 )
 
 NOISE_TOKENS = {
@@ -74,6 +74,15 @@ NOISE_TOKENS = {
     "Top",
     "Best",
     "Greatest",
+    "Wikipedia",
+    "Navigation",
+    "Contents",
+    "Donate",
+    "Search",
+    "Article",
+    "Tools",
+    "Help",
+    "Main",
 }
 
 
@@ -117,7 +126,16 @@ def fetch_text(url: str, timeout: int = 15, max_chars: int = 12000) -> str:
     soup = BeautifulSoup(resp.text, "html.parser")
     for tag in soup(["script", "style", "noscript"]):
         tag.decompose()
-    text = soup.get_text(" ", strip=True)
+    chunks: list[str] = []
+    for tag in soup.select("li, h2, h3, h4, p, td"):
+        text = tag.get_text(" ", strip=True)
+        if not text:
+            continue
+        if len(text) < 3 or len(text) > 240:
+            continue
+        chunks.append(text)
+
+    text = " | ".join(chunks)
     return text[:max_chars]
 
 
