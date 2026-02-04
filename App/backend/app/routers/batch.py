@@ -336,7 +336,8 @@ def batch_ui() -> str:
         <div class="row" style="margin-top: 12px;">
           <label>Start index:</label>
           <input id="startIndex" type="number" min="1" value="1" />
-          <button class="start" onclick="startBatch()">Iniciar</button>
+          <button class="start" onclick="startBatch()">Iniciar (auto)</button>
+          <button class="ghost" onclick="resumeBatch()">Reanudar</button>
           <button class="stop" onclick="stopBatch()">Parar</button>
           <button class="ghost" onclick="refreshStatus()">Actualizar</button>
         </div>
@@ -359,18 +360,27 @@ def batch_ui() -> str:
         statusEl.textContent = data.running ? 'En marcha' : 'Detenido';
         statusEl.className = 'status ' + (data.running ? 'running' : 'stopped');
         document.getElementById('pid').textContent = data.pid ? `PID: ${data.pid}` : '';
-        document.getElementById('latest').textContent = `Último índice: ${data.latest_index}`;
+        document.getElementById('latest').textContent = `Último índice procesado: ${data.latest_index}`;
         document.getElementById('startIndex').value = data.latest_index + 1;
         document.getElementById('log').textContent = data.log_tail.join('\\n');
         document.getElementById('logMeta').textContent = `(${data.log_tail.length} líneas)`;
       }
 
       async function startBatch() {
+        const res = await fetch('/batch/start', { method: 'POST' });
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.detail || 'Error al iniciar');
+        }
+        await refreshStatus();
+      }
+
+      async function resumeBatch() {
         const idx = parseInt(document.getElementById('startIndex').value, 10);
         const res = await fetch(`/batch/start?start_index=${idx}`, { method: 'POST' });
         if (!res.ok) {
           const err = await res.json();
-          alert(err.detail || 'Error al iniciar');
+          alert(err.detail || 'Error al reanudar');
         }
         await refreshStatus();
       }
