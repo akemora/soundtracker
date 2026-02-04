@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 
 from .config import get_settings
 from .database import DatabaseError, DatabaseManager, db_manager, get_database
-from .routers import assets_router, composers_router, search_router
+from .routers import assets_router, batch_router, composers_router, search_router
 
 settings = get_settings()
 
@@ -131,6 +131,7 @@ async def health_check(
 app.include_router(composers_router)
 app.include_router(search_router)
 app.include_router(assets_router)
+app.include_router(batch_router)
 
 
 # =============================================================================

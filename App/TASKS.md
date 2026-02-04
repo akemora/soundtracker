@@ -779,6 +779,11 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.2.1 | Sección de series de TV | **Claude** | `opus` | 🟢 | `[ ]` | |
 | 8.2.2 | Sección de videojuegos | **Claude** | `opus` | 🟢 | `[ ]` | |
 
+### 8.3 Herramientas Operativas
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 8.3.1 | UI para controlar batch (start/stop/status/log) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
+
 ---
 
 ## Resumen de Progreso
@@ -793,8 +798,8 @@ Cuando una tarea requiera una IA diferente a la actual:
 | Fase 5 | 37 | 35 | 95% |
 | Fase 6 | 16 | 16 | 100% |
 | Fase 7 | 18 | 18 | 100% |
-| Fase 8 | 4 | 0 | 0% |
-| **TOTAL** | **313** | **307** | **98%** |
+| Fase 8 | 5 | 1 | 20% |
+| **TOTAL** | **314** | **308** | **98%** |
 
 ---
 
