@@ -84,6 +84,27 @@ NON_PERSON_TOKENS = {
     "various artists",
 }
 
+TITLE_STOPWORDS = {
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "of",
+    "for",
+    "with",
+    "without",
+    "from",
+    "to",
+    "in",
+    "on",
+    "at",
+    "vs",
+    "v",
+}
+
+TITLE_SEPARATORS = (":", " - ", " – ", " — ", "/")
+
 
 @dataclass
 class ComposerRow:
@@ -123,6 +144,63 @@ def is_person_name(name: str) -> bool:
     if len(alpha_tokens) < 2:
         return False
     return True
+
+
+def is_probable_title(name: str) -> bool:
+    if not name:
+        return False
+    if any(sep in name for sep in TITLE_SEPARATORS):
+        return True
+    tokens = [t.strip(".,:;!?()[]{}\"'") for t in name.lower().split()]
+    if not tokens:
+        return False
+    if tokens[0] in {"the", "a", "an"}:
+        return True
+    if any(token in TITLE_STOPWORDS for token in tokens):
+        return True
+    if name.endswith((".", "!", "?", "…")):
+        return True
+    return False
+
+
+class TitleMatcher:
+    def __init__(self, db_path: Path) -> None:
+        self.conn = sqlite3.connect(db_path)
+        self.conn.row_factory = sqlite3.Row
+        self.cache: dict[str, bool] = {}
+        placeholders = ",".join("?" for _ in TITLE_TYPES)
+        self.query = (
+            "SELECT 1 FROM titles "
+            f"WHERE titleType IN ({placeholders}) "
+            "AND (primaryTitle = ? COLLATE NOCASE OR originalTitle = ? COLLATE NOCASE) "
+            "LIMIT 1"
+        )
+        self._ensure_indexes()
+
+    def _ensure_indexes(self) -> None:
+        self.conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_titles_primary_nocase "
+            "ON titles (primaryTitle COLLATE NOCASE)"
+        )
+        self.conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_titles_original_nocase "
+            "ON titles (originalTitle COLLATE NOCASE)"
+        )
+        self.conn.commit()
+
+    def is_title(self, name: str) -> bool:
+        key = normalize_name(name)
+        if not key:
+            return False
+        if key in self.cache:
+            return self.cache[key]
+        row = self.conn.execute(self.query, [*TITLE_TYPES, name, name]).fetchone()
+        is_title = row is not None
+        self.cache[key] = is_title
+        return is_title
+
+    def close(self) -> None:
+        self.conn.close()
 
 
 def parse_existing_master_list(path: Path) -> list[ComposerRow]:
@@ -193,6 +271,8 @@ def build_imdb_rows(db_path: Path, min_credits: int) -> list[ComposerRow]:
         name = row["name"]
         if not name or not is_person_name(name):
             continue
+        if is_probable_title(name):
+            continue
         types = (row["types"] or "").split(",") if row["types"] else []
         mediums: set[str] = set()
         for ttype in types:
@@ -221,6 +301,7 @@ def merge_rows(
     web_names: dict[str, "WebName"],
     min_sources: int,
     allow_non_imdb: bool,
+    title_matcher: Optional[TitleMatcher],
 ) -> list[ComposerRow]:
     merged: list[ComposerRow] = []
 
@@ -264,8 +345,17 @@ def merge_rows(
         if dedupe_key in seen_keys:
             continue
         seen_keys.add(dedupe_key)
-        if is_person_name(row.name):
+        if not is_person_name(row.name):
+            continue
+        if is_probable_title(row.name):
+            continue
+        name_key = normalize_name(row.name).lower()
+        if name_key in imdb_name_set:
             merged.append(row)
+            continue
+        if title_matcher and title_matcher.is_title(row.name):
+            continue
+        merged.append(row)
 
     if allow_non_imdb and web_names:
         for key, entry in web_names.items():
@@ -274,6 +364,10 @@ def merge_rows(
             if len(entry.sources) < min_sources:
                 continue
             if not is_person_name(entry.name):
+                continue
+            if is_probable_title(entry.name):
+                continue
+            if title_matcher and title_matcher.is_title(entry.name):
                 continue
             merged.append(
                 ComposerRow(
@@ -337,6 +431,7 @@ def main() -> None:
     imdb_rows = build_imdb_rows(args.imdb_db, args.min_credits)
     logger.info("IMDb rows loaded: %d", len(imdb_rows))
     existing_rows = [] if args.skip_existing else parse_existing_master_list(args.existing_master)
+    title_matcher = TitleMatcher(args.imdb_db)
     web_names = {}
     if args.use_web:
         web_names = harvest_web_names(
@@ -353,7 +448,9 @@ def main() -> None:
         web_names,
         min_sources=args.non_imdb_min_sources,
         allow_non_imdb=args.allow_non_imdb,
+        title_matcher=title_matcher,
     )
+    title_matcher.close()
     write_markdown(merged, args.output)
 
 
