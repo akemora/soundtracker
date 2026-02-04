@@ -50,16 +50,21 @@ class ImdbDataset:
         """Check if the IMDb SQLite database exists."""
         return self.db_path.exists()
 
-    def get_person_years(self, name: str) -> Optional[ImdbPerson]:
+    def get_person_years(self, name: str, conn: Optional[sqlite3.Connection] = None) -> Optional[ImdbPerson]:
         """Resolve person by name and return year metadata."""
-        return self.resolve_person(name)
+        return self.resolve_person(name, conn=conn)
 
-    def resolve_person(self, name: str) -> Optional[ImdbPerson]:
+    def resolve_person(self, name: str, conn: Optional[sqlite3.Connection] = None) -> Optional[ImdbPerson]:
         """Find the best matching person for a given name."""
-        candidates = self.find_person_candidates(name, limit=8)
+        candidates = self.find_person_candidates(name, limit=8, conn=conn)
         return candidates[0] if candidates else None
 
-    def find_person_candidates(self, name: str, limit: int = 5) -> list[ImdbPerson]:
+    def find_person_candidates(
+        self,
+        name: str,
+        limit: int = 5,
+        conn: Optional[sqlite3.Connection] = None,
+    ) -> list[ImdbPerson]:
         """Return candidate IMDb people matching a name."""
         if not self.is_available:
             return []
@@ -67,51 +72,23 @@ class ImdbDataset:
         normalized = name.strip()
         if not normalized:
             return []
-
-        query = (
-            "SELECT nconst, primaryName, birthYear, deathYear, primaryProfession "
-            "FROM people "
-            "WHERE lower(primaryName) = lower(?) "
-            "   OR lower(primaryName) LIKE lower(?) "
-            "ORDER BY CASE WHEN lower(primaryName) = lower(?) THEN 0 ELSE 1 END, "
-            "         CASE WHEN primaryProfession LIKE '%composer%' THEN 0 ELSE 1 END, "
-            "         CASE WHEN birthYear IS NULL THEN 1 ELSE 0 END, "
-            "         primaryName "
-            "LIMIT ?"
-        )
-
-        with self._connect() as conn:
-            rows = conn.execute(
-                query,
-                (normalized, f"%{normalized}%", normalized, limit),
-            ).fetchall()
-
-            candidates = [
-                ImdbPerson(
-                    nconst=row["nconst"],
-                    name=row["primaryName"],
-                    birth_year=row["birthYear"],
-                    death_year=row["deathYear"],
-                    professions=row["primaryProfession"],
-                )
-                for row in rows
-            ]
-
-            self._attach_credit_counts(conn, candidates)
-            candidates.sort(key=lambda c: self._candidate_sort_key(c, normalized))
-            return candidates
+        if conn is None:
+            with self._connect() as opened:
+                return self._find_person_candidates(opened, normalized, limit)
+        return self._find_person_candidates(conn, normalized, limit)
 
     def get_composer_filmography(
         self,
         name: str,
         title_types: Optional[set[str]] = None,
         max_titles: Optional[int] = None,
+        conn: Optional[sqlite3.Connection] = None,
     ) -> list[Film]:
         """Fetch composer filmography from IMDb dataset."""
         if not self.is_available:
             return []
 
-        person = self.resolve_person(name)
+        person = self.resolve_person(name, conn=conn)
         if not person:
             return []
 
@@ -132,24 +109,82 @@ class ImdbDataset:
         params = [person.nconst, *sorted(title_types)]
         films: list[Film] = []
 
-        with self._connect() as conn:
-            for row in conn.execute(query, params):
-                title = row["primaryTitle"] or row["originalTitle"] or ""
-                if not title:
-                    continue
-                films.append(
-                    Film(
-                        title=title,
-                        original_title=row["originalTitle"] or title,
-                        year=row["startYear"],
-                        vote_average=row["averageRating"],
-                        vote_count=row["numVotes"],
-                        imdb_id=row["tconst"],
-                    )
-                )
-                if max_titles and len(films) >= max_titles:
-                    break
+        if conn is None:
+            with self._connect() as opened:
+                return self._fetch_films(opened, query, params, max_titles)
+        return self._fetch_films(conn, query, params, max_titles)
 
+    def _find_person_candidates(
+        self,
+        conn: sqlite3.Connection,
+        normalized: str,
+        limit: int,
+    ) -> list[ImdbPerson]:
+        exact_query = (
+            "SELECT nconst, primaryName, birthYear, deathYear, primaryProfession "
+            "FROM people "
+            "WHERE primaryName = ? COLLATE NOCASE "
+            "LIMIT ?"
+        )
+        rows = conn.execute(exact_query, (normalized, limit)).fetchall()
+
+        if not rows:
+            like_query = (
+                "SELECT nconst, primaryName, birthYear, deathYear, primaryProfession "
+                "FROM people "
+                "WHERE primaryName LIKE ? COLLATE NOCASE "
+                "LIMIT ?"
+            )
+            rows = conn.execute(like_query, (f"{normalized}%", limit)).fetchall()
+
+        if not rows:
+            fallback_query = (
+                "SELECT nconst, primaryName, birthYear, deathYear, primaryProfession "
+                "FROM people "
+                "WHERE primaryName LIKE ? COLLATE NOCASE "
+                "LIMIT ?"
+            )
+            rows = conn.execute(fallback_query, (f"%{normalized}%", limit)).fetchall()
+
+        candidates = [
+            ImdbPerson(
+                nconst=row["nconst"],
+                name=row["primaryName"],
+                birth_year=row["birthYear"],
+                death_year=row["deathYear"],
+                professions=row["primaryProfession"],
+            )
+            for row in rows
+        ]
+
+        self._attach_credit_counts(conn, candidates)
+        candidates.sort(key=lambda c: self._candidate_sort_key(c, normalized))
+        return candidates
+
+    def _fetch_films(
+        self,
+        conn: sqlite3.Connection,
+        query: str,
+        params: list[str],
+        max_titles: Optional[int],
+    ) -> list[Film]:
+        films: list[Film] = []
+        for row in conn.execute(query, params):
+            title = row["primaryTitle"] or row["originalTitle"] or ""
+            if not title:
+                continue
+            films.append(
+                Film(
+                    title=title,
+                    original_title=row["originalTitle"] or title,
+                    year=row["startYear"],
+                    vote_average=row["averageRating"],
+                    vote_count=row["numVotes"],
+                    imdb_id=row["tconst"],
+                )
+            )
+            if max_titles and len(films) >= max_titles:
+                break
         return films
 
     def _attach_credit_counts(self, conn: sqlite3.Connection, candidates: list[ImdbPerson]) -> None:

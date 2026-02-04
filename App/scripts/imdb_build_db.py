@@ -235,6 +235,7 @@ def build_db(data_dir: Path, db_path: Path, include_ratings: bool) -> None:
         """
         CREATE INDEX idx_composer_nconst ON composer_credits (nconst);
         CREATE INDEX idx_people_name ON people (primaryName);
+        CREATE INDEX idx_people_name_nocase ON people (primaryName COLLATE NOCASE);
         CREATE INDEX idx_titles_year ON titles (startYear);
         CREATE INDEX idx_titles_type ON titles (titleType);
         """

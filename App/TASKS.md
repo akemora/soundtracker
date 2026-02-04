@@ -806,6 +806,8 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.4.4 | Script para actualizar master list con IMDb | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.4.5 | Fix parser master list (columnas vacías) | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
 | 8.4.6 | Fix parser master list (valores no numéricos) | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
+| 8.4.7 | Optimizar lookup IMDb (NOCASE + filtros) | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
+| 8.4.8 | Reutilizar conexión IMDb en update master list | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
 
 ---
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -67,8 +68,11 @@ def main() -> None:
     updates = 0
     mismatches = 0
 
+    conn = sqlite3.connect(imdb.db_path)
+    conn.row_factory = sqlite3.Row
+
     for entry in manager.entries:
-        person = imdb.get_person_years(entry.name)
+        person = imdb.get_person_years(entry.name, conn=conn)
         if not person:
             continue
 
@@ -98,6 +102,8 @@ def main() -> None:
                     updates += 1
                 elif not args.only_missing:
                     mismatches += 1
+
+    conn.close()
 
     logger.info("IMDb update completed. Updates=%d, mismatches=%d", updates, mismatches)
 
