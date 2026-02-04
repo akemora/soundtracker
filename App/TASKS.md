@@ -792,6 +792,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.3.8 | Configurar modelo OpenAI y esfuerzo de razonamiento | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.9 | Permitir desactivar OpenAI vía config | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.10 | Añadir fuentes externas alternativas (anti-403/timeouts) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.3.11 | Validar CSV de 50 fuentes y añadir dominios útiles | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ---
 

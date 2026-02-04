@@ -95,6 +95,15 @@ EXTERNAL_DOMAINS = {
     'SoundtrackInfo': 'soundtrackinfo.com',
     'SoundtrackFest': 'soundtrackfest.com',
     'BandasSonorasDeCine': 'bandassonorasdecine.com',
+    'FMDB': 'fmdb.net',
+    'Film Music Review': 'fmrev.com',
+    'Cinescores': 'cinescores.dudaone.com',
+    'AllMusic': 'allmusic.com',
+    'Discogs': 'discogs.com',
+    'MusicBrainz': 'musicbrainz.org',
+    'Soundtrack.net': 'soundtrack.net',
+    'OSTNews': 'ostnews.com',
+    'VGMdb': 'vgmdb.net',
 }
 SOURCE_PACK_QUERIES = [
     '{composer} compositor biografia',
