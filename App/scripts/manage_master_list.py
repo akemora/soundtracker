@@ -323,10 +323,10 @@ class MasterListManager:
             logger.warning(f"Error parseando fila: {line} - {e}")
             return None
 
-    def save(self) -> None:
+    def save(self, sort_by_index: bool = True) -> None:
         """Guarda el archivo master list."""
-        # Ordenar por índice
-        self._entries.sort(key=lambda e: e.index)
+        if sort_by_index:
+            self._entries.sort(key=lambda e: e.index)
 
         lines = []
 
