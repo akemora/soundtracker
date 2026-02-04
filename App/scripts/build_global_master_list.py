@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import re
 import sqlite3
 import sys
 import unicodedata
@@ -53,6 +54,36 @@ TYPE_TO_MEDIUM = {
     "videoGame": {"videojuego"},
 }
 
+NON_PERSON_TOKENS = {
+    "studio",
+    "studios",
+    "records",
+    "recordings",
+    "production",
+    "productions",
+    "company",
+    "co.",
+    "inc",
+    "ltd",
+    "llc",
+    "entertainment",
+    "orchestra",
+    "ensemble",
+    "choir",
+    "band",
+    "group",
+    "department",
+    "team",
+    "music department",
+    "sound department",
+    "soundtrack",
+    "pictures",
+    "films",
+    "games",
+    "media",
+    "various artists",
+}
+
 
 @dataclass
 class ComposerRow:
@@ -74,6 +105,24 @@ def normalize_name(name: str) -> str:
     normalized = unicodedata.normalize("NFKD", name)
     ascii_name = normalized.encode("ascii", "ignore").decode("ascii")
     return ascii_name.lower().strip()
+
+
+def is_person_name(name: str) -> bool:
+    if not name:
+        return False
+    if any(ch.isdigit() for ch in name):
+        return False
+    lower = name.lower()
+    for token in NON_PERSON_TOKENS:
+        if token in lower:
+            return False
+    if "&" in name or "/" in name:
+        return False
+    tokens = [t for t in re.split(r"\\s+", name.strip()) if t]
+    alpha_tokens = [t for t in tokens if re.search(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]", t)]
+    if len(alpha_tokens) < 2:
+        return False
+    return True
 
 
 def parse_existing_master_list(path: Path) -> list[ComposerRow]:
@@ -142,7 +191,7 @@ def build_imdb_rows(db_path: Path, min_credits: int) -> list[ComposerRow]:
     rows: list[ComposerRow] = []
     for row in conn.execute(query, [*TITLE_TYPES, min_credits]):
         name = row["name"]
-        if not name:
+        if not name or not is_person_name(name):
             continue
         types = (row["types"] or "").split(",") if row["types"] else []
         mediums: set[str] = set()
@@ -215,13 +264,16 @@ def merge_rows(
         if dedupe_key in seen_keys:
             continue
         seen_keys.add(dedupe_key)
-        merged.append(row)
+        if is_person_name(row.name):
+            merged.append(row)
 
     if allow_non_imdb and web_names:
         for key, entry in web_names.items():
             if key in imdb_name_set:
                 continue
             if len(entry.sources) < min_sources:
+                continue
+            if not is_person_name(entry.name):
                 continue
             merged.append(
                 ComposerRow(
