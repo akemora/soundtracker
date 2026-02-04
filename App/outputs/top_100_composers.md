@@ -4,103 +4,103 @@
 
 | No. | Name | Mentions |
 |---|---|---|
-| 001 | John Williams | 16 |
-| 002 | Ennio Morricone | 15 |
-| 003 | Hans Zimmer | 13 |
-| 004 | James Horner | 12 |
-| 005 | John Barry | 12 |
-| 006 | Danny Elfman | 10 |
-| 007 | Star Wars | 10 |
-| 008 | Howard Shore | 9 |
-| 009 | Elmer Bernstein | 8 |
-| 010 | Henry Mancini | 8 |
-| 011 | Maurice Jarre | 8 |
-| 012 | Max Steiner | 8 |
-| 013 | Bernard Herrmann | 7 |
-| 014 | Jerry Goldsmith | 7 |
-| 015 | Michael Giacchino | 7 |
-| 016 | Rachel Portman | 7 |
-| 017 | Alan Silvestri | 6 |
-| 018 | All Time | 6 |
-| 019 | Bill Conti | 6 |
-| 020 | Final Fantasy | 6 |
-| 021 | Harry Gregson | 6 |
-| 022 | James Newton Howard | 6 |
-| 023 | Nino Rota | 6 |
-| 024 | Thomas Newman | 6 |
-| 025 | David Wise | 5 |
-| 026 | Harry Potter | 5 |
-| 027 | Joe Hisaishi | 5 |
-| 028 | Koji Kondo | 5 |
-| 029 | New York | 5 |
-| 030 | Nobuo Uematsu | 5 |
-| 031 | Ramin Djawadi | 5 |
-| 032 | Star Trek | 5 |
-| 033 | The Legend | 5 |
-| 034 | About Us | 4 |
-| 035 | Alexandre Desplat | 4 |
-| 036 | Alfred Newman | 4 |
-| 037 | Christopher Nolan | 4 |
-| 038 | Dimitri Tiomkin | 4 |
-| 039 | James Bond | 4 |
-| 040 | Jurassic Park | 4 |
-| 041 | Leonard Bernstein | 4 |
-| 042 | Michiru Yamane | 4 |
-| 043 | Mick Gordon | 4 |
-| 044 | Once Upon | 4 |
-| 045 | Randy Newman | 4 |
-| 046 | The Godfather | 4 |
-| 047 | The Good | 4 |
-| 048 | The Lord | 4 |
-| 049 | Yasunori Mitsuda | 4 |
-| 050 | Alan Menken | 3 |
-| 051 | Alex North | 3 |
-| 052 | Angelo Badalamenti | 3 |
-| 053 | Austin Wintory | 3 |
-| 054 | Christophe Beck | 3 |
-| 055 | Chrono Trigger | 3 |
-| 056 | Dave Grusin | 3 |
-| 057 | Erich Wolfgang Korngold | 3 |
-| 058 | Francis Ford Coppola | 3 |
-| 059 | Franz Waxman | 3 |
-| 060 | Gustavo Santaolalla | 3 |
-| 061 | Harold Arlen | 3 |
-| 062 | Herbie Hancock | 3 |
-| 063 | John Addison | 3 |
-| 064 | John Debney | 3 |
-| 065 | Kingdom Hearts | 3 |
-| 066 | Michael Nyman | 3 |
-| 067 | Peter Jackson | 3 |
-| 068 | Philip Glass | 3 |
-| 069 | Slumdog Millionaire | 3 |
-| 070 | Stranger Things | 3 |
-| 071 | Street Fighter | 3 |
-| 072 | Super Mario Bros | 3 |
-| 073 | Super Smash Bros | 3 |
-| 074 | The Adventures | 3 |
-| 075 | The Empire Strikes Back | 3 |
-| 076 | The Magnificent Seven | 3 |
-| 077 | The Pink Panther | 3 |
-| 078 | The Simpsons | 3 |
-| 079 | Toby Fox | 3 |
-| 080 | Twin Peaks | 3 |
-| 081 | Victor Fleming | 3 |
-| 082 | Ace Attorney | 2 |
-| 083 | Akira Yamaoka | 2 |
-| 084 | Alexander Courage | 2 |
-| 085 | Alfred Hitchcock | 2 |
-| 086 | Allee Willis | 2 |
-| 087 | Amanda Abizaid | 2 |
-| 088 | Aretha Franklin | 2 |
-| 089 | Bad Boys | 2 |
-| 090 | Bad Fur Day | 2 |
-| 091 | Bahasa Indonesia | 2 |
-| 092 | Blade Runner | 2 |
-| 093 | Blue Velvet | 2 |
-| 094 | Burt Bacharach | 2 |
-| 095 | Carter Burwell | 2 |
-| 096 | Chris Columbus | 2 |
-| 097 | Christopher Larkin | 2 |
-| 098 | Cliff Martinez | 2 |
-| 099 | Clint Mansell | 2 |
-| 100 | Combat Evolved | 2 |
+| 001 | Danny Elfman | 7 |
+| 002 | James Horner | 5 |
+| 003 | Max Steiner | 5 |
+| 004 | Alan Silvestri | 4 |
+| 005 | Christophe Beck | 4 |
+| 006 | Howard Shore | 4 |
+| 007 | Koji Kondo | 4 |
+| 008 | David Wise | 3 |
+| 009 | Jerry Goldsmith | 3 |
+| 010 | Rachel Portman | 3 |
+| 011 | Thomas Newman | 3 |
+| 012 | Yasunori Mitsuda | 3 |
+| 013 | Alexandre Desplat | 2 |
+| 014 | Alfred Newman | 2 |
+| 015 | Amanda Abizaid | 2 |
+| 016 | Austin Wintory | 2 |
+| 017 | Edwin Astley | 2 |
+| 018 | Grant Kirkhope | 2 |
+| 019 | Harry Gregson | 2 |
+| 020 | Jeff Alexander | 2 |
+| 021 | Jeff Beal | 2 |
+| 022 | John Addison | 2 |
+| 023 | Marco Beltrami | 2 |
+| 024 | Michiru Yamane | 2 |
+| 025 | Mike Post | 2 |
+| 026 | Nino Rota | 2 |
+| 027 | Adam Anders | 1 |
+| 028 | Adam Berry | 1 |
+| 029 | Akira Yamaoka | 1 |
+| 030 | Albert Ayler | 1 |
+| 031 | Alejandro Gutiérrez del Barrio | 1 |
+| 032 | Alessandro Alessandroni | 1 |
+| 033 | Alexandre Azaria | 1 |
+| 034 | Allyn Ferguson | 1 |
+| 035 | Anand Raj Anand | 1 |
+| 036 | Andrew Barnabas | 1 |
+| 037 | Andrew Belling | 1 |
+| 038 | Andrew Gold | 1 |
+| 039 | Andy Grush | 1 |
+| 040 | Ann Hampton Callaway | 1 |
+| 041 | Anne Dudley | 1 |
+| 042 | Aphex Twin | 1 |
+| 043 | Arnold Bax | 1 |
+| 044 | Art Zoyd | 1 |
+| 045 | Babak Bayat | 1 |
+| 046 | Barry Adamson | 1 |
+| 047 | Barry De Vorzon | 1 |
+| 048 | Beau Black | 1 |
+| 049 | Bebe Barron | 1 |
+| 050 | Benny Andersson | 1 |
+| 051 | Billy Barber | 1 |
+| 052 | Billy Goldenberg | 1 |
+| 053 | Bob Alcivar | 1 |
+| 054 | Bob Cobert | 1 |
+| 055 | Bob James | 1 |
+| 056 | Bobby Beausoleil | 1 |
+| 057 | Brad Fiedel | 1 |
+| 058 | Carter Burwell | 1 |
+| 059 | Charles Albertine | 1 |
+| 060 | Charles Bernstein | 1 |
+| 061 | Charles Gross | 1 |
+| 062 | Christopher Franke | 1 |
+| 063 | Christopher Gunning | 1 |
+| 064 | Christopher Tyng | 1 |
+| 065 | Chuck Hammer | 1 |
+| 066 | Claude Arrieu | 1 |
+| 067 | Claus Bantzer | 1 |
+| 068 | Craig Armstrong | 1 |
+| 069 | Craig Sharmat | 1 |
+| 070 | Cris Velasco | 1 |
+| 071 | Curt Massey | 1 |
+| 072 | Cy Coleman | 1 |
+| 073 | Dan Andrei Aldea | 1 |
+| 074 | Daniele Amfitheatrof | 1 |
+| 075 | Danielle Brisebois | 1 |
+| 076 | Danny Lux | 1 |
+| 077 | Darling Violetta | 1 |
+| 078 | David Arkenstone | 1 |
+| 079 | David Arnold | 1 |
+| 080 | David Bergeaud | 1 |
+| 081 | David Buttolph | 1 |
+| 082 | David Catalano | 1 |
+| 083 | Dee Barton | 1 |
+| 084 | Delia Derbyshire | 1 |
+| 085 | Devin Powers | 1 |
+| 086 | Don Banks | 1 |
+| 087 | Don Battye | 1 |
+| 088 | Dylan Berry | 1 |
+| 089 | Edesio Alejandro | 1 |
+| 090 | Eef Barzelay | 1 |
+| 091 | Elegant Too | 1 |
+| 092 | Eric Allaman | 1 |
+| 093 | Eric Avery | 1 |
+| 094 | Eric Bazilian | 1 |
+| 095 | Erran Baron Cohen | 1 |
+| 096 | Evan Frankfort | 1 |
+| 097 | Frank Comstock | 1 |
+| 098 | Frank De Vol | 1 |
+| 099 | Gabriel Mann | 1 |
+| 100 | Gareth Coker | 1 |

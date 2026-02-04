@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import logging
+import re
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -16,6 +18,102 @@ from soundtracker.config import settings  # noqa: E402
 from master_list_sources import TOP100_QUERIES, harvest_web_names, normalize_name  # noqa: E402
 
 logger = logging.getLogger(__name__)
+
+NOISE_TOKENS = {
+    "about",
+    "contact",
+    "privacy",
+    "policy",
+    "terms",
+    "cookies",
+    "sitemap",
+    "home",
+    "login",
+    "sign",
+    "subscribe",
+    "language",
+    "bahasa",
+    "política",
+    "aviso",
+    "legal",
+    "press",
+    "news",
+    "newsletter",
+    "careers",
+}
+
+NOISE_PHRASES = {
+    "about us",
+    "contact us",
+    "privacy policy",
+    "terms of use",
+    "all time",
+}
+
+TITLE_SEPARATORS = (":", " - ", " – ", " — ", "/")
+
+
+def is_person_name(name: str) -> bool:
+    if not name:
+        return False
+    if any(ch.isdigit() for ch in name):
+        return False
+    if "&" in name or "/" in name:
+        return False
+    tokens = [t for t in re.split(r"\s+", name.strip()) if t]
+    alpha_tokens = [t for t in tokens if re.search(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]", t)]
+    if len(alpha_tokens) < 2:
+        return False
+    return True
+
+
+def is_probable_title(name: str) -> bool:
+    if any(sep in name for sep in TITLE_SEPARATORS):
+        return True
+    tokens = [t.strip(".,:;!?()[]{}\"'") for t in name.lower().split()]
+    if not tokens:
+        return False
+    if tokens[0] in {"the", "a", "an"}:
+        return True
+    if any(token in {"and", "or", "of", "for", "with", "from", "to", "in", "on", "at"} for token in tokens):
+        return True
+    return False
+
+
+def is_noise_name(name: str) -> bool:
+    lower = name.lower()
+    for phrase in NOISE_PHRASES:
+        if phrase in lower:
+            return True
+    for token in NOISE_TOKENS:
+        if token in lower:
+            return True
+    return False
+
+
+def build_imdb_person_checker(db_path: Path):
+    conn = sqlite3.connect(db_path)
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_people_name_nocase "
+        "ON people (primaryName COLLATE NOCASE)"
+    )
+    conn.commit()
+    cache: dict[str, bool] = {}
+
+    def is_person(name: str) -> bool:
+        key = name.lower().strip()
+        if not key:
+            return False
+        if key in cache:
+            return cache[key]
+        row = conn.execute(
+            "SELECT 1 FROM people WHERE primaryName = ? COLLATE NOCASE LIMIT 1",
+            (name,),
+        ).fetchone()
+        cache[key] = row is not None
+        return cache[key]
+
+    return conn, is_person
 
 
 def load_master_names(path: Path) -> dict[str, str]:
@@ -66,6 +164,8 @@ def main() -> None:
     parser.add_argument("--web-max-urls-per-query", type=int, default=6)
     parser.add_argument("--gemini-max-urls", type=int, default=12)
     parser.add_argument("--min-sources", type=int, default=1)
+    parser.add_argument("--imdb-db", type=Path, default=settings.imdb_db_path)
+    parser.add_argument("--require-imdb-person", action="store_true", default=True)
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -83,13 +183,27 @@ def main() -> None:
         gemini_max_urls=args.gemini_max_urls,
     )
 
+    imdb_conn = None
+    imdb_checker = None
+    if args.require_imdb_person:
+        imdb_conn, imdb_checker = build_imdb_person_checker(args.imdb_db)
+
     counts: dict[str, int] = {}
     for key, entry in web_names.items():
         if len(entry.sources) < args.min_sources:
             continue
+        if not is_person_name(entry.name):
+            continue
+        if is_probable_title(entry.name) or is_noise_name(entry.name):
+            continue
+        if imdb_checker and not imdb_checker(entry.name):
+            continue
         if key not in master_names:
             continue
         counts[master_names[key]] = max(counts.get(master_names[key], 0), len(entry.sources))
+
+    if imdb_conn:
+        imdb_conn.close()
 
     ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
     top100 = ranked[:100]

@@ -829,7 +829,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 |---|-------|-----|--------|-----------|--------|-------|
 | 8.6.1 | Script top 100 desde web sources | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.6.2 | Generar top 100 desde web sources | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
-| 8.6.3 | Filtrar top 100 (solo personas IMDb) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` |  |
+| 8.6.3 | Filtrar top 100 (solo personas IMDb) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ### 8.7 Backup Outputs
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
@@ -850,8 +850,8 @@ Cuando una tarea requiera una IA diferente a la actual:
 | Fase 5 | 37 | 35 | 95% |
 | Fase 6 | 16 | 16 | 100% |
 | Fase 7 | 18 | 18 | 100% |
-| Fase 8 | 12 | 7 | 58% |
-| **TOTAL** | **321** | **314** | **98%** |
+| Fase 8 | 12 | 8 | 67% |
+| **TOTAL** | **321** | **315** | **98%** |
 
 ---
 
