@@ -809,6 +809,13 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.4.7 | Optimizar lookup IMDb (NOCASE + filtros) | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
 | 8.4.8 | Reutilizar conexión IMDb en update master list | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
 
+### 8.5 Master List Global
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 8.5.1 | Script global master list (IMDb base) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.5.2 | Orden alfabético + columna Medios | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.5.3 | Merge con master list existente (país/años) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+
 ---
 
 ## Resumen de Progreso
