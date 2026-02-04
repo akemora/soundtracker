@@ -170,9 +170,10 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
 SOURCE_PACK_ENABLED = os.getenv('SOURCE_PACK_ENABLED', '1') == '1'
 SOURCE_PACK_REUSE = os.getenv('SOURCE_PACK_REUSE', '1') == '1'
-SOURCE_PACK_MAX_URLS = int(os.getenv('SOURCE_PACK_MAX_URLS', '18'))
-SOURCE_PACK_MAX_PARAGRAPHS = int(os.getenv('SOURCE_PACK_MAX_PARAGRAPHS', '6'))
-SOURCE_PACK_MAX_CHARS = int(os.getenv('SOURCE_PACK_MAX_CHARS', '24000'))
+SOURCE_PACK_GOOGLE_FALLBACK = os.getenv('SOURCE_PACK_GOOGLE_FALLBACK', '1') == '1'
+SOURCE_PACK_MAX_URLS = int(os.getenv('SOURCE_PACK_MAX_URLS', '24'))
+SOURCE_PACK_MAX_PARAGRAPHS = int(os.getenv('SOURCE_PACK_MAX_PARAGRAPHS', '8'))
+SOURCE_PACK_MAX_CHARS = int(os.getenv('SOURCE_PACK_MAX_CHARS', '32000'))
 DEEP_RESEARCH_ENABLED = os.getenv('DEEP_RESEARCH_ENABLED', '1') == '1'
 EXTERNAL_SNIPPET_MAX_CHARS = int(os.getenv('EXTERNAL_SNIPPET_MAX_CHARS', '700'))
 EXTERNAL_SNIPPET_SOURCES = int(os.getenv('EXTERNAL_SNIPPET_SOURCES', '12'))
@@ -920,6 +921,43 @@ def extract_paragraphs_from_soup(soup: BeautifulSoup, max_paragraphs: int = 4) -
     return paragraphs
 
 
+def _wiki_key(url: str) -> Optional[str]:
+    parsed = urlparse(url)
+    if 'wikipedia.org' not in parsed.netloc:
+        return None
+    if not parsed.path.startswith('/wiki/'):
+        return None
+    title = unquote(parsed.path[len('/wiki/'):]).split('#')[0]
+    return title or None
+
+
+def _select_best_wikipedia_url(urls: List[str]) -> Tuple[List[str], Dict[str, str]]:
+    selected: List[str] = []
+    preloaded: Dict[str, str] = {}
+    non_wiki: List[str] = []
+    wiki_urls: List[str] = []
+
+    for url in urls:
+        if _wiki_key(url):
+            wiki_urls.append(url)
+        else:
+            non_wiki.append(url)
+
+    best_url = ''
+    best_text = ''
+    for url in wiki_urls:
+        text = extract_source_text(url)
+        if len(text) > len(best_text):
+            best_text = text
+            best_url = url
+    if best_url:
+        selected.append(best_url)
+        if best_text:
+            preloaded[best_url] = best_text
+
+    return selected + non_wiki, preloaded
+
+
 def collect_source_urls(composer: str) -> List[str]:
     if not (SOURCE_PACK_ENABLED and PPLX_API_KEY):
         return []
@@ -928,7 +966,14 @@ def collect_source_urls(composer: str) -> List[str]:
     for template in SOURCE_PACK_QUERIES:
         query = template.format(composer=composer)
         log(f"Source pack query: {query}", "INFO")
-        for url in search_perplexity(query, num=6):
+        candidates: List[str] = []
+        candidates.extend(search_perplexity(query, num=6))
+        if SOURCE_PACK_GOOGLE_FALLBACK and len(candidates) < 6:
+            try:
+                candidates.extend(list(search(query, num=4, stop=4, pause=1.0)))
+            except Exception:
+                pass
+        for url in candidates:
             if url in urls:
                 continue
             netloc = urlparse(url).netloc.lower()
@@ -979,12 +1024,15 @@ def build_source_pack(composer: str) -> Optional[Dict[str, object]]:
     if not urls:
         log(f"Source pack: no URLs found for {composer}", "WARNING")
         return None
+    urls, preloaded = _select_best_wikipedia_url(urls)
+    if preloaded:
+        log(f"Source pack: selected {len(preloaded)} Wikipedia source(s) for {composer}", "INFO")
     sources_dir.mkdir(parents=True, exist_ok=True)
     pack_parts: List[str] = []
     citations: List[str] = []
     for idx, url in enumerate(urls, 1):
         log(f"Source pack: fetching {url}", "INFO")
-        text = extract_source_text(url)
+        text = preloaded.get(url) or extract_source_text(url)
         if len(text) < 200:
             log(f"Source pack: skipped short source {url}", "WARNING")
             continue
