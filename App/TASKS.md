@@ -820,7 +820,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 8.6 Top 100 Compositores
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 8.6.1 | Script top 100 desde web sources | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` | |
+| 8.6.1 | Script top 100 desde web sources | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ---
 
