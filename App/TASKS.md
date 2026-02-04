@@ -791,6 +791,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.3.7 | Refinar source pack (filtros, fallback deep research, Wikipedia única) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.8 | Configurar modelo OpenAI y esfuerzo de razonamiento | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.9 | Permitir desactivar OpenAI vía config | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.3.10 | Añadir fuentes externas alternativas (anti-403/timeouts) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ---
 

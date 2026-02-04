@@ -90,6 +90,11 @@ EXTERNAL_DOMAINS = {
     'Film Score Monthly': 'filmscoremonthly.com',
     'SoundtrackCollector': 'soundtrackcollector.com',
     'WhatSong': 'whatsong.org',
+    'Movie Music UK': 'moviemusicuk.us',
+    'Film Music Site': 'cinemusic.net',
+    'SoundtrackInfo': 'soundtrackinfo.com',
+    'SoundtrackFest': 'soundtrackfest.com',
+    'BandasSonorasDeCine': 'bandassonorasdecine.com',
 }
 SOURCE_PACK_QUERIES = [
     '{composer} compositor biografia',
