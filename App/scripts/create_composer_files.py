@@ -102,8 +102,17 @@ SOURCE_PACK_QUERIES = [
     '{composer} awards nominations film music',
     '{composer} legacy influence film music',
 ]
+
+
+def log(message: str, level: str = 'INFO') -> None:
+    numeric = LOG_LEVELS.get(level, 20)
+    threshold = LOG_LEVELS.get(LOG_LEVEL, 20)
+    if numeric >= threshold:
+        print(f"[{level}] {message}")
 HEADERS = {'User-Agent': 'Soundtracker/1.0'}
 REQUEST_TIMEOUT = 10
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
+LOG_LEVELS = {'DEBUG': 10, 'INFO': 20, 'WARNING': 30, 'ERROR': 40}
 DEEP_RESEARCH_TIMEOUT = int(os.getenv('DEEP_RESEARCH_TIMEOUT', '60'))
 POSTER_LIMIT = int(os.getenv('POSTER_LIMIT', '0'))
 POSTER_SEARCH_RESULTS = 2
@@ -374,6 +383,7 @@ def search_duckduckgo(query: str, num: int = 5) -> List[str]:
 def search_perplexity(query: str, num: int = 5) -> List[str]:
     if not (SEARCH_WEB_ENABLED and PPLX_API_KEY):
         return []
+    log(f"PPLX query: {query}", "INFO")
     payload = {
         'model': PPLX_MODEL,
         'messages': [
@@ -393,9 +403,15 @@ def search_perplexity(query: str, num: int = 5) -> List[str]:
             json=payload,
             timeout=DEEP_RESEARCH_TIMEOUT,
         )
+        log(f"PPLX status {resp.status_code} for query: {query}", "INFO")
         resp.raise_for_status()
         data = resp.json()
-    except (requests.RequestException, ValueError):
+    except (requests.RequestException, ValueError) as exc:
+        detail = getattr(exc, 'response', None)
+        if detail is not None:
+            log(f"PPLX error {detail.status_code} for query: {query}", "WARNING")
+        else:
+            log(f"PPLX request failed for query: {query}", "WARNING")
         return []
     urls: List[str] = []
     for item in data.get('search_results') or []:
@@ -711,12 +727,15 @@ def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
         return None
     pack = build_source_pack(composer)
     if not pack:
+        log(f"Source pack: no pack available for {composer}", "WARNING")
         return None
     pack_text = pack.get('pack_text') or ''
     citations = pack.get('citations') or []
     if not pack_text or not citations:
+        log(f"Source pack: empty pack for {composer}", "WARNING")
         return None
     outline = _build_research_outline(composer)
+    log(f"Source pack: running synthesis for {composer}", "INFO")
     openai_profile = _openai_source_profile(composer, pack_text, citations, outline)
     gemini_profile = _gemini_source_profile(composer, pack_text, citations, outline)
 
@@ -901,9 +920,11 @@ def extract_paragraphs_from_soup(soup: BeautifulSoup, max_paragraphs: int = 4) -
 def collect_source_urls(composer: str) -> List[str]:
     if not (SOURCE_PACK_ENABLED and PPLX_API_KEY):
         return []
+    log(f"Source pack: collecting URLs for {composer}", "INFO")
     urls: List[str] = []
     for template in SOURCE_PACK_QUERIES:
         query = template.format(composer=composer)
+        log(f"Source pack query: {query}", "INFO")
         for url in search_perplexity(query, num=6):
             if url in urls:
                 continue
@@ -914,7 +935,9 @@ def collect_source_urls(composer: str) -> List[str]:
                 continue
             urls.append(url)
             if len(urls) >= SOURCE_PACK_MAX_URLS:
+                log(f"Source pack: reached max URLs ({SOURCE_PACK_MAX_URLS}) for {composer}", "INFO")
                 return urls
+    log(f"Source pack: collected {len(urls)} URLs for {composer}", "INFO")
     return urls
 
 
@@ -951,26 +974,32 @@ def build_source_pack(composer: str) -> Optional[Dict[str, object]]:
 
     urls = collect_source_urls(composer)
     if not urls:
+        log(f"Source pack: no URLs found for {composer}", "WARNING")
         return None
     sources_dir.mkdir(parents=True, exist_ok=True)
     pack_parts: List[str] = []
     citations: List[str] = []
     for idx, url in enumerate(urls, 1):
+        log(f"Source pack: fetching {url}", "INFO")
         text = extract_source_text(url)
         if len(text) < 200:
+            log(f"Source pack: skipped short source {url}", "WARNING")
             continue
         citations.append(url)
         source_path = sources_dir / f"source_{idx:02}.txt"
         source_path.write_text(f"URL: {url}\n\n{text}\n", encoding='utf-8')
         pack_parts.append(f"[{len(citations)}] {url}\n{text}\n")
         if sum(len(part) for part in pack_parts) >= SOURCE_PACK_MAX_CHARS:
+            log(f"Source pack: reached max chars for {composer}", "INFO")
             break
     if not citations:
+        log(f"Source pack: no usable sources for {composer}", "WARNING")
         return None
     pack_text = '\n\n'.join(pack_parts).strip()
     base_dir.mkdir(parents=True, exist_ok=True)
     pack_file.write_text(pack_text, encoding='utf-8')
     meta_file.write_text(json.dumps({'citations': citations}, ensure_ascii=False, indent=2), encoding='utf-8')
+    log(f"Source pack: wrote {len(citations)} sources for {composer}", "INFO")
     return {'pack_text': pack_text, 'citations': citations}
 
 
@@ -2369,6 +2398,7 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
     deep_facts = False
     deep_profile = get_source_pack_profile(composer)
     if not deep_profile:
+        log(f"Source pack missing; falling back to deep research for {composer}", "WARNING")
         deep_profile = get_deep_research_profile(composer)
     if deep_profile:
         if deep_profile.get('biography'):

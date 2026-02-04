@@ -784,6 +784,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 |---|-------|-----|--------|-----------|--------|-------|
 | 8.3.1 | UI para controlar batch (start/stop/status/log) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.2 | Source pack estilo NotebookLM (crawler + síntesis) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.3.3 | Logging de consultas y estado del source pack | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ---
 
@@ -799,8 +800,8 @@ Cuando una tarea requiera una IA diferente a la actual:
 | Fase 5 | 37 | 35 | 95% |
 | Fase 6 | 16 | 16 | 100% |
 | Fase 7 | 18 | 18 | 100% |
-| Fase 8 | 6 | 2 | 33% |
-| **TOTAL** | **315** | **309** | **98%** |
+| Fase 8 | 7 | 3 | 43% |
+| **TOTAL** | **316** | **310** | **98%** |
 
 ---
 
