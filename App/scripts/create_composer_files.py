@@ -611,7 +611,13 @@ def _build_research_outline(composer: str) -> str:
     return "\n\n".join(outlines)
 
 
-def _openai_source_profile(composer: str, pack_text: str, citations: List[str], outline: str) -> Optional[Dict]:
+def _openai_source_profile(
+    composer: str,
+    pack_text: str,
+    citations: List[str],
+    outline: str,
+    debug_dir: Optional[Path] = None,
+) -> Optional[Dict]:
     if not OPENAI_API_KEY:
         return None
     sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
@@ -667,16 +673,30 @@ def _openai_source_profile(composer: str, pack_text: str, citations: List[str], 
         )
         resp.raise_for_status()
         data = resp.json()
-    except (requests.RequestException, ValueError):
+    except (requests.RequestException, ValueError) as exc:
+        log(f"OpenAI source synthesis failed for {composer}: {exc}", "WARNING")
         return None
     choices = data.get('choices') or []
     if not choices:
+        log(f"OpenAI source synthesis empty response for {composer}", "WARNING")
         return None
     content = (choices[0].get('message') or {}).get('content') or ''
-    return _safe_json_loads(content)
+    if debug_dir and content:
+        debug_dir.mkdir(parents=True, exist_ok=True)
+        (debug_dir / 'source_pack_openai_raw.txt').write_text(content, encoding='utf-8')
+    parsed = _safe_json_loads(content)
+    if not parsed:
+        log(f"OpenAI source synthesis JSON parse failed for {composer}", "WARNING")
+    return parsed
 
 
-def _gemini_source_profile(composer: str, pack_text: str, citations: List[str], outline: str) -> Optional[Dict]:
+def _gemini_source_profile(
+    composer: str,
+    pack_text: str,
+    citations: List[str],
+    outline: str,
+    debug_dir: Optional[Path] = None,
+) -> Optional[Dict]:
     if not GEMINI_API_KEY:
         return None
     sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
@@ -726,14 +746,22 @@ def _gemini_source_profile(composer: str, pack_text: str, citations: List[str], 
         )
         resp.raise_for_status()
         data = resp.json()
-    except (requests.RequestException, ValueError):
+    except (requests.RequestException, ValueError) as exc:
+        log(f"Gemini source synthesis failed for {composer}: {exc}", "WARNING")
         return None
     candidates = data.get('candidates') or []
     if not candidates:
+        log(f"Gemini source synthesis empty response for {composer}", "WARNING")
         return None
     parts = (candidates[0].get('content') or {}).get('parts') or []
     text = ''.join(part.get('text', '') for part in parts)
-    return _safe_json_loads(text)
+    if debug_dir and text:
+        debug_dir.mkdir(parents=True, exist_ok=True)
+        (debug_dir / 'source_pack_gemini_raw.txt').write_text(text, encoding='utf-8')
+    parsed = _safe_json_loads(text)
+    if not parsed:
+        log(f"Gemini source synthesis JSON parse failed for {composer}", "WARNING")
+    return parsed
 
 
 def _merge_section(primary: str, secondary: str) -> str:
@@ -762,8 +790,9 @@ def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
         return None
     outline = _build_research_outline(composer)
     log(f"Source pack: running synthesis for {composer}", "INFO")
-    openai_profile = _openai_source_profile(composer, pack_text, citations, outline)
-    gemini_profile = _gemini_source_profile(composer, pack_text, citations, outline)
+    debug_dir = INTERMEDIATE_DIR / slugify(composer)
+    openai_profile = _openai_source_profile(composer, pack_text, citations, outline, debug_dir)
+    gemini_profile = _gemini_source_profile(composer, pack_text, citations, outline, debug_dir)
 
     def extract_text(profile: Optional[Dict], key: str) -> str:
         if not profile:
