@@ -45,6 +45,16 @@ class Settings(BaseSettings):
         default=None,
         description="Directory for output files",
     )
+    imdb_data_dir: Path = Field(
+        default=None,
+        alias="IMDB_DATA_DIR",
+        description="Directory for IMDb dataset files",
+    )
+    imdb_db_path: Path = Field(
+        default=None,
+        alias="IMDB_DB_PATH",
+        description="Path to IMDb SQLite database",
+    )
 
     @field_validator("output_dir", mode="before")
     @classmethod
@@ -53,6 +63,27 @@ class Settings(BaseSettings):
         if v is None:
             base = info.data.get("base_dir") or Path(__file__).resolve().parents[2]
             return Path(base) / "outputs"
+        return Path(v)
+
+    @field_validator("imdb_data_dir", mode="before")
+    @classmethod
+    def set_imdb_data_dir(cls, v, info):
+        """Set default IMDb data directory based on base_dir if not provided."""
+        if v is None:
+            base = info.data.get("base_dir") or Path(__file__).resolve().parents[2]
+            return Path(base) / "data" / "imdb_data"
+        return Path(v)
+
+    @field_validator("imdb_db_path", mode="before")
+    @classmethod
+    def set_imdb_db_path(cls, v, info):
+        """Set default IMDb database path based on imdb_data_dir if not provided."""
+        if v is None:
+            data_dir = info.data.get("imdb_data_dir")
+            if data_dir is None:
+                base = info.data.get("base_dir") or Path(__file__).resolve().parents[2]
+                data_dir = Path(base) / "data" / "imdb_data"
+            return Path(data_dir) / "imdb.sqlite"
         return Path(v)
 
     # ==========================================================================
@@ -185,6 +216,11 @@ class Settings(BaseSettings):
     def is_perplexity_available(self) -> bool:
         """Check if Perplexity integration is available."""
         return self.search_web_enabled and bool(self.perplexity_key)
+
+    @property
+    def is_imdb_available(self) -> bool:
+        """Check if IMDb dataset is available locally."""
+        return self.imdb_db_path.exists()
 
     # ==========================================================================
     # Numeric Limits

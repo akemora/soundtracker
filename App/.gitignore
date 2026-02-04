@@ -104,6 +104,8 @@ desktop.ini
 data/*.db
 data/*.sqlite
 data/*.sqlite3
+data/imdb_data/
+imdb_data/
 
 # Logs
 *.log

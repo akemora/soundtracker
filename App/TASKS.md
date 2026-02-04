@@ -797,6 +797,14 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.3.13 | Usar URL específica de Metacritic en fuentes | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.14 | Añadir Rotten Tomatoes como fuente externa | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 
+### 8.4 Integración IMDb Dataset
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 8.4.1 | Configurar IMDb dataset (env + gitignore + builder) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.4.2 | Crear cliente IMDb + soporte en modelos | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` | |
+| 8.4.3 | Integrar IMDb en filmografía | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` | |
+| 8.4.4 | Script para actualizar master list con IMDb | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` | |
+
 ---
 
 ## Resumen de Progreso
