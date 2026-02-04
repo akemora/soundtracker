@@ -299,8 +299,11 @@ class MasterListManager:
     def _parse_table_row(self, line: str) -> Optional[ComposerEntry]:
         """Parsea una fila de la tabla."""
         parts = [p.strip() for p in line.split("|")]
-        # Filtrar partes vacías (inicio y fin)
-        parts = [p for p in parts if p]
+        # Quitar bordes vacíos, pero mantener columnas vacías internas
+        if parts and parts[0] == "":
+            parts = parts[1:]
+        if parts and parts[-1] == "":
+            parts = parts[:-1]
 
         if len(parts) < 2:
             return None
