@@ -840,7 +840,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 8.8.1 | Eliminar DuckDuckGo del buscador | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
-| 8.8.2 | Generar top 300 cine (A+B+D) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` |  |
+| 8.8.2 | Generar top 300 cine (A+B+D) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.8.3 | Generar top 100 videojuegos (A+B+D) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` |  |
 
 ---

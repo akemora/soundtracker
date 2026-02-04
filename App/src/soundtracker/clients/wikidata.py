@@ -247,6 +247,108 @@ class WikidataClient(BaseClient):
         if not data:
             return None, None
 
+    def get_birth_death_dates(self, qid: str) -> tuple[Optional[str], Optional[str]]:
+        """Get birth and death dates for a person.
+
+        Args:
+            qid: Wikidata QID.
+
+        Returns:
+            Tuple of (birth_date, death_date) as YYYY-MM-DD strings when available.
+        """
+        query = f"""
+        SELECT ?birthDate ?deathDate WHERE {{
+          OPTIONAL {{ wd:{qid} wdt:P569 ?birthDate . }}
+          OPTIONAL {{ wd:{qid} wdt:P570 ?deathDate . }}
+        }}
+        """
+        data = self._sparql_query(query)
+        if not data:
+            return None, None
+        bindings = data.get("results", {}).get("bindings", [])
+        if not bindings:
+            return None, None
+        item = bindings[0]
+        birth = item.get("birthDate", {}).get("value")
+        death = item.get("deathDate", {}).get("value")
+        return birth, death
+
+    def get_country(self, qid: str, language: str = "es") -> Optional[str]:
+        """Get country of citizenship for a person.
+
+        Args:
+            qid: Wikidata QID.
+            language: Preferred label language.
+
+        Returns:
+            Country label or None.
+        """
+        query = f"""
+        SELECT ?countryLabel WHERE {{
+          wd:{qid} wdt:P27 ?country .
+          SERVICE wikibase:label {{ bd:serviceParam wikibase:language "{language},en". }}
+        }}
+        LIMIT 1
+        """
+        data = self._sparql_query(query)
+        if not data:
+            return None
+        bindings = data.get("results", {}).get("bindings", [])
+        if not bindings:
+            return None
+        return bindings[0].get("countryLabel", {}).get("value")
+
+    def get_person_summary(
+        self,
+        qid: str,
+        language: str = "es",
+    ) -> dict[str, Optional[str]]:
+        """Get birth/death dates, country, and award counts in one query.
+
+        Args:
+            qid: Wikidata QID.
+            language: Preferred label language.
+
+        Returns:
+            Dict with keys: birth, death, country, wins, nominations.
+        """
+        query = f"""
+        SELECT ?birthDate ?deathDate ?countryLabel ?wins ?noms WHERE {{
+          wd:{qid} wdt:P31 wd:Q5 .
+          OPTIONAL {{ wd:{qid} wdt:P569 ?birthDate . }}
+          OPTIONAL {{ wd:{qid} wdt:P570 ?deathDate . }}
+          OPTIONAL {{ wd:{qid} wdt:P27 ?country . }}
+          OPTIONAL {{
+            SELECT (COUNT(DISTINCT ?award) as ?wins) WHERE {{
+              wd:{qid} p:P166 ?awardStatement .
+              ?awardStatement ps:P166 ?award .
+            }}
+          }}
+          OPTIONAL {{
+            SELECT (COUNT(DISTINCT ?awardNom) as ?noms) WHERE {{
+              wd:{qid} p:P1411 ?nomStatement .
+              ?nomStatement ps:P1411 ?awardNom .
+            }}
+          }}
+          SERVICE wikibase:label {{ bd:serviceParam wikibase:language "{language},en". }}
+        }}
+        LIMIT 1
+        """
+        data = self._sparql_query(query)
+        if not data:
+            return {"birth": None, "death": None, "country": None, "wins": None, "nominations": None}
+        bindings = data.get("results", {}).get("bindings", [])
+        if not bindings:
+            return {"birth": None, "death": None, "country": None, "wins": None, "nominations": None}
+        item = bindings[0]
+        return {
+            "birth": item.get("birthDate", {}).get("value"),
+            "death": item.get("deathDate", {}).get("value"),
+            "country": item.get("countryLabel", {}).get("value"),
+            "wins": item.get("wins", {}).get("value"),
+            "nominations": item.get("noms", {}).get("value"),
+        }
+
         bindings = data.get("results", {}).get("bindings", [])
         if not bindings:
             return None, None
