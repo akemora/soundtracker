@@ -100,22 +100,22 @@ class FilmographyService:
         """
         films: list[Film] = []
 
-        # Primary source: IMDb dataset (offline)
-        if self.imdb.is_available:
-            imdb_films = self.imdb.get_composer_filmography(
-                composer,
-                max_titles=self.film_limit,
-            )
-            films = self._merge_films(films, imdb_films)
-
-        # Secondary source: TMDB
-        if not films and self.tmdb.is_available:
+        # Primary source: TMDB
+        if self.tmdb.is_available:
             person_id = tmdb_id
             if person_id is None:
                 person_id, _ = self.tmdb.search_person(composer)
             if person_id:
                 tmdb_films = self.tmdb.get_person_movie_credits(person_id)
                 films = tmdb_films
+
+        # Supplement with IMDb dataset (offline)
+        if self.imdb.is_available:
+            imdb_films = self.imdb.get_composer_filmography(
+                composer,
+                max_titles=self.film_limit,
+            )
+            films = self._merge_films(films, imdb_films)
 
         # Supplement with Wikidata
         if len(films) < 8:
@@ -151,6 +151,26 @@ class FilmographyService:
                 self._set_poster_path(film, composer_folder)
 
         return films[: self.film_limit]
+
+    def get_tv_credits(self, composer: str) -> list[Film]:
+        """Get TV credits from IMDb dataset."""
+        if not self.imdb.is_available:
+            return []
+        return self.imdb.get_composer_filmography(
+            composer,
+            title_types={"tvSeries", "tvMiniSeries", "tvSpecial", "tvShort"},
+            max_titles=self.film_limit,
+        )
+
+    def get_video_game_credits(self, composer: str) -> list[Film]:
+        """Get video game credits from IMDb dataset."""
+        if not self.imdb.is_available:
+            return []
+        return self.imdb.get_composer_filmography(
+            composer,
+            title_types={"videoGame"},
+            max_titles=self.film_limit,
+        )
 
     def _merge_films(self, base: list[Film], extra: list[Film]) -> list[Film]:
         """Merge film lists, avoiding duplicates.

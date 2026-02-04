@@ -229,6 +229,8 @@ class ComposerInfo:
         style: Musical style description.
         anecdotes: Personal anecdotes and trivia.
         filmography: List of films scored by the composer.
+        tv_credits: List of TV credits by the composer.
+        video_games: List of video game credits by the composer.
         awards: List of awards and nominations.
         external_sources: List of external information sources.
         external_snippets: List of text snippets from external sources.
@@ -251,6 +253,8 @@ class ComposerInfo:
     style: Optional[str] = None
     anecdotes: Optional[str] = None
     filmography: list[Film] = field(default_factory=list)
+    tv_credits: list[Film] = field(default_factory=list)
+    video_games: list[Film] = field(default_factory=list)
     awards: list[Award] = field(default_factory=list)
     external_sources: list[ExternalSource] = field(default_factory=list)
     external_snippets: list[ExternalSource] = field(default_factory=list)
@@ -327,6 +331,8 @@ class ComposerInfo:
             "style": self.style,
             "anecdotes": self.anecdotes,
             "filmography": [f.to_dict() for f in self.filmography],
+            "tv_credits": [f.to_dict() for f in self.tv_credits],
+            "video_games": [f.to_dict() for f in self.video_games],
             "awards": [a.to_dict() for a in self.awards],
             "external_sources": [s.to_dict() for s in self.external_sources],
             "external_snippets": [s.to_dict() for s in self.external_snippets],
@@ -360,6 +366,8 @@ class ComposerInfo:
             style=data.get("style"),
             anecdotes=data.get("anecdotes"),
             filmography=[Film.from_dict(f) for f in data.get("filmography", [])],
+            tv_credits=[Film.from_dict(f) for f in data.get("tv_credits", [])],
+            video_games=[Film.from_dict(f) for f in data.get("video_games", [])],
             awards=[Award.from_dict(a) for a in data.get("awards", [])],
             external_sources=[
                 ExternalSource.from_dict(s) for s in data.get("external_sources", [])

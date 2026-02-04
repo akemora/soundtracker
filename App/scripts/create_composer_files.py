@@ -24,6 +24,12 @@ OUTPUT_DIR = BASE_DIR / 'outputs'
 INTERMEDIATE_DIR = BASE_DIR / 'intermediate_research'
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
+sys.path.insert(0, str(BASE_DIR / 'src'))
+try:
+    from soundtracker.clients.imdb_dataset import ImdbDataset
+except Exception:
+    ImdbDataset = None
+
 PLACEHOLDER_IMAGE = 'https://example.com/placeholder.jpg'
 AWARD_KEYWORDS = [
     'Academy Award',
@@ -72,6 +78,9 @@ STYLE_HINTS = [
     'bandas sonoras',
     'orquesta',
 ]
+
+IMDB_DB_PATH = Path(os.getenv('IMDB_DB_PATH', BASE_DIR / 'data' / 'imdb_data' / 'imdb.sqlite'))
+IMDB_CLIENT = ImdbDataset(IMDB_DB_PATH) if ImdbDataset else None
 ANECDOTE_HINTS = [
     'born',
     'died',
@@ -2187,6 +2196,36 @@ def fetch_wikidata_country(qid: str) -> Optional[str]:
     return items[0].get('countryLabel', {}).get('value')
 
 
+def imdb_is_available() -> bool:
+    return bool(IMDB_CLIENT and getattr(IMDB_CLIENT, 'is_available', False))
+
+
+def imdb_films_to_dicts(films) -> List[Dict]:
+    entries: List[Dict] = []
+    for film in films or []:
+        entries.append({
+            'title': film.title,
+            'original_title': film.original_title,
+            'title_es': film.title_es,
+            'year': film.year,
+            'vote_average': film.vote_average,
+            'vote_count': film.vote_count,
+            'imdb_id': film.imdb_id,
+        })
+    return entries
+
+
+def imdb_get_titles(composer: str, title_types: List[str]) -> List[Dict]:
+    if not imdb_is_available():
+        return []
+    films = IMDB_CLIENT.get_composer_filmography(
+        composer,
+        title_types=set(title_types),
+        max_titles=FILM_LIMIT,
+    )
+    return imdb_films_to_dicts(films)
+
+
 def get_complete_filmography(composer: str, composer_folder: Path) -> List[Dict]:
     films: List[Dict] = []
     tmdb_films: List[Dict] = []
@@ -2196,6 +2235,9 @@ def get_complete_filmography(composer: str, composer_folder: Path) -> List[Dict]
             tmdb_films = tmdb_person_movie_credits(person_id, language='es-ES')
     if tmdb_films:
         films = tmdb_films
+    imdb_films = imdb_get_titles(composer, ['movie', 'tvMovie'])
+    if imdb_films:
+        films = merge_films(films, imdb_films)
     if len(films) < 8:
         html = fetch_wikipedia_html(f"{composer} composer")
         if html:
@@ -2276,6 +2318,20 @@ def get_complete_filmography(composer: str, composer_folder: Path) -> List[Dict]
                 except Exception:
                     entry['poster_local'] = PLACEHOLDER_IMAGE
     return films
+
+
+def get_tv_credits(composer: str) -> List[Dict]:
+    entries = imdb_get_titles(composer, ['tvSeries', 'tvMiniSeries', 'tvSpecial', 'tvShort'])
+    entries = dedupe_films(entries)
+    entries.sort(key=lambda item: (item.get('year') or 9999, item.get('title') or ''))
+    return entries
+
+
+def get_video_game_credits(composer: str) -> List[Dict]:
+    entries = imdb_get_titles(composer, ['videoGame'])
+    entries = dedupe_films(entries)
+    entries.sort(key=lambda item: (item.get('year') or 9999, item.get('title') or ''))
+    return entries
 
 
 def get_detailed_awards(composer: str) -> List[Dict]:
@@ -2622,6 +2678,8 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
         if profile_url:
             info['photo'] = download_image(profile_url, photo_path) or profile_url
     info['filmography'] = get_complete_filmography(composer, composer_folder)
+    info['tv_credits'] = get_tv_credits(composer)
+    info['video_games'] = get_video_game_credits(composer)
     info['awards'] = get_detailed_awards(composer)
     top_boosts = get_top_10_films(composer)
     for title in known_for_titles:
@@ -2770,6 +2828,28 @@ def format_award_label(award_name: str, status: str) -> str:
     return award_name
 
 
+def append_media_table(lines: List[str], title: str, entries: List[Dict], target: Path) -> None:
+    lines.append(f"## {title}\n")
+    lines.append("| Año | Título | Título original | Póster |")
+    lines.append("| --- | --- | --- | --- |")
+    for entry in entries:
+        year = str(entry.get('year') or '—')
+        title_es = entry.get('title_es') or entry.get('title') or entry.get('original_title') or '—'
+        original = entry.get('original_title') or entry.get('title') or '—'
+        if title_es == original:
+            original = '—'
+        poster = entry.get('poster_local') or entry.get('poster_url')
+        if poster:
+            poster_cell = f"[Póster]({format_link(poster, target.parent)})"
+        else:
+            poster_cell = '—'
+        lines.append(
+            f"| {escape_table_cell(year)} | {escape_table_cell(title_es)} | "
+            f"{escape_table_cell(original)} | {escape_table_cell(poster_cell)} |"
+        )
+    lines.append('')
+
+
 def create_markdown_file(composer_info: Dict, target: Path) -> None:
     lines = [f"# {composer_info['name']}\n"]
     photo = composer_info.get('photo')
@@ -2804,25 +2884,13 @@ def create_markdown_file(composer_info: Dict, target: Path) -> None:
         lines.append('')
     filmography = composer_info.get('filmography', [])
     if filmography:
-        lines.append("## Filmografía completa\n")
-        lines.append("| Año | Título | Título original | Póster |")
-        lines.append("| --- | --- | --- | --- |")
-        for entry in filmography:
-            year = str(entry.get('year') or '—')
-            title_es = entry.get('title_es') or entry.get('title') or entry.get('original_title') or '—'
-            original = entry.get('original_title') or entry.get('title') or '—'
-            if title_es == original:
-                original = '—'
-            poster = entry.get('poster_local') or entry.get('poster_url')
-            if poster:
-                poster_cell = f"[Póster]({format_link(poster, target.parent)})"
-            else:
-                poster_cell = '—'
-            lines.append(
-                f"| {escape_table_cell(year)} | {escape_table_cell(title_es)} | "
-                f"{escape_table_cell(original)} | {escape_table_cell(poster_cell)} |"
-            )
-        lines.append('')
+        append_media_table(lines, "Filmografía completa", filmography, target)
+    tv_credits = composer_info.get('tv_credits', [])
+    if tv_credits:
+        append_media_table(lines, "Series de TV", tv_credits, target)
+    video_games = composer_info.get('video_games', [])
+    if video_games:
+        append_media_table(lines, "Videojuegos", video_games, target)
     awards = composer_info.get('awards', [])
     if awards:
         lines.append("## Premios y nominaciones\n")

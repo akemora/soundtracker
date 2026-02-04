@@ -776,8 +776,8 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 8.2 Secciones Adicionales
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 8.2.1 | Sección de series de TV | **Claude** | `opus` | 🟢 | `[ ]` | |
-| 8.2.2 | Sección de videojuegos | **Claude** | `opus` | 🟢 | `[ ]` | |
+| 8.2.1 | Sección de series de TV | **Claude** | `opus` | 🟢 | `[x]` | 2026-02-04 |
+| 8.2.2 | Sección de videojuegos | **Claude** | `opus` | 🟢 | `[x]` | 2026-02-04 |
 
 ### 8.3 Herramientas Operativas
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |

@@ -115,6 +115,12 @@ class MarkdownGenerator:
         # Filmography
         if info.filmography:
             lines.extend(self._build_filmography(info.filmography, base_path))
+        # TV credits
+        if info.tv_credits:
+            lines.extend(self._build_media_table("Series de TV", info.tv_credits, base_path))
+        # Video games
+        if info.video_games:
+            lines.extend(self._build_media_table("Videojuegos", info.video_games, base_path))
 
         # Awards
         if info.awards:
@@ -206,6 +212,35 @@ class MarkdownGenerator:
                 f"{self._escape_table_cell(poster_cell)} |"
             )
 
+        lines.append("")
+        return lines
+
+    def _build_media_table(
+        self,
+        title: str,
+        films: list[Film],
+        base_path: Path,
+    ) -> list[str]:
+        """Build a generic media table section."""
+        lines = [f"## {title}\n"]
+        lines.append("| Año | Título | Título original | Póster |")
+        lines.append("| --- | --- | --- | --- |")
+
+        for film in films:
+            year = str(film.year) if film.year else "—"
+            title_es = film.title_es or film.title or film.original_title or "—"
+            original = film.original_title or film.title or "—"
+            if title_es == original:
+                original = "—"
+            poster = film.poster_local or film.poster_url
+            if poster:
+                link = format_link(poster, base_path)
+                poster_cell = f"[Póster]({link})"
+            else:
+                poster_cell = "—"
+            lines.append(
+                f"| {year} | {title_es} | {original} | {poster_cell} |"
+            )
         lines.append("")
         return lines
 

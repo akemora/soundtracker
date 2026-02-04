@@ -163,6 +163,8 @@ class TestComposerInfo:
         info = ComposerInfo(name="John Williams")
         assert info.name == "John Williams"
         assert info.filmography == []
+        assert info.tv_credits == []
+        assert info.video_games == []
         assert info.awards == []
         assert info.created_at is not None
 
@@ -236,11 +238,15 @@ class TestComposerInfo:
             name="John Williams",
             index=1,
             filmography=[Film(title="Star Wars")],
+            tv_credits=[Film(title="Series A")],
+            video_games=[Film(title="Game A")],
         )
         d = info.to_dict()
         assert d["name"] == "John Williams"
         assert d["index"] == 1
         assert len(d["filmography"]) == 1
+        assert len(d["tv_credits"]) == 1
+        assert len(d["video_games"]) == 1
 
     def test_from_dict(self):
         """Test creation from dictionary."""
@@ -249,6 +255,8 @@ class TestComposerInfo:
             "index": 1,
             "birth_year": 1932,
             "filmography": [{"title": "Star Wars", "year": 1977}],
+            "tv_credits": [{"title": "Series A", "year": 1990}],
+            "video_games": [{"title": "Game A", "year": 2000}],
             "awards": [{"award": "Oscar", "year": 1978}],
         }
         info = ComposerInfo.from_dict(data)
@@ -256,6 +264,8 @@ class TestComposerInfo:
         assert info.birth_year == 1932
         assert len(info.filmography) == 1
         assert info.filmography[0].title == "Star Wars"
+        assert len(info.tv_credits) == 1
+        assert len(info.video_games) == 1
 
 
 class TestAwardStatus:

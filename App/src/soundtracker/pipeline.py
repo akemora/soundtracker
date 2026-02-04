@@ -254,6 +254,8 @@ class ComposerPipeline:
             wikidata_qid=info.wikidata_qid,
         )
         info.filmography = films
+        info.tv_credits = self.filmography_service.get_tv_credits(info.name)
+        info.video_games = self.filmography_service.get_video_game_credits(info.name)
 
     def _collect_awards(self, info: ComposerInfo) -> None:
         """Collect awards and nominations.
