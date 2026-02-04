@@ -60,18 +60,20 @@ class TestFilm:
 
     def test_to_dict(self):
         """Test conversion to dictionary."""
-        film = Film(title="Test", year=2000)
+        film = Film(title="Test", year=2000, imdb_id="tt1234567")
         d = film.to_dict()
         assert d["title"] == "Test"
         assert d["year"] == 2000
+        assert d["imdb_id"] == "tt1234567"
 
     def test_from_dict(self):
         """Test creation from dictionary."""
-        data = {"title": "Test", "year": 2000, "popularity": 50.0}
+        data = {"title": "Test", "year": 2000, "popularity": 50.0, "imdb_id": "tt7654321"}
         film = Film.from_dict(data)
         assert film.title == "Test"
         assert film.year == 2000
         assert film.popularity == 50.0
+        assert film.imdb_id == "tt7654321"
 
 
 class TestAward:

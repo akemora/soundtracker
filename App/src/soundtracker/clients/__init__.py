@@ -10,6 +10,7 @@ This module provides clients for various external APIs used by SOUNDTRACKER:
 """
 
 from soundtracker.clients.base import BaseClient
+from soundtracker.clients.imdb_dataset import ImdbDataset
 from soundtracker.clients.search import SearchClient
 from soundtracker.clients.spotify import SpotifyClient
 from soundtracker.clients.tmdb import TMDBClient
@@ -20,6 +21,7 @@ from soundtracker.clients.youtube import YouTubeClient
 __all__ = [
     "BaseClient",
     "MultiLangWikipediaClient",
+    "ImdbDataset",
     "SearchClient",
     "SpotifyClient",
     "TMDBClient",

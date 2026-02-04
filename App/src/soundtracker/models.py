@@ -38,6 +38,7 @@ class Film:
         vote_average: TMDB average vote (0-10).
         spotify_popularity: Spotify popularity score (0-100).
         youtube_views: YouTube view count for soundtrack.
+        imdb_id: IMDb title ID (tconst).
     """
 
     title: str
@@ -53,6 +54,7 @@ class Film:
     vote_average: Optional[float] = None
     spotify_popularity: Optional[float] = None
     youtube_views: Optional[int] = None
+    imdb_id: Optional[str] = None
 
     def __post_init__(self) -> None:
         """Ensure original_title defaults to title if not provided."""
@@ -87,6 +89,7 @@ class Film:
             "vote_average": self.vote_average,
             "spotify_popularity": self.spotify_popularity,
             "youtube_views": self.youtube_views,
+            "imdb_id": self.imdb_id,
         }
 
     @classmethod
@@ -106,6 +109,7 @@ class Film:
             vote_average=data.get("vote_average"),
             spotify_popularity=data.get("spotify_popularity"),
             youtube_views=data.get("youtube_views"),
+            imdb_id=data.get("imdb_id"),
         )
 
 
