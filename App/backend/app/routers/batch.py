@@ -341,6 +341,11 @@ def batch_ui() -> str:
           <button class="stop" onclick="stopBatch()">Parar</button>
           <button class="ghost" onclick="refreshStatus()">Actualizar</button>
         </div>
+        <div class="row" style="margin-top: 8px;">
+          <button class="ghost" onclick="showRecent()">Ver últimas</button>
+          <button class="ghost" onclick="showAll()">Ver todas</button>
+          <button class="ghost" onclick="clearLog()">Limpiar pantalla</button>
+        </div>
       </div>
 
       <div class="panel">
@@ -353,8 +358,10 @@ def batch_ui() -> str:
     </div>
 
     <script>
+      let logLines = 80;
+
       async function refreshStatus() {
-        const res = await fetch('/batch/status?lines=80');
+        const res = await fetch(`/batch/status?lines=${logLines}`);
         const data = await res.json();
         const statusEl = document.getElementById('status');
         statusEl.textContent = data.running ? 'En marcha' : 'Detenido';
@@ -391,6 +398,22 @@ def batch_ui() -> str:
           alert('Error al detener');
         }
         await refreshStatus();
+      }
+
+      function showAll() {
+        logLines = 500;
+        refreshStatus();
+      }
+
+      function showRecent() {
+        logLines = 80;
+        refreshStatus();
+      }
+
+      function clearLog() {
+        logLines = 0;
+        document.getElementById('log').textContent = '';
+        document.getElementById('logMeta').textContent = '(0 líneas)';
       }
 
       refreshStatus();
