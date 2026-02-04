@@ -118,7 +118,7 @@ def is_person_name(name: str) -> bool:
             return False
     if "&" in name or "/" in name:
         return False
-    tokens = [t for t in re.split(r"\\s+", name.strip()) if t]
+    tokens = [t for t in re.split(r"\s+", name.strip()) if t]
     alpha_tokens = [t for t in tokens if re.search(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]", t)]
     if len(alpha_tokens) < 2:
         return False
