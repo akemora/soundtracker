@@ -181,10 +181,13 @@ def harvest_web_names(
     max_urls_total: int,
     max_urls_per_query: int,
     use_gemini: bool,
+    gemini_max_urls: int = 12,
 ) -> dict[str, WebName]:
     search_client = SearchClient()
     all_names: dict[str, WebName] = {}
     seen_urls: set[str] = set()
+
+    gemini_used = 0
 
     for query_def in queries:
         query = query_def["query"]
@@ -201,8 +204,10 @@ def harvest_web_names(
             if not text:
                 continue
             candidates = extract_candidate_names(text)
-            if use_gemini:
+            use_gemini_now = use_gemini and gemini_used < gemini_max_urls
+            if use_gemini_now:
                 candidates = gemini_filter_names(text, candidates)
+                gemini_used += 1
             for name in candidates:
                 cleaned = normalize_name(name)
                 if not cleaned:
@@ -212,4 +217,12 @@ def harvest_web_names(
                     all_names[key] = WebName(name=cleaned)
                 all_names[key].add_source(url, mediums)
 
+        logger.info(
+            "Query '%s' -> %d urls, names so far: %d",
+            query,
+            len(urls),
+            len(all_names),
+        )
+
+    logger.info("Web harvest completed: %d names, %d urls, gemini=%d", len(all_names), len(seen_urls), gemini_used)
     return all_names

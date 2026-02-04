@@ -274,6 +274,7 @@ def main() -> None:
     parser.add_argument("--web-max-urls", type=int, default=60)
     parser.add_argument("--web-max-urls-per-query", type=int, default=6)
     parser.add_argument("--use-gemini", action="store_true")
+    parser.add_argument("--gemini-max-urls", type=int, default=12)
     parser.add_argument("--non-imdb-min-sources", type=int, default=1)
     parser.add_argument("--allow-non-imdb", action="store_true")
     parser.add_argument("--skip-existing", action="store_true", help="Do not merge existing list data.")
@@ -290,6 +291,7 @@ def main() -> None:
             max_urls_total=args.web_max_urls,
             max_urls_per_query=args.web_max_urls_per_query,
             use_gemini=args.use_gemini,
+            gemini_max_urls=args.gemini_max_urls,
         )
     merged = merge_rows(
         imdb_rows,

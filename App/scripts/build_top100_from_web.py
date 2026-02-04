@@ -64,6 +64,7 @@ def main() -> None:
     parser.add_argument("--use-gemini", action="store_true")
     parser.add_argument("--web-max-urls", type=int, default=60)
     parser.add_argument("--web-max-urls-per-query", type=int, default=6)
+    parser.add_argument("--gemini-max-urls", type=int, default=12)
     parser.add_argument("--min-sources", type=int, default=1)
 
     args = parser.parse_args()
@@ -79,6 +80,7 @@ def main() -> None:
         max_urls_total=args.web_max_urls,
         max_urls_per_query=args.web_max_urls_per_query,
         use_gemini=args.use_gemini,
+        gemini_max_urls=args.gemini_max_urls,
     )
 
     counts: dict[str, int] = {}
