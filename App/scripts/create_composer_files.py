@@ -368,36 +368,6 @@ def download_posters_bulk(entries: List[Dict], composer_folder: Path) -> None:
 
 
 def search_duckduckgo(query: str, num: int = 5) -> List[str]:
-    if not SEARCH_WEB_ENABLED:
-        return []
-    endpoints = [
-        f"https://duckduckgo.com/html/?q={quote_plus(query)}",
-        f"https://html.duckduckgo.com/html/?q={quote_plus(query)}",
-        f"https://lite.duckduckgo.com/lite/?q={quote_plus(query)}",
-    ]
-    for url in endpoints:
-        html = fetch_url_text(url)
-        if not html:
-            continue
-        soup = BeautifulSoup(html, 'html.parser')
-        results: List[str] = []
-        anchors = soup.select('a.result__a') or soup.find_all('a')
-        for a in anchors:
-            href = a.get('href')
-            if not href or not href.startswith('http'):
-                continue
-            parsed = urlparse(href)
-            if parsed.netloc.endswith('duckduckgo.com') and parsed.path == '/l/':
-                params = parse_qs(parsed.query)
-                redirect = params.get('uddg', [])
-                if redirect:
-                    href = unquote(redirect[0])
-            if href not in results:
-                results.append(href)
-            if len(results) >= num:
-                break
-        if results:
-            return results
     return []
 
 
@@ -908,7 +878,7 @@ def search_web(query: str, num: int = 3, pause: float = 1.2) -> List[str]:
             return deduped
     except Exception:
         pass
-    return search_duckduckgo(query, num=num)
+    return []
 
 
 def extract_paragraphs_from_soup(soup: BeautifulSoup, max_paragraphs: int = 4) -> List[str]:
