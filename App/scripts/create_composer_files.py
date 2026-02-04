@@ -109,6 +109,43 @@ def log(message: str, level: str = 'INFO') -> None:
     threshold = LOG_LEVELS.get(LOG_LEVEL, 20)
     if numeric >= threshold:
         print(f"[{level}] {message}")
+
+
+def perplexity_post(payload: Dict, timeout: int) -> Optional[Dict]:
+    if not PPLX_API_KEY:
+        return None
+    urls_to_try = [f"{PPLX_API}/chat/completions"]
+    if PPLX_API.endswith('/v2'):
+        urls_to_try.append('https://api.perplexity.ai/chat/completions')
+    last_error = None
+    for url in urls_to_try:
+        try:
+            resp = requests.post(
+                url,
+                headers={
+                    'Authorization': f"Bearer {PPLX_API_KEY}",
+                    'Content-Type': 'application/json',
+                },
+                json=payload,
+                timeout=timeout,
+            )
+            log(f"PPLX POST {url} -> {resp.status_code}", "INFO")
+            if resp.status_code in {400, 401, 403, 404}:
+                if resp.text:
+                    snippet = resp.text[:400].replace('\n', ' ')
+                    log(f"PPLX error body: {snippet}", "WARNING")
+                last_error = resp.status_code
+                continue
+            resp.raise_for_status()
+            return resp.json()
+        except (requests.RequestException, ValueError) as exc:
+            last_error = getattr(exc, 'response', None)
+            continue
+    if last_error:
+        log(f"PPLX request failed (status {last_error})", "WARNING")
+    else:
+        log("PPLX request failed", "WARNING")
+    return None
 HEADERS = {'User-Agent': 'Soundtracker/1.0'}
 REQUEST_TIMEOUT = 10
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
@@ -122,7 +159,10 @@ TMDB_API = 'https://api.themoviedb.org/3'
 TMDB_IMAGE = 'https://image.tmdb.org/t/p/w500'
 PPLX_API_KEY = os.getenv('PPLX_API_KEY') or os.getenv('PERPLEXITY_API_KEY')
 PPLX_MODEL = os.getenv('PPLX_MODEL', 'sonar')
-PPLX_API = 'https://api.perplexity.ai/v2'
+PPLX_API = os.getenv('PPLX_API', 'https://api.perplexity.ai')
+PPLX_SEARCH_MODE = os.getenv('PPLX_SEARCH_MODE', 'web')
+PPLX_DEEP_MODE = os.getenv('PPLX_DEEP_MODE', 'web')
+PPLX_SEARCH_MAX_TOKENS = int(os.getenv('PPLX_SEARCH_MAX_TOKENS', '64'))
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.1-mini')
 OPENAI_API = os.getenv('OPENAI_API', 'https://api.openai.com/v1/chat/completions')
@@ -390,28 +430,13 @@ def search_perplexity(query: str, num: int = 5) -> List[str]:
             {'role': 'system', 'content': 'Devuelve resultados de busqueda con URLs fiables.'},
             {'role': 'user', 'content': query},
         ],
-        'max_tokens': 128,
+        'max_tokens': PPLX_SEARCH_MAX_TOKENS,
         'temperature': 0.2,
+        'search_mode': PPLX_SEARCH_MODE,
     }
-    try:
-        resp = requests.post(
-            f"{PPLX_API}/chat/completions",
-            headers={
-                'Authorization': f"Bearer {PPLX_API_KEY}",
-                'Content-Type': 'application/json',
-            },
-            json=payload,
-            timeout=DEEP_RESEARCH_TIMEOUT,
-        )
-        log(f"PPLX status {resp.status_code} for query: {query}", "INFO")
-        resp.raise_for_status()
-        data = resp.json()
-    except (requests.RequestException, ValueError) as exc:
-        detail = getattr(exc, 'response', None)
-        if detail is not None:
-            log(f"PPLX error {detail.status_code} for query: {query}", "WARNING")
-        else:
-            log(f"PPLX request failed for query: {query}", "WARNING")
+    data = perplexity_post(payload, DEEP_RESEARCH_TIMEOUT)
+    if not data:
+        log(f"PPLX request failed for query: {query}", "WARNING")
         return []
     urls: List[str] = []
     for item in data.get('search_results') or []:
@@ -817,37 +842,14 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
         ],
         'max_tokens': 2400,
         'temperature': 0.2,
-        'search_mode': 'deep',
+        'search_mode': PPLX_DEEP_MODE,
     }
-    data = None
-    try:
-        resp = requests.post(
-            f"{PPLX_API}/chat/completions",
-            headers={
-                'Authorization': f"Bearer {PPLX_API_KEY}",
-                'Content-Type': 'application/json',
-            },
-            json=payload,
-            timeout=REQUEST_TIMEOUT,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-    except (requests.RequestException, ValueError):
+    data = perplexity_post(payload, REQUEST_TIMEOUT)
+    if not data:
         payload.pop('search_mode', None)
-        try:
-            resp = requests.post(
-                f"{PPLX_API}/chat/completions",
-                headers={
-                    'Authorization': f"Bearer {PPLX_API_KEY}",
-                    'Content-Type': 'application/json',
-                },
-                json=payload,
-                timeout=DEEP_RESEARCH_TIMEOUT,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-        except (requests.RequestException, ValueError):
-            return None
+        data = perplexity_post(payload, DEEP_RESEARCH_TIMEOUT)
+    if not data:
+        return None
     content = ''
     choices = data.get('choices') or []
     if choices:
@@ -887,6 +889,7 @@ def search_web(query: str, num: int = 3, pause: float = 1.2) -> List[str]:
         if urls:
             return urls
     try:
+        log(f"Google search fallback: {query}", "INFO")
         time.sleep(pause)
         results = list(search(query, num=num, stop=num, pause=pause))
         deduped = []
