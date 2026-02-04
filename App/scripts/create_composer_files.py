@@ -154,7 +154,7 @@ def perplexity_post(payload: Dict, timeout: int) -> Optional[Dict]:
 
 
 def openai_generate_text(system_prompt: str, user_prompt: str, max_tokens: int = 1500) -> str:
-    if not OPENAI_API_KEY:
+    if not OPENAI_ENABLED or not OPENAI_API_KEY:
         return ''
     if OPENAI_USE_RESPONSES or OPENAI_MODEL.startswith('gpt-5'):
         payload = {
@@ -280,6 +280,8 @@ if PPLX_DEEP_MODE == 'deep':
 if PPLX_DEEP_MODE not in {'web', 'academic', 'sec'}:
     PPLX_DEEP_MODE = 'web'
 PPLX_SEARCH_MAX_TOKENS = int(os.getenv('PPLX_SEARCH_MAX_TOKENS', '64'))
+OPENAI_ENABLED = os.getenv('OPENAI_ENABLED', '1') == '1'
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.1-codex-mini')
 OPENAI_API = os.getenv('OPENAI_API', 'https://api.openai.com/v1/chat/completions')
