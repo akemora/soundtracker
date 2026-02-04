@@ -105,6 +105,7 @@ EXTERNAL_DOMAINS = {
     'Soundtrack.net': 'soundtrack.net',
     'OSTNews': 'ostnews.com',
     'VGMdb': 'vgmdb.net',
+    'Rotten Tomatoes': 'https://www.rottentomatoes.com',
 }
 SOURCE_PACK_QUERIES = [
     '{composer} compositor biografia',

@@ -795,6 +795,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.3.11 | Validar CSV de 50 fuentes y añadir dominios útiles | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.12 | Añadir Metacritic como fuente externa | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.13 | Usar URL específica de Metacritic en fuentes | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.3.14 | Añadir Rotten Tomatoes como fuente externa | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ---
 
