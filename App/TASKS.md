@@ -788,6 +788,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.3.4 | Controles de log (limpiar/ver todas) en UI batch | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.5 | Mejorar source pack (dedupe Wikipedia + más fuentes) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.3.6 | Guardar salidas raw de síntesis (debug source pack) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.3.7 | Refinar source pack (filtros, fallback deep research, Wikipedia única) | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ---
 

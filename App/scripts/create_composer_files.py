@@ -94,13 +94,18 @@ EXTERNAL_DOMAINS = {
 SOURCE_PACK_QUERIES = [
     '{composer} compositor biografia',
     '{composer} composer biography',
-    '{composer} entrevista compositor banda sonora',
-    '{composer} interview film composer',
-    '{composer} estilo musical orquestacion tecnica composicion',
-    '{composer} film score technique orchestration',
-    '{composer} premios y nominaciones banda sonora',
+    '{composer} entrevista compositor banda sonora -site:wikipedia.org',
+    '{composer} interview film composer -site:wikipedia.org',
+    '{composer} metodo de trabajo compositor banda sonora -site:wikipedia.org',
+    '{composer} "working method" film composer -site:wikipedia.org',
+    '{composer} estilo musical orquestacion tecnica composicion -site:wikipedia.org',
+    '{composer} film score technique orchestration -site:wikipedia.org',
+    '{composer} "leitmotif" film music -site:wikipedia.org',
+    '{composer} "oral history" film music -site:wikipedia.org',
+    '{composer} anecdotas compositor banda sonora -site:wikipedia.org',
     '{composer} awards nominations film music',
-    '{composer} legacy influence film music',
+    '{composer} premios y nominaciones banda sonora',
+    '{composer} legacy influence film music -site:wikipedia.org',
 ]
 
 
@@ -108,7 +113,7 @@ def log(message: str, level: str = 'INFO') -> None:
     numeric = LOG_LEVELS.get(level, 20)
     threshold = LOG_LEVELS.get(LOG_LEVEL, 20)
     if numeric >= threshold:
-        print(f"[{level}] {message}")
+        print(f"[{level}] {message}", flush=True)
 
 
 def perplexity_post(payload: Dict, timeout: int) -> Optional[Dict]:
@@ -146,6 +151,112 @@ def perplexity_post(payload: Dict, timeout: int) -> Optional[Dict]:
     else:
         log("PPLX request failed", "WARNING")
     return None
+
+
+def openai_generate_text(system_prompt: str, user_prompt: str, max_tokens: int = 1500) -> str:
+    if not OPENAI_API_KEY:
+        return ''
+    if OPENAI_USE_RESPONSES or OPENAI_MODEL.startswith('gpt-5'):
+        payload = {
+            'model': OPENAI_MODEL,
+            'input': [
+                {'role': 'system', 'content': [{'type': 'input_text', 'text': system_prompt}]},
+                {'role': 'user', 'content': [{'type': 'input_text', 'text': user_prompt}]},
+            ],
+            'max_output_tokens': max_tokens,
+        }
+        try:
+            resp = requests.post(
+                OPENAI_RESPONSES_API,
+                headers={
+                    'Authorization': f'Bearer {OPENAI_API_KEY}',
+                    'Content-Type': 'application/json',
+                },
+                json=payload,
+                timeout=DEEP_RESEARCH_TIMEOUT,
+            )
+            log(f"OpenAI responses -> {resp.status_code}", "INFO")
+            resp.raise_for_status()
+            data = resp.json()
+        except (requests.RequestException, ValueError) as exc:
+            if isinstance(exc, requests.RequestException) and exc.response is not None:
+                snippet = exc.response.text[:400].replace('\n', ' ')
+                log(f"OpenAI responses error body: {snippet}", "WARNING")
+            log(f"OpenAI responses failed: {exc}", "WARNING")
+            return _openai_chat_fallback(system_prompt, user_prompt, max_tokens)
+        text_parts: List[str] = []
+        for output in data.get('output') or []:
+            for part in output.get('content') or []:
+                if part.get('type') == 'output_text' and part.get('text'):
+                    text_parts.append(part['text'])
+        return '\n'.join(text_parts).strip()
+    return _openai_chat_fallback(system_prompt, user_prompt, max_tokens)
+
+
+def _openai_chat_fallback(system_prompt: str, user_prompt: str, max_tokens: int) -> str:
+    payload = {
+        'model': OPENAI_MODEL,
+        'messages': [
+            {'role': 'system', 'content': system_prompt},
+            {'role': 'user', 'content': user_prompt},
+        ],
+        'max_tokens': max_tokens,
+        'temperature': 0.2,
+    }
+    try:
+        resp = requests.post(
+            OPENAI_API,
+            headers={
+                'Authorization': f'Bearer {OPENAI_API_KEY}',
+                'Content-Type': 'application/json',
+            },
+            json=payload,
+            timeout=DEEP_RESEARCH_TIMEOUT,
+        )
+        log(f"OpenAI chat -> {resp.status_code}", "INFO")
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError) as exc:
+        if isinstance(exc, requests.RequestException) and exc.response is not None:
+            snippet = exc.response.text[:400].replace('\n', ' ')
+            log(f"OpenAI chat error body: {snippet}", "WARNING")
+        log(f"OpenAI chat failed: {exc}", "WARNING")
+        return ''
+    choices = data.get('choices') or []
+    if not choices:
+        return ''
+    return (choices[0].get('message') or {}).get('content') or ''
+
+
+def gemini_generate_text(prompt: str, max_tokens: int = 1500) -> str:
+    if not GEMINI_API_KEY:
+        return ''
+    payload = {
+        'contents': [
+            {'role': 'user', 'parts': [{'text': prompt}]},
+        ],
+        'generationConfig': {
+            'temperature': 0.2,
+            'maxOutputTokens': max_tokens,
+        },
+    }
+    try:
+        resp = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
+            params={'key': GEMINI_API_KEY},
+            json=payload,
+            timeout=DEEP_RESEARCH_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError) as exc:
+        log(f"Gemini generation failed: {exc}", "WARNING")
+        return ''
+    candidates = data.get('candidates') or []
+    if not candidates:
+        return ''
+    parts = (candidates[0].get('content') or {}).get('parts') or []
+    return ''.join(part.get('text', '') for part in parts).strip()
 HEADERS = {'User-Agent': 'Soundtracker/1.0'}
 REQUEST_TIMEOUT = 10
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
@@ -162,10 +273,16 @@ PPLX_MODEL = os.getenv('PPLX_MODEL', 'sonar')
 PPLX_API = os.getenv('PPLX_API', 'https://api.perplexity.ai')
 PPLX_SEARCH_MODE = os.getenv('PPLX_SEARCH_MODE', 'web')
 PPLX_DEEP_MODE = os.getenv('PPLX_DEEP_MODE', 'web')
+if PPLX_DEEP_MODE == 'deep':
+    PPLX_DEEP_MODE = 'academic'
+if PPLX_DEEP_MODE not in {'web', 'academic', 'sec'}:
+    PPLX_DEEP_MODE = 'web'
 PPLX_SEARCH_MAX_TOKENS = int(os.getenv('PPLX_SEARCH_MAX_TOKENS', '64'))
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.1-mini')
 OPENAI_API = os.getenv('OPENAI_API', 'https://api.openai.com/v1/chat/completions')
+OPENAI_RESPONSES_API = os.getenv('OPENAI_RESPONSES_API', 'https://api.openai.com/v1/responses')
+OPENAI_USE_RESPONSES = os.getenv('OPENAI_USE_RESPONSES', '1') == '1'
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
 SOURCE_PACK_ENABLED = os.getenv('SOURCE_PACK_ENABLED', '1') == '1'
@@ -197,15 +314,6 @@ NOISE_HINTS = [
     'sign up',
     'terms of use',
     'otras secciones',
-    'bso news',
-    'news',
-    'entrevistas',
-    'reviews',
-    'miniaturas',
-    'soundtracks',
-    'festivales',
-    'conciertos',
-    'participaciones',
     'menu',
 ]
 BLOCKED_DOMAINS = {
@@ -525,41 +633,13 @@ def _normalize_citations_text(text: str, citations: List[str]) -> str:
 def _openai_outline(composer: str) -> Optional[str]:
     if not OPENAI_API_KEY:
         return None
-    payload = {
-        'model': OPENAI_MODEL,
-        'messages': [
-            {
-                'role': 'system',
-                'content': (
-                    'Eres un investigador musical. Devuelve un esquema corto con los '
-                    'puntos clave que no deben faltar en un informe académico sobre el compositor, '
-                    'incluyendo hitos, colaboraciones, técnicas, obras clave y contexto histórico. '
-                    'Responde en viñetas.'
-                ),
-            },
-            {'role': 'user', 'content': f'Compositor: {composer}'},
-        ],
-        'max_tokens': 450,
-        'temperature': 0.2,
-    }
-    try:
-        resp = requests.post(
-            OPENAI_API,
-            headers={
-                'Authorization': f'Bearer {OPENAI_API_KEY}',
-                'Content-Type': 'application/json',
-            },
-            json=payload,
-            timeout=REQUEST_TIMEOUT,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-    except (requests.RequestException, ValueError):
-        return None
-    choices = data.get('choices') or []
-    if not choices:
-        return None
-    content = (choices[0].get('message') or {}).get('content') or ''
+    system_prompt = (
+        'Eres un investigador musical. Devuelve un esquema corto con los '
+        'puntos clave que no deben faltar en un informe académico sobre el compositor, '
+        'incluyendo hitos, colaboraciones, técnicas, obras clave y contexto histórico. '
+        'Responde en viñetas.'
+    )
+    content = openai_generate_text(system_prompt, f'Compositor: {composer}', max_tokens=450)
     return content.strip() or None
 
 
@@ -611,6 +691,54 @@ def _build_research_outline(composer: str) -> str:
     return "\n\n".join(outlines)
 
 
+def _build_section_prompt(
+    composer: str,
+    section: str,
+    sources_text: str,
+    pack_text: str,
+    red_tones_note: str,
+) -> Tuple[str, str, int]:
+    base = (
+        'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
+        'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
+        'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
+        'Si hay incertidumbre, indícalo. '
+    )
+    if section == 'biography':
+        system_prompt = (
+            'Eres un investigador musical y divulgador. '
+            + base +
+            'Redacta la biografía en 8-14 párrafos o más si hace falta. '
+            'Incluye subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
+            '(cronología, colaboraciones, obras clave). '
+            + red_tones_note
+        )
+        max_tokens = 2600
+    elif section == 'style':
+        system_prompt = (
+            'Eres un investigador musical y divulgador. '
+            + base +
+            'Redacta 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
+            + red_tones_note
+        )
+        max_tokens = 1400
+    else:
+        system_prompt = (
+            'Eres un investigador musical y divulgador. '
+            + base +
+            'Redacta 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
+            'excentricidades o rasgos humanos que lo hagan memorable. '
+            + red_tones_note
+        )
+        max_tokens = 1200
+    user_prompt = (
+        f"Compositor: {composer}\n\n"
+        f"Fuentes (citas):\n{sources_text}\n\n"
+        f"Material:\n{pack_text}\n"
+    )
+    return system_prompt, user_prompt, max_tokens
+
+
 def _openai_source_profile(
     composer: str,
     pack_text: str,
@@ -629,65 +757,29 @@ def _openai_source_profile(
         )
     else:
         red_tones_note = 'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
-    system_prompt = (
-        'Eres un investigador musical y divulgador. Responde SOLO con JSON válido. '
-        'Estructura: {"biography": {"text": "..."}, '
-        '"style": {"text": "..."}, "facts": {"text": "..."}}. '
-        'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
-        'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
-        'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta), '
-        'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
-        '(cronología, colaboraciones, obras clave). '
-        'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
-        'facts.text: 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
-        'excentricidades o rasgos humanos que lo hagan memorable. '
-        + red_tones_note +
-        'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
-        'Si hay incertidumbre, indícalo.'
-    )
-    user_prompt = (
-        f"Compositor: {composer}\n\n"
-        f"Fuentes (citas):\n{sources_text}\n\n"
-        f"Material:\n{pack_text}\n"
-    )
     if outline:
-        user_prompt += f"\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
-    payload = {
-        'model': OPENAI_MODEL,
-        'messages': [
-            {'role': 'system', 'content': system_prompt},
-            {'role': 'user', 'content': user_prompt},
-        ],
-        'max_tokens': 3000,
-        'temperature': 0.2,
-    }
-    try:
-        resp = requests.post(
-            OPENAI_API,
-            headers={
-                'Authorization': f'Bearer {OPENAI_API_KEY}',
-                'Content-Type': 'application/json',
-            },
-            json=payload,
-            timeout=DEEP_RESEARCH_TIMEOUT,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-    except (requests.RequestException, ValueError) as exc:
-        log(f"OpenAI source synthesis failed for {composer}: {exc}", "WARNING")
-        return None
-    choices = data.get('choices') or []
-    if not choices:
-        log(f"OpenAI source synthesis empty response for {composer}", "WARNING")
-        return None
-    content = (choices[0].get('message') or {}).get('content') or ''
-    if debug_dir and content:
+        pack_text = f"{pack_text}\n\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
+    biography_prompt = _build_section_prompt(composer, 'biography', sources_text, pack_text, red_tones_note)
+    style_prompt = _build_section_prompt(composer, 'style', sources_text, pack_text, red_tones_note)
+    facts_prompt = _build_section_prompt(composer, 'facts', sources_text, pack_text, red_tones_note)
+    bio = openai_generate_text(*biography_prompt)
+    style = openai_generate_text(*style_prompt)
+    facts = openai_generate_text(*facts_prompt)
+    if debug_dir:
         debug_dir.mkdir(parents=True, exist_ok=True)
-        (debug_dir / 'source_pack_openai_raw.txt').write_text(content, encoding='utf-8')
-    parsed = _safe_json_loads(content)
-    if not parsed:
-        log(f"OpenAI source synthesis JSON parse failed for {composer}", "WARNING")
-    return parsed
+        if bio:
+            (debug_dir / 'source_pack_openai_biography.txt').write_text(bio, encoding='utf-8')
+        if style:
+            (debug_dir / 'source_pack_openai_style.txt').write_text(style, encoding='utf-8')
+        if facts:
+            (debug_dir / 'source_pack_openai_facts.txt').write_text(facts, encoding='utf-8')
+    if not (bio or style or facts):
+        return None
+    return {
+        'biography': {'text': bio},
+        'style': {'text': style},
+        'facts': {'text': facts},
+    }
 
 
 def _gemini_source_profile(
@@ -708,60 +800,35 @@ def _gemini_source_profile(
         )
     else:
         red_tones_note = 'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
-    prompt = (
-        'Responde SOLO con JSON válido. '
-        'Estructura: {"biography": {"text": "..."}, '
-        '"style": {"text": "..."}, "facts": {"text": "..."}}. '
-        'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
-        'Texto en español, tono atractivo, pedagógico y ameno. '
-        'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta), '
-        'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente. '
-        'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
-        'facts.text: 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
-        'excentricidades o rasgos humanos que lo hagan memorable. '
-        + red_tones_note +
-        'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
-        'Si hay incertidumbre, indícalo.\n\n'
-        f'Compositor: {composer}\n\n'
-        f'Fuentes (citas):\n{sources_text}\n\n'
-        f'Material:\n{pack_text}\n'
-    )
     if outline:
-        prompt += f"\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
-    payload = {
-        'contents': [
-            {'role': 'user', 'parts': [{'text': prompt}]},
-        ],
-        'generationConfig': {
-            'temperature': 0.2,
-            'maxOutputTokens': 3000,
-        },
-    }
-    try:
-        resp = requests.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
-            params={'key': GEMINI_API_KEY},
-            json=payload,
-            timeout=DEEP_RESEARCH_TIMEOUT,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-    except (requests.RequestException, ValueError) as exc:
-        log(f"Gemini source synthesis failed for {composer}: {exc}", "WARNING")
-        return None
-    candidates = data.get('candidates') or []
-    if not candidates:
-        log(f"Gemini source synthesis empty response for {composer}", "WARNING")
-        return None
-    parts = (candidates[0].get('content') or {}).get('parts') or []
-    text = ''.join(part.get('text', '') for part in parts)
-    if debug_dir and text:
+        pack_text = f"{pack_text}\n\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
+    biography_prompt = _build_section_prompt(composer, 'biography', sources_text, pack_text, red_tones_note)
+    style_prompt = _build_section_prompt(composer, 'style', sources_text, pack_text, red_tones_note)
+    facts_prompt = _build_section_prompt(composer, 'facts', sources_text, pack_text, red_tones_note)
+    bio = gemini_generate_text(
+        f"{biography_prompt[0]}\n\n{biography_prompt[1]}", max_tokens=biography_prompt[2]
+    )
+    style = gemini_generate_text(
+        f"{style_prompt[0]}\n\n{style_prompt[1]}", max_tokens=style_prompt[2]
+    )
+    facts = gemini_generate_text(
+        f"{facts_prompt[0]}\n\n{facts_prompt[1]}", max_tokens=facts_prompt[2]
+    )
+    if debug_dir:
         debug_dir.mkdir(parents=True, exist_ok=True)
-        (debug_dir / 'source_pack_gemini_raw.txt').write_text(text, encoding='utf-8')
-    parsed = _safe_json_loads(text)
-    if not parsed:
-        log(f"Gemini source synthesis JSON parse failed for {composer}", "WARNING")
-    return parsed
+        if bio:
+            (debug_dir / 'source_pack_gemini_biography.txt').write_text(bio, encoding='utf-8')
+        if style:
+            (debug_dir / 'source_pack_gemini_style.txt').write_text(style, encoding='utf-8')
+        if facts:
+            (debug_dir / 'source_pack_gemini_facts.txt').write_text(facts, encoding='utf-8')
+    if not (bio or style or facts):
+        return None
+    return {
+        'biography': {'text': bio},
+        'style': {'text': style},
+        'facts': {'text': facts},
+    }
 
 
 def _merge_section(primary: str, secondary: str) -> str:
@@ -816,7 +883,25 @@ def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
         extract_text(openai_profile, 'facts'),
         extract_text(gemini_profile, 'facts'),
     )
+    min_bio = 900
+    min_style = 350
+    min_facts = 280
+    needs_deep = (
+        len(biography or '') < min_bio
+        or len(style or '') < min_style
+        or len(facts or '') < min_facts
+    )
+    if needs_deep:
+        log(f"Source pack: short synthesis, trying deep research for {composer}", "WARNING")
+        deep_profile = get_deep_research_profile(composer)
+        if deep_profile:
+            deep_citations = deep_profile.get('citations') or []
+            biography = _merge_section(biography, deep_profile.get('biography') or '')
+            style = _merge_section(style, deep_profile.get('style') or '')
+            facts = _merge_section(facts, deep_profile.get('facts') or '')
+            citations = _dedupe_list(citations + list(deep_citations))
 
+    citations = _dedupe_wikipedia_citations(citations, composer)
     biography = _normalize_citations_text(biography, citations)
     style = _normalize_citations_text(style, citations)
     facts = _normalize_citations_text(facts, citations)
@@ -874,41 +959,62 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
         'temperature': 0.2,
         'search_mode': PPLX_DEEP_MODE,
     }
-    data = perplexity_post(payload, REQUEST_TIMEOUT)
-    if not data:
-        payload.pop('search_mode', None)
-        data = perplexity_post(payload, DEEP_RESEARCH_TIMEOUT)
-    if not data:
-        return None
-    content = ''
-    choices = data.get('choices') or []
-    if choices:
-        content = (choices[0].get('message') or {}).get('content') or ''
-    parsed = _safe_json_loads(content)
-    if not parsed or not isinstance(parsed, dict):
-        return None
-    citations = parsed.get('citations') or data.get('citations') or []
-    citations = _dedupe_list([c for c in citations if isinstance(c, str)])
+    def request_profile(payload_data: Dict, allow_mode_fallback: bool) -> Optional[Dict[str, object]]:
+        data = perplexity_post(payload_data, DEEP_RESEARCH_TIMEOUT)
+        if not data:
+            payload_data = dict(payload_data)
+            payload_data.pop('search_mode', None)
+            data = perplexity_post(payload_data, DEEP_RESEARCH_TIMEOUT)
+        if not data:
+            return None
+        content = ''
+        choices = data.get('choices') or []
+        if choices:
+            content = (choices[0].get('message') or {}).get('content') or ''
+        parsed = _safe_json_loads(content)
+        if not parsed or not isinstance(parsed, dict):
+            return None
+        citations = parsed.get('citations') or data.get('citations') or []
+        citations = _dedupe_list([c for c in citations if isinstance(c, str)])
+        citations = _dedupe_wikipedia_citations(citations, composer)
 
-    def extract_text(section: object) -> str:
-        if isinstance(section, dict):
-            return section.get('text') or ''
-        if isinstance(section, str):
-            return section
-        return ''
+        def extract_text(section: object) -> str:
+            if isinstance(section, dict):
+                return section.get('text') or ''
+            if isinstance(section, str):
+                return section
+            return ''
 
-    biography = extract_text(parsed.get('biography'))
-    style = extract_text(parsed.get('style'))
-    facts = extract_text(parsed.get('facts'))
-    biography = _normalize_citations_text(biography, citations)
-    style = _normalize_citations_text(style, citations)
-    facts = _normalize_citations_text(facts, citations)
-    return {
-        'biography': biography.strip(),
-        'style': style.strip(),
-        'facts': facts.strip(),
-        'citations': citations,
-    }
+        biography = extract_text(parsed.get('biography'))
+        style = extract_text(parsed.get('style'))
+        facts = extract_text(parsed.get('facts'))
+        min_bio = 900
+        min_style = 350
+        min_facts = 280
+        if allow_mode_fallback and payload_data.get('search_mode') and (
+            len(biography or '') < min_bio or len(style or '') < min_style or len(facts or '') < min_facts
+        ):
+            payload_alt = dict(payload_data)
+            payload_alt.pop('search_mode', None)
+            alt = request_profile(payload_alt, False)
+            if alt:
+                biography = _merge_section(biography, alt.get('biography') or '')
+                style = _merge_section(style, alt.get('style') or '')
+                facts = _merge_section(facts, alt.get('facts') or '')
+                citations = _dedupe_list(citations + list(alt.get('citations') or []))
+                citations = _dedupe_wikipedia_citations(citations, composer)
+
+        biography = _normalize_citations_text(biography, citations)
+        style = _normalize_citations_text(style, citations)
+        facts = _normalize_citations_text(facts, citations)
+        return {
+            'biography': biography.strip(),
+            'style': style.strip(),
+            'facts': facts.strip(),
+            'citations': citations,
+        }
+
+    return request_profile(payload, True)
 
 
 def search_web(query: str, num: int = 3, pause: float = 1.2) -> List[str]:
@@ -960,17 +1066,64 @@ def _wiki_key(url: str) -> Optional[str]:
     return title or None
 
 
-def _select_best_wikipedia_url(urls: List[str]) -> Tuple[List[str], Dict[str, str]]:
+def _composer_tokens(composer: str) -> List[str]:
+    tokens = [token for token in re.split(r'[^a-zA-Z0-9]+', composer.lower()) if token]
+    return [token for token in tokens if token not in {'jr', 'sr', 'ii', 'iii', 'iv'}]
+
+
+def _wiki_title_matches_composer(title: str, composer: str) -> bool:
+    if not title:
+        return False
+    title_clean = title.replace('_', ' ').lower()
+    tokens = _composer_tokens(composer)
+    if not tokens:
+        return False
+    full_name = ' '.join(tokens)
+    if full_name and full_name in title_clean:
+        return True
+    surname = tokens[-1]
+    return surname in title_clean
+
+
+def _dedupe_wikipedia_citations(citations: List[str], composer: str) -> List[str]:
+    wiki_urls = [url for url in citations if _wiki_key(url)]
+    if len(wiki_urls) <= 1:
+        return citations
+    matching = [
+        url for url in wiki_urls
+        if _wiki_title_matches_composer(_wiki_key(url) or '', composer)
+    ]
+    candidates = matching or wiki_urls
+    best_url = ''
+    best_text = ''
+    for url in candidates:
+        text = extract_source_text(url)
+        if len(text) > len(best_text):
+            best_text = text
+            best_url = url
+    if not best_url:
+        return citations
+    return [url for url in citations if not _wiki_key(url) or url == best_url]
+
+
+def _select_best_wikipedia_url(urls: List[str], composer: str) -> Tuple[List[str], Dict[str, str]]:
     selected: List[str] = []
     preloaded: Dict[str, str] = {}
     non_wiki: List[str] = []
     wiki_urls: List[str] = []
+    wiki_candidates: List[str] = []
 
     for url in urls:
-        if _wiki_key(url):
+        title = _wiki_key(url)
+        if title:
             wiki_urls.append(url)
+            if _wiki_title_matches_composer(title, composer):
+                wiki_candidates.append(url)
         else:
             non_wiki.append(url)
+
+    if wiki_candidates:
+        wiki_urls = wiki_candidates
 
     best_url = ''
     best_text = ''
@@ -992,7 +1145,14 @@ def collect_source_urls(composer: str) -> List[str]:
         return []
     log(f"Source pack: collecting URLs for {composer}", "INFO")
     urls: List[str] = []
-    for template in SOURCE_PACK_QUERIES:
+    extra_queries: List[str] = []
+    if 'stothart' in composer.lower():
+        extra_queries = [
+            f'{composer} "red tones" music theory',
+            f'{composer} "tonos rojos" musica',
+            f'{composer} "red tones" orchestration',
+        ]
+    for template in extra_queries + SOURCE_PACK_QUERIES:
         query = template.format(composer=composer)
         log(f"Source pack query: {query}", "INFO")
         candidates: List[str] = []
@@ -1053,7 +1213,7 @@ def build_source_pack(composer: str) -> Optional[Dict[str, object]]:
     if not urls:
         log(f"Source pack: no URLs found for {composer}", "WARNING")
         return None
-    urls, preloaded = _select_best_wikipedia_url(urls)
+    urls, preloaded = _select_best_wikipedia_url(urls, composer)
     if preloaded:
         log(f"Source pack: selected {len(preloaded)} Wikipedia source(s) for {composer}", "INFO")
     sources_dir.mkdir(parents=True, exist_ok=True)
@@ -2175,16 +2335,16 @@ def get_external_sources(composer: str) -> List[Dict[str, str]]:
 def get_general_snippets(composer: str, limit: int, existing_urls: set) -> List[Dict[str, str]]:
     snippets: List[Dict[str, str]] = []
     queries = [
-        f"{composer} compositor entrevista banda sonora",
-        f"{composer} compositor estilo musical",
-        f"{composer} compositor trayectoria musical",
-        f"{composer} compositor cine biografia",
-        f"{composer} film music composer biography",
-        f"{composer} soundtrack composer interview",
-        f"{composer} film score composer profile",
-        f"{composer} biographie compositeur",
-        f"{composer} komponist filmmusik biografie",
-        f"{composer} compositor cinema biografia",
+        f"{composer} compositor entrevista banda sonora -site:wikipedia.org",
+        f"{composer} compositor estilo musical -site:wikipedia.org",
+        f"{composer} compositor trayectoria musical -site:wikipedia.org",
+        f"{composer} compositor cine biografia -site:wikipedia.org",
+        f"{composer} film music composer biography -site:wikipedia.org",
+        f"{composer} soundtrack composer interview -site:wikipedia.org",
+        f"{composer} film score composer profile -site:wikipedia.org",
+        f"{composer} biographie compositeur -site:wikipedia.org",
+        f"{composer} komponist filmmusik biografie -site:wikipedia.org",
+        f"{composer} compositor cinema biografia -site:wikipedia.org",
     ]
     for query in queries:
         urls = search_web(query, num=4)
@@ -2391,7 +2551,7 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
             style_text = extract_section_text(html_en, STYLE_SECTION_KEYWORDS, max_paragraphs=2)
             style_text = translate_to_spanish(style_text)
     if not style_text:
-        style_text = search_for_text(f"{composer} estilo musical compositor", STYLE_HINTS)
+        style_text = search_for_text(f"{composer} estilo musical compositor -site:wikipedia.org", STYLE_HINTS)
     if biography and style_text and style_text in biography:
         style_text = ''
     if style_text:
@@ -2404,7 +2564,7 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
             anecdote_text = extract_section_text(html_en, ANECDOTE_SECTION_KEYWORDS, max_paragraphs=2)
             anecdote_text = translate_to_spanish(anecdote_text)
     if not anecdote_text:
-        anecdote_text = search_for_text(f"{composer} vida personal curiosidades", ANECDOTE_HINTS)
+        anecdote_text = search_for_text(f"{composer} vida personal curiosidades -site:wikipedia.org", ANECDOTE_HINTS)
     if biography and anecdote_text and anecdote_text in biography:
         anecdote_text = ''
     if anecdote_text:
@@ -2508,7 +2668,7 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
                 style_text,
                 info['external_snippets'],
                 STYLE_HINTS,
-                f"{composer} estilo musical compositor",
+                f"{composer} estilo musical compositor -site:wikipedia.org",
             )
         if biography and style_text and style_text in biography:
             style_text = ''
@@ -2528,7 +2688,7 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
                 anecdote_text,
                 info['external_snippets'],
                 ANECDOTE_HINTS,
-                f"{composer} vida personal curiosidades",
+                f"{composer} vida personal curiosidades -site:wikipedia.org",
             )
         if biography and anecdote_text and anecdote_text in biography:
             anecdote_text = ''
