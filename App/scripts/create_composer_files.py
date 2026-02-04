@@ -101,6 +101,7 @@ EXTERNAL_DOMAINS = {
     'AllMusic': 'allmusic.com',
     'Discogs': 'discogs.com',
     'MusicBrainz': 'musicbrainz.org',
+    'Metacritic': 'metacritic.com',
     'Soundtrack.net': 'soundtrack.net',
     'OSTNews': 'ostnews.com',
     'VGMdb': 'vgmdb.net',
