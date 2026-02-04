@@ -9,7 +9,13 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from soundtracker.clients import SearchClient, TMDBClient, WikidataClient, WikipediaClient
+from soundtracker.clients import (
+    ImdbDataset,
+    SearchClient,
+    TMDBClient,
+    WikidataClient,
+    WikipediaClient,
+)
 from soundtracker.config import settings
 from soundtracker.models import Film
 
@@ -53,6 +59,7 @@ class FilmographyService:
         wikidata_client: Optional[WikidataClient] = None,
         wikipedia_client: Optional[WikipediaClient] = None,
         search_client: Optional[SearchClient] = None,
+        imdb_client: Optional[ImdbDataset] = None,
         film_limit: int = 200,
     ) -> None:
         """Initialize filmography service.
@@ -68,6 +75,7 @@ class FilmographyService:
         self.wikidata = wikidata_client or WikidataClient()
         self.wikipedia = wikipedia_client or WikipediaClient(lang="en")
         self.search = search_client or SearchClient()
+        self.imdb = imdb_client or ImdbDataset()
         self.film_limit = film_limit or settings.film_limit
 
     def get_complete_filmography(
@@ -92,8 +100,16 @@ class FilmographyService:
         """
         films: list[Film] = []
 
-        # Primary source: TMDB
-        if self.tmdb.is_available:
+        # Primary source: IMDb dataset (offline)
+        if self.imdb.is_available:
+            imdb_films = self.imdb.get_composer_filmography(
+                composer,
+                max_titles=self.film_limit,
+            )
+            films = self._merge_films(films, imdb_films)
+
+        # Secondary source: TMDB
+        if not films and self.tmdb.is_available:
             person_id = tmdb_id
             if person_id is None:
                 person_id, _ = self.tmdb.search_person(composer)
