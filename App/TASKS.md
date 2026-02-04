@@ -821,11 +821,18 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.5.7 | Filtrar no-compositores en master list | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
 | 8.5.8 | Logging de conteo en master list global | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
 | 8.5.9 | Fix split regex en filtro de nombres | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
+| 8.5.10 | Generar master list global filtrada | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ### 8.6 Top 100 Compositores
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 8.6.1 | Script top 100 desde web sources | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.6.2 | Generar top 100 desde web sources | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+
+### 8.7 Backup Outputs
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 8.7.1 | Añadir outputs/OLD al repo | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 
 ---
 

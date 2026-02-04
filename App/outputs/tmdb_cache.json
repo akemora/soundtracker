@@ -12019,5 +12019,796 @@
     "popularity": 0.7239,
     "vote_count": 58,
     "vote_average": 6.5
+  },
+  "The Bondman|1929": {
+    "original_title": "The Bondman",
+    "title_es": "The Bondman",
+    "poster_path": null,
+    "popularity": 0.1009,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "Half Shot at Sunrise|1930": {
+    "original_title": "Half Shot at Sunrise",
+    "title_es": "Half Shot at Sunrise",
+    "poster_path": "/9dR87HholUpWWE5NmB53iaORDxg.jpg",
+    "popularity": 1.1604,
+    "vote_count": 13,
+    "vote_average": 5.9
+  },
+  "Behind Office Doors|1931": {
+    "original_title": "Behind Office Doors",
+    "title_es": "Trás las Puertas Cerradas",
+    "poster_path": "/qIaPU3hkLx6TQ3O9Y9zs9KdbFdt.jpg",
+    "popularity": 0.387,
+    "vote_count": 16,
+    "vote_average": 4.656
+  },
+  "Cracked Nuts|1931": {
+    "original_title": "Cracked Nuts",
+    "title_es": "Cracked Nuts",
+    "poster_path": "/zuE7U4fVQbtQaEJCXrn3hSKgYBj.jpg",
+    "popularity": 4.5181,
+    "vote_count": 2,
+    "vote_average": 7.0
+  },
+  "Fanny Foley Herself|1931": {
+    "original_title": "Fanny Foley Herself",
+    "title_es": "Fanny Foley Herself",
+    "poster_path": "/8r7qBP8SyeWINaVyUg2Km2Hbigz.jpg",
+    "popularity": 1.9144,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "High Stakes|1931": {
+    "original_title": "High Stakes",
+    "title_es": "High Stakes",
+    "poster_path": "/3hG1W6uXn57oV4qAcOT7elNhfNy.jpg",
+    "popularity": 0.1366,
+    "vote_count": 3,
+    "vote_average": 2.7
+  },
+  "The Gay Diplomat|1931": {
+    "original_title": "The Gay Diplomat",
+    "title_es": "The Gay Diplomat",
+    "poster_path": "/WeqlKl0kqJj7t3l1b1NGKPlATQ.jpg",
+    "popularity": 0.7176,
+    "vote_count": 5,
+    "vote_average": 4.0
+  },
+  "Traveling Husbands|1931": {
+    "original_title": "Traveling Husbands",
+    "title_es": "Traveling Husbands",
+    "poster_path": "/51CPcDcqIbDI6QB9jSZRv4DDCWV.jpg",
+    "popularity": 0.1223,
+    "vote_count": 2,
+    "vote_average": 4.0
+  },
+  "Ghost Valley|1932": {
+    "original_title": "Ghost Valley",
+    "title_es": "Ghost Valley",
+    "poster_path": "/2LOaNILJj6GslLsvlVicZ73DasH.jpg",
+    "popularity": 0.0747,
+    "vote_count": 1,
+    "vote_average": 4.0
+  },
+  "Girl Crazy|1932": {
+    "original_title": "Girl Crazy",
+    "title_es": "Girl Crazy",
+    "poster_path": "/m3FF594YK9kKHvqabyq7C1GBTal.jpg",
+    "popularity": 0.1323,
+    "vote_count": 5,
+    "vote_average": 3.8
+  },
+  "Men of Chance|1932": {},
+  "State's Attorney|1932": {
+    "original_title": "State's Attorney",
+    "title_es": "El fiscal",
+    "poster_path": "/wNCnE3TwkVq2Qd32grq4SGdAS2h.jpg",
+    "popularity": 1.853,
+    "vote_count": 7,
+    "vote_average": 6.7
+  },
+  "The Half-Naked Truth|1932": {
+    "original_title": "The Half-Naked Truth",
+    "title_es": "La verdad a medias",
+    "poster_path": "/nLws14Jz2LGvE2xIx01ZwPCCAJ0.jpg",
+    "popularity": 3.9514,
+    "vote_count": 12,
+    "vote_average": 4.875
+  },
+  "The Saddle Buster|1932": {
+    "original_title": "The Saddle Buster",
+    "title_es": "The Saddle Buster",
+    "poster_path": "/thh0xbx2l8Gr5mwOfw7w5vhfa0C.jpg",
+    "popularity": 0.1669,
+    "vote_count": 1,
+    "vote_average": 7.0
+  },
+  "The Sport Parade|1932": {
+    "original_title": "The Sport Parade",
+    "title_es": "The Sport Parade",
+    "poster_path": "/4ytWZTWc9FSuv6O7gPrqLriSisJ.jpg",
+    "popularity": 0.3552,
+    "vote_count": 8,
+    "vote_average": 4.8
+  },
+  "Westward Passage|1932": {
+    "original_title": "Westward Passage",
+    "title_es": "Westward Passage",
+    "poster_path": "/bsfzNYFfPwiDjsnevepMoZBAjHn.jpg",
+    "popularity": 1.7028,
+    "vote_count": 5,
+    "vote_average": 5.8
+  },
+  "Bed of Roses|1933": {
+    "original_title": "Bed of Roses",
+    "title_es": "Lecho de rosas",
+    "poster_path": "/lLozxIipN4j21KkGOxl57UbX1If.jpg",
+    "popularity": 4.0315,
+    "vote_count": 14,
+    "vote_average": 6.1
+  },
+  "Double Harness|1933": {
+    "original_title": "Double Harness",
+    "title_es": "Double Harness",
+    "poster_path": "/vDVebENmmToW4duHrWKO7id3uMQ.jpg",
+    "popularity": 0.2304,
+    "vote_count": 17,
+    "vote_average": 6.3
+  },
+  "One Man's Journey|1933": {
+    "original_title": "One Man's Journey",
+    "title_es": "One Man's Journey",
+    "poster_path": "/xNY8lSFO6SyyDp5PNEwJIeVJaPe.jpg",
+    "popularity": 0.1334,
+    "vote_count": 11,
+    "vote_average": 6.545
+  },
+  "Rafter Romance|1933": {
+    "original_title": "Rafter Romance",
+    "title_es": "Rafter Romance",
+    "poster_path": "/knRAztk47je05rassWwJ5fFOIng.jpg",
+    "popularity": 2.1638,
+    "vote_count": 11,
+    "vote_average": 6.5
+  },
+  "The Monkey's Paw|1933": {
+    "original_title": "The Monkey's Paw",
+    "title_es": "The Monkey's Paw",
+    "poster_path": "/9ExbpH2rzRG67FgAP3mcSsrZINE.jpg",
+    "popularity": 0.1741,
+    "vote_count": 1,
+    "vote_average": 6.0
+  },
+  "The Right to Romance|1933": {
+    "original_title": "The Right To Romance",
+    "title_es": "Divina",
+    "poster_path": "/1ogxW0DYTYOvYNjWnvVG3ckORzJ.jpg",
+    "popularity": 0.235,
+    "vote_count": 6,
+    "vote_average": 4.0
+  },
+  "Let's Try Again|1934": {
+    "original_title": "Let's Try Again",
+    "title_es": "Let's Try Again",
+    "poster_path": "/1BYMqA8ipDcbPrXctWUN96GUyM0.jpg",
+    "popularity": 0.4188,
+    "vote_count": 3,
+    "vote_average": 2.0
+  },
+  "Murder on the Blackboard|1934": {
+    "original_title": "Murder on the Blackboard",
+    "title_es": "El crimen de la pizarra",
+    "poster_path": "/hHyTVfDmu1EDMiFCUHZWNE4qF62.jpg",
+    "popularity": 0.3361,
+    "vote_count": 9,
+    "vote_average": 6.111
+  },
+  "Success at Any Price|1934": {
+    "original_title": "Success at Any Price",
+    "title_es": "Success at Any Price",
+    "poster_path": "/1e6TurtSUYgF0AWDwdHVe0eNuDb.jpg",
+    "popularity": 0.2302,
+    "vote_count": 9,
+    "vote_average": 3.778
+  },
+  "The Fountain|1934": {
+    "original_title": "The Fountain",
+    "title_es": "Un amor prohibido",
+    "poster_path": "/bKAm43b487StTXFgNIiin7EBEMN.jpg",
+    "popularity": 0.1887,
+    "vote_count": 2,
+    "vote_average": 9.8
+  },
+  "Submarine D-1|1937": {
+    "original_title": "Submarine D-1",
+    "title_es": "Submarine D-1",
+    "poster_path": "/tpt1ER5OzN5oN4kOwYdXh8TUOx4.jpg",
+    "popularity": 0.3258,
+    "vote_count": 6,
+    "vote_average": 4.7
+  },
+  "The Man Who Found Himself|1937": {
+    "original_title": "The Man Who Found Himself",
+    "title_es": "Un hospital en las nubes",
+    "poster_path": "/x09Bpgv5BPFT1Olt21EwPHXNAaC.jpg",
+    "popularity": 0.2586,
+    "vote_count": 1,
+    "vote_average": 7.0
+  },
+  "Crime School|1938": {
+    "original_title": "Crime School",
+    "title_es": "Crime School",
+    "poster_path": "/711a1AAfFQ5IVlCLUQHWCdI68Pd.jpg",
+    "popularity": 0.3701,
+    "vote_count": 21,
+    "vote_average": 6.31
+  },
+  "Daughters Courageous|1939": {
+    "original_title": "Daughters Courageous",
+    "title_es": "Daughters Courageous",
+    "poster_path": "/spJAOXpF9IbxkhNAQpGqSxiuPNO.jpg",
+    "popularity": 0.3021,
+    "vote_count": 9,
+    "vote_average": 6.2
+  },
+  "Dust Be My Destiny|1939": {
+    "original_title": "Dust Be My Destiny",
+    "title_es": "Dust Be My Destiny",
+    "poster_path": "/twsX5wNnkWzyoZqrTR3iO7cgKPQ.jpg",
+    "popularity": 0.3519,
+    "vote_count": 19,
+    "vote_average": 6.421
+  },
+  "Four Wives|1939": {
+    "original_title": "Four Wives",
+    "title_es": "Four Wives",
+    "poster_path": "/kJLEfC9VWCe24jjGQiMG0Kl7ZkZ.jpg",
+    "popularity": 0.3044,
+    "vote_count": 10,
+    "vote_average": 5.3
+  },
+  "Deep Valley|1947": {
+    "original_title": "Deep Valley",
+    "title_es": "Deep Valley",
+    "poster_path": "/kFEPpg7Q69Wtogjlr96Qdw49ay3.jpg",
+    "popularity": 5.6548,
+    "vote_count": 21,
+    "vote_average": 5.6
+  },
+  "My Girl Tisa|1948": {
+    "original_title": "My Girl Tisa",
+    "title_es": "My Girl Tisa",
+    "poster_path": "/mAhBJUENk508t8CpWe8x8SsMnEV.jpg",
+    "popularity": 2.3837,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "The Woman in White|1948": {
+    "original_title": "The Woman in White",
+    "title_es": "La mujer de blanco",
+    "poster_path": "/qb6C4tA7Ydeyh2ClXpf5KSGlC6E.jpg",
+    "popularity": 0.3614,
+    "vote_count": 21,
+    "vote_average": 5.5
+  },
+  "Without Honor|1949": {
+    "original_title": "Without Honor",
+    "title_es": "Without Honor",
+    "poster_path": "/nmHudoXnyEyFipjqsqzbXPwMQQQ.jpg",
+    "popularity": 6.2321,
+    "vote_count": 15,
+    "vote_average": 4.533
+  },
+  "Lightning Strikes Twice|1951": {
+    "original_title": "Lightning Strikes Twice",
+    "title_es": "La luz brilló dos veces",
+    "poster_path": "/6U9ecedIjJTjtwCaezt4f8Wl82X.jpg",
+    "popularity": 0.4836,
+    "vote_count": 20,
+    "vote_average": 5.5
+  },
+  "Raton Pass|1951": {
+    "original_title": "Raton Pass",
+    "title_es": "Raton Pass",
+    "poster_path": "/baB6FNYcL6cmF41BXUi4PUSBab9.jpg",
+    "popularity": 0.3266,
+    "vote_count": 12,
+    "vote_average": 4.6
+  },
+  "So Big|1953": {
+    "original_title": "So Big",
+    "title_es": "So Big",
+    "poster_path": "/3pfburUMlUBavlab2hnr4N7hDdz.jpg",
+    "popularity": 5.0678,
+    "vote_count": 12,
+    "vote_average": 5.25
+  },
+  "The Caine Mutiny|1954": {
+    "original_title": "The Caine Mutiny",
+    "title_es": "El motín del Caine",
+    "poster_path": "/x1A74gOklkVHCDiky2ufuWYgRj9.jpg",
+    "popularity": 1.1629,
+    "vote_count": 358,
+    "vote_average": 7.204
+  },
+  "Hell on Frisco Bay|1955": {
+    "original_title": "Hell on Frisco Bay",
+    "title_es": "Infierno en la bahía de San Francisco",
+    "poster_path": "/8kLvDRcM5syecqxZ3s7GL017WiQ.jpg",
+    "popularity": 0.7247,
+    "vote_count": 17,
+    "vote_average": 4.971
+  },
+  "Illegal|1955": {
+    "original_title": "Illegal",
+    "title_es": "Ilegal",
+    "poster_path": "/1v7g6cBk9nZabqk9S3YiVNTLnwu.jpg",
+    "popularity": 2.0626,
+    "vote_count": 45,
+    "vote_average": 6.322
+  },
+  "Come Next Spring|1956": {
+    "original_title": "Come Next Spring",
+    "title_es": "Come Next Spring",
+    "poster_path": "/rlc8bvM8dajFPZEFYCNuAX1pgv2.jpg",
+    "popularity": 0.202,
+    "vote_count": 7,
+    "vote_average": 5.571
+  },
+  "Death of a Scoundrel|1956": {
+    "original_title": "Death of a Scoundrel",
+    "title_es": "Amores de un impostor",
+    "poster_path": "/xm63vib0mBQEGZ9phxgdbnRxm81.jpg",
+    "popularity": 1.0425,
+    "vote_count": 23,
+    "vote_average": 5.783
+  },
+  "Cash McCall|1960": {
+    "original_title": "Cash McCall",
+    "title_es": "El potentado",
+    "poster_path": "/nsJFLzH0chnzK30rpPBBCmpEk5F.jpg",
+    "popularity": 3.3985,
+    "vote_count": 13,
+    "vote_average": 6.2
+  },
+  "Portrait of a Mobster|1961": {
+    "original_title": "Portrait of a Mobster",
+    "title_es": "Portrait of a Mobster",
+    "poster_path": "/ar1v8lP9FWbnLVbEARUPrpeLjWK.jpg",
+    "popularity": 1.6201,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "Marco Polo 8-225050|1956": {},
+  "Film Score Reviews by Jonathan Broxton since|1997": {},
+  "March 8,|2021": {
+    "original_title": "НМДНИ-1921 Капабланка. НЭП. Голод в Поволжье. 8 марта. ТЮЗ. Беспризорники. «Цыплёнок жареный»",
+    "title_es": "НМДНИ-1921 Капабланка. НЭП. Голод в Поволжье. 8 марта. ТЮЗ. Беспризорники. «Цыплёнок жареный»",
+    "poster_path": null,
+    "popularity": 3.8625,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "April|2025": {
+    "original_title": "April",
+    "title_es": "April",
+    "poster_path": "/bZ5Td5X5nisD21ew9HOGRqqcxyR.jpg",
+    "popularity": 1.0723,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "August|2025": {
+    "original_title": "August so Tragic and Tender",
+    "title_es": "August so Tragic and Tender",
+    "poster_path": "/6X0qO6nd9xTtEpEIvfkXFDB3UGY.jpg",
+    "popularity": 2.3334,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "BAFTA Nominations|2025": {},
+  "December|2025": {
+    "original_title": "We Met in December",
+    "title_es": "We Met in December",
+    "poster_path": "/emhOHTwm3HlO1yqkVTl2doprTQh.jpg",
+    "popularity": 0.5297,
+    "vote_count": 16,
+    "vote_average": 6.563
+  },
+  "July|2025": {
+    "original_title": "July 7: Who Killed the President of Haiti?",
+    "title_es": "July 7: Who Killed the President of Haiti?",
+    "poster_path": "/188sMXV200ntkfg6WkKtIAFSb3r.jpg",
+    "popularity": 0.1428,
+    "vote_count": 2,
+    "vote_average": 8.5
+  },
+  "June|2025": {
+    "original_title": "Goodbye June",
+    "title_es": "Adiós, June",
+    "poster_path": "/c6b7JgxtmN1ADVzFPeeY3J11kWt.jpg",
+    "popularity": 7.8735,
+    "vote_count": 110,
+    "vote_average": 6.5
+  },
+  "March|2025": {
+    "original_title": "The Long Walk",
+    "title_es": "La larga marcha",
+    "poster_path": "/izA5U09supDy8J2Z4339Po6PIHU.jpg",
+    "popularity": 17.7004,
+    "vote_count": 1113,
+    "vote_average": 6.947
+  },
+  "May|2025": {
+    "original_title": "May",
+    "title_es": "May",
+    "poster_path": "/68AUaDD7Pza0hUhgXekGyqN3SDt.jpg",
+    "popularity": 0.0143,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "November|2025": {
+    "original_title": "November",
+    "title_es": "November",
+    "poster_path": "/uMfKlhsmol2nxPnsmTOlsdJ49Kq.jpg",
+    "popularity": 0.0954,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "October|2025": {
+    "original_title": "12 Hours in October",
+    "title_es": "12 Hours in October",
+    "poster_path": "/uRI6pASQX30W1Jv8JEWVFh2Rya2.jpg",
+    "popularity": 1.9218,
+    "vote_count": 3,
+    "vote_average": 5.7
+  },
+  "September|2025": {
+    "original_title": "An einem Tag im September",
+    "title_es": "An einem Tag im September",
+    "poster_path": "/jgosmTHqfcm6g4QAcP2eQsWNr03.jpg",
+    "popularity": 2.7495,
+    "vote_count": 5,
+    "vote_average": 6.4
+  },
+  "Under-the-Radar Round Up|2025": {},
+  "February|2026": {
+    "original_title": "Still February",
+    "title_es": "Still February",
+    "poster_path": "/aGtvQYnD6FbXX8vBBh2r7Q672X5.jpg",
+    "popularity": 0.0386,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "January|2026": {
+    "original_title": "Saturday Night's Main Event: January 24, 2026",
+    "title_es": "Saturday Night's Main Event: January 24, 2026",
+    "poster_path": "/3EZK2gbncrmVxZ7bJWa8w9K3RGW.jpg",
+    "popularity": 0.8539,
+    "vote_count": 3,
+    "vote_average": 7.5
+  },
+  "НМДНИ-1921 Капабланка. НЭП. Голод в Поволжье. 8 марта. ТЮЗ. Беспризорники. «Цыплёнок жареный»|2021": {
+    "original_title": "НМДНИ-1921 Капабланка. НЭП. Голод в Поволжье. 8 марта. ТЮЗ. Беспризорники. «Цыплёнок жареный»",
+    "title_es": "НМДНИ-1921 Капабланка. НЭП. Голод в Поволжье. 8 марта. ТЮЗ. Беспризорники. «Цыплёнок жареный»",
+    "poster_path": null,
+    "popularity": 3.8625,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "Waltzing in a Dream|1932": {},
+  "Flirting with Fate|1938": {
+    "original_title": "Flirting with Fate",
+    "title_es": "Flirting with Fate",
+    "poster_path": "/8o8idGzykNZCBnJJiMJUclbyTnO.jpg",
+    "popularity": 0.3353,
+    "vote_count": 2,
+    "vote_average": 6.5
+  },
+  "Fisherman's Wharf|1939": {
+    "original_title": "Fisherman's Wharf",
+    "title_es": "Fisherman's Wharf",
+    "poster_path": "/cshGbnjeKrQ3DsCBNbSYWg2ue51.jpg",
+    "popularity": 2.9947,
+    "vote_count": 1,
+    "vote_average": 6.0
+  },
+  "Grand Jury Secrets|1939": {
+    "original_title": "Grand Jury Secrets",
+    "title_es": "Grand Jury Secrets",
+    "poster_path": "/ax8bVkVVQytKzMCCA27CbgIYe2R.jpg",
+    "popularity": 0.1917,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "Heritage of the Desert|1939": {
+    "original_title": "Heritage of the Desert",
+    "title_es": "Heritage of the Desert",
+    "poster_path": "/cWOSGMPc7YE3fsl1LN6uXLZosOV.jpg",
+    "popularity": 0.2182,
+    "vote_count": 4,
+    "vote_average": 5.8
+  },
+  "Law of the Pampas|1939": {
+    "original_title": "Law of the Pampas",
+    "title_es": "Law of the Pampas",
+    "poster_path": "/8JUZ2y9gEDiVZUhkpZx3jGErmK5.jpg",
+    "popularity": 0.2847,
+    "vote_count": 2,
+    "vote_average": 4.0
+  },
+  "Our Neighbors – The Carters|1939": {
+    "original_title": "Our Neighbors - The Carters",
+    "title_es": "Our Neighbors - The Carters",
+    "poster_path": "/bmlx5PdiXxn2SwByhvLBvsLPeLa.jpg",
+    "popularity": 0.0965,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "The Light That Failed|1939": {
+    "original_title": "The Light That Failed",
+    "title_es": "The Light That Failed",
+    "poster_path": "/bjUMKPmoJqTFrLv4UySBImye7o0.jpg",
+    "popularity": 0.218,
+    "vote_count": 6,
+    "vote_average": 6.0
+  },
+  "Way Down South|1939": {
+    "original_title": "Way Down South",
+    "title_es": "Way Down South",
+    "poster_path": "/kDa3wDTNWWmuw67rx3BljONKIWV.jpg",
+    "popularity": 2.9148,
+    "vote_count": 6,
+    "vote_average": 5.8
+  },
+  "A Night at Earl Carroll's|1940": {
+    "original_title": "A Night at Earl Carroll's",
+    "title_es": "A Night at Earl Carroll's",
+    "poster_path": "/vtNLVgZI0enDsR1ExsBr9YMj1D4.jpg",
+    "popularity": 0.1826,
+    "vote_count": 5,
+    "vote_average": 3.4
+  },
+  "The Way of All Flesh|1940": {
+    "original_title": "The Way of All Flesh",
+    "title_es": "The Way of All Flesh",
+    "poster_path": "/nR7aEYlQisENxeNcEXD6SIzf9da.jpg",
+    "popularity": 0.1994,
+    "vote_count": 7,
+    "vote_average": 4.1
+  },
+  "Those Were the Days!|1940": {
+    "original_title": "Those Were the Days!",
+    "title_es": "Those Were the Days!",
+    "poster_path": "/aWRhQU8fCYyhLTkosyZDx3v5SbM.jpg",
+    "popularity": 0.3363,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "Three Men from Texas|1940": {
+    "original_title": "Three Men from Texas",
+    "title_es": "Tres hombres de Texas",
+    "poster_path": "/9bZaB64zxgfoGUIHryreYSaxM1o.jpg",
+    "popularity": 0.1173,
+    "vote_count": 5,
+    "vote_average": 5.6
+  },
+  "Untamed|1940": {
+    "original_title": "Untamed",
+    "title_es": "Untamed",
+    "poster_path": "/7P7ykNMBxKX3vslMCB1LNKfpcCA.jpg",
+    "popularity": 0.3435,
+    "vote_count": 5,
+    "vote_average": 4.2
+  },
+  "Buy Me That Town|1941": {
+    "original_title": "Buy Me That Town",
+    "title_es": "Buy Me That Town",
+    "poster_path": "/e4urIvvS2904IYIUB8NfmUZGjtO.jpg",
+    "popularity": 1.495,
+    "vote_count": 2,
+    "vote_average": 6.0
+  },
+  "Glamour Boy|1941": {
+    "original_title": "Glamour Boy",
+    "title_es": "Glamour Boy",
+    "poster_path": "/zia70E5jbXuu5PQQ03W6lXnEA5r.jpg",
+    "popularity": 0.3563,
+    "vote_count": 1,
+    "vote_average": 6.0
+  },
+  "Reaching for the Sun|1941": {
+    "original_title": "Reaching for the Sun",
+    "title_es": "La ciudad que nunca duerme",
+    "poster_path": "/yxaaViFDLohVpXKjHeAviMHCNHk.jpg",
+    "popularity": 0.2155,
+    "vote_count": 2,
+    "vote_average": 6.0
+  },
+  "The Round Up|1941": {
+    "original_title": "Billy The Kid's Round-Up",
+    "title_es": "Billy The Kid's Round-Up",
+    "poster_path": "/567fW3ryvsPxgPqnCUV5hnRafBG.jpg",
+    "popularity": 0.3237,
+    "vote_count": 1,
+    "vote_average": 5.0
+  },
+  "Virginia|1941": {
+    "original_title": "Virginia",
+    "title_es": "Virginia",
+    "poster_path": "/5t6Hdd4FuQyAFrpnwoFiY3y5PV7.jpg",
+    "popularity": 0.162,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "World Premiere|1941": {
+    "original_title": "World Premiere",
+    "title_es": "World Premiere",
+    "poster_path": "/vn80cNrYbEkGIEH714l9g2pPZ5f.jpg",
+    "popularity": 0.126,
+    "vote_count": 1,
+    "vote_average": 5.0
+  },
+  "Beyond the Blue Horizon|1942": {
+    "original_title": "Beyond the Blue Horizon",
+    "title_es": "Horizontes salvajes",
+    "poster_path": "/sCthtguVPVAo7rpbMj76jkTfyC5.jpg",
+    "popularity": 0.137,
+    "vote_count": 2,
+    "vote_average": 5.5
+  },
+  "Mrs. Wiggs of the Cabbage Patch|1942": {
+    "original_title": "Mrs. Wiggs of the Cabbage Patch",
+    "title_es": "Mrs. Wiggs of the Cabbage Patch",
+    "poster_path": "/c0Hl1S4KCzjsJDbUSpB74YepZgI.jpg",
+    "popularity": 0.2694,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "Priorities on Parade|1942": {
+    "original_title": "Priorities on Parade",
+    "title_es": "Priorities on Parade",
+    "poster_path": "/k1cx7KAjf3Zves4UQSMQ4Iqipfl.jpg",
+    "popularity": 0.1514,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "Reap the Wild Wind|1942": {
+    "original_title": "Reap the Wild Wind",
+    "title_es": "Piratas del mar Caribe",
+    "poster_path": "/p4M6IuLEXRVlHQtr5ICSjstl0hD.jpg",
+    "popularity": 0.9051,
+    "vote_count": 58,
+    "vote_average": 6.388
+  },
+  "Buckskin Frontier|1943": {
+    "original_title": "Buckskin Frontier",
+    "title_es": "Buckskin Frontier",
+    "poster_path": "/kZZy2Iv72UxwYn26bwfhE6aOOjp.jpg",
+    "popularity": 0.2106,
+    "vote_count": 2,
+    "vote_average": 6.0
+  },
+  "Hostages|1943": {
+    "original_title": "Hostages",
+    "title_es": "Hostages",
+    "poster_path": "/fG9zEqRfjsPLVowLKuwLI1nvxL2.jpg",
+    "popularity": 5.4854,
+    "vote_count": 2,
+    "vote_average": 6.0
+  },
+  "Salute for Three|1943": {
+    "original_title": "Salute for Three",
+    "title_es": "Salute for Three",
+    "poster_path": "/xdgSuEYadsm7hHZrfD39dI06LRv.jpg",
+    "popularity": 0.1138,
+    "vote_count": 0,
+    "vote_average": 0.0
+  },
+  "True to Life|1943": {
+    "original_title": "True to Life",
+    "title_es": "True to Life",
+    "poster_path": "/ubdncpfmnXKSfeZlpUfvLyfg07R.jpg",
+    "popularity": 0.3336,
+    "vote_count": 3,
+    "vote_average": 7.0
+  },
+  "Young and Willing|1943": {
+    "original_title": "Young and Willing",
+    "title_es": "Juventud ambiciosa",
+    "poster_path": "/hDmqVrA8Kt3MSgcOw5VvS1BnqQ7.jpg",
+    "popularity": 2.6186,
+    "vote_count": 3,
+    "vote_average": 4.7
+  },
+  "Out of This World|1945": {
+    "original_title": "Out of This World",
+    "title_es": "Out of This World",
+    "poster_path": "/awsJKesXjIewHRRslRWcnLeQoJr.jpg",
+    "popularity": 3.7048,
+    "vote_count": 3,
+    "vote_average": 7.3
+  },
+  "Our Hearts Were Growing Up|1946": {
+    "original_title": "Our Hearts Were Growing Up",
+    "title_es": "Our Hearts Were Growing Up",
+    "poster_path": "/n2Jnbfhr4PW4cnURcnfMw6M5Yiv.jpg",
+    "popularity": 0.2555,
+    "vote_count": 2,
+    "vote_average": 6.2
+  },
+  "Golden Earrings|1947": {
+    "original_title": "Golden Earrings",
+    "title_es": "En las rayas de la mano",
+    "poster_path": "/sbzoquDpU6QRGlhpSUKeBbNoRHo.jpg",
+    "popularity": 0.4051,
+    "vote_count": 11,
+    "vote_average": 5.864
+  },
+  "Where There's Life|1947": {
+    "original_title": "Where There's Life",
+    "title_es": "Where There's Life",
+    "poster_path": "/jNhRuom8itoM6WJHjT5IVDYViO8.jpg",
+    "popularity": 2.4648,
+    "vote_count": 6,
+    "vote_average": 5.8
+  },
+  "Our Very Own|1950": {
+    "original_title": "Our Very Own",
+    "title_es": "Our Very Own",
+    "poster_path": "/pXbZVZVQUOLGtbLr2ezuDvJfX1B.jpg",
+    "popularity": 4.4741,
+    "vote_count": 12,
+    "vote_average": 5.417
+  },
+  "Honeychile|1951": {
+    "original_title": "Honeychile",
+    "title_es": "Honeychile",
+    "poster_path": "/8qVfFFEI6xLrxkNGGCpI4bkf6KG.jpg",
+    "popularity": 6.305,
+    "vote_count": 1,
+    "vote_average": 6.0
+  },
+  "The Wild Blue Yonder|1951": {
+    "original_title": "The Wild Blue Yonder",
+    "title_es": "The Wild Blue Yonder",
+    "poster_path": "/6FzIHNcuzwSc9fWBVOMXSxz0gM7.jpg",
+    "popularity": 0.2603,
+    "vote_count": 1,
+    "vote_average": 6.0
+  },
+  "A Perilous Journey|1953": {
+    "original_title": "A Perilous Journey",
+    "title_es": "A Perilous Journey",
+    "poster_path": "/qDNtkF8rUJ0duXEJThV7LvpPlbD.jpg",
+    "popularity": 0.168,
+    "vote_count": 5,
+    "vote_average": 3.8
+  },
+  "Flight Nurse|1953": {
+    "original_title": "Flight Nurse",
+    "title_es": "Flight Nurse",
+    "poster_path": "/4y48Qcijbd7pIpSVKbfSfmAPUD6.jpg",
+    "popularity": 0.263,
+    "vote_count": 2,
+    "vote_average": 5.5
+  },
+  "Jubilee Trail|1954": {
+    "original_title": "Jubilee Trail",
+    "title_es": "Extraña aventura",
+    "poster_path": "/caeLy4DPdQKrnlkEMOlgdGjJ2ko.jpg",
+    "popularity": 0.213,
+    "vote_count": 8,
+    "vote_average": 4.8
+  },
+  "Light's Diamond Jubilee|1954": {},
+  "Timberjack|1955": {
+    "original_title": "Timberjack",
+    "title_es": "Titanes de la montaña",
+    "poster_path": "/dN27rGr0Xre5vLladIhXRPf5eqU.jpg",
+    "popularity": 6.9545,
+    "vote_count": 5,
+    "vote_average": 3.2
   }
 }
