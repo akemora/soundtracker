@@ -335,6 +335,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
     imdb_rows = build_imdb_rows(args.imdb_db, args.min_credits)
+    logger.info("IMDb rows loaded: %d", len(imdb_rows))
     existing_rows = [] if args.skip_existing else parse_existing_master_list(args.existing_master)
     web_names = {}
     if args.use_web:
@@ -345,6 +346,7 @@ def main() -> None:
             use_gemini=args.use_gemini,
             gemini_max_urls=args.gemini_max_urls,
         )
+    logger.info("Web names harvested: %d", len(web_names))
     merged = merge_rows(
         imdb_rows,
         existing_rows,
