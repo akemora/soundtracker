@@ -165,6 +165,8 @@ def openai_generate_text(system_prompt: str, user_prompt: str, max_tokens: int =
             ],
             'max_output_tokens': max_tokens,
         }
+        if OPENAI_REASONING_EFFORT:
+            payload['reasoning'] = {'effort': OPENAI_REASONING_EFFORT}
         try:
             resp = requests.post(
                 OPENAI_RESPONSES_API,
@@ -279,10 +281,13 @@ if PPLX_DEEP_MODE not in {'web', 'academic', 'sec'}:
     PPLX_DEEP_MODE = 'web'
 PPLX_SEARCH_MAX_TOKENS = int(os.getenv('PPLX_SEARCH_MAX_TOKENS', '64'))
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.1-mini')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.1-codex-mini')
 OPENAI_API = os.getenv('OPENAI_API', 'https://api.openai.com/v1/chat/completions')
 OPENAI_RESPONSES_API = os.getenv('OPENAI_RESPONSES_API', 'https://api.openai.com/v1/responses')
 OPENAI_USE_RESPONSES = os.getenv('OPENAI_USE_RESPONSES', '1') == '1'
+OPENAI_REASONING_EFFORT = os.getenv('OPENAI_REASONING_EFFORT', 'medium').lower()
+if OPENAI_REASONING_EFFORT not in {'low', 'medium', 'high'}:
+    OPENAI_REASONING_EFFORT = 'medium'
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
 SOURCE_PACK_ENABLED = os.getenv('SOURCE_PACK_ENABLED', '1') == '1'
