@@ -14,12 +14,18 @@ from __future__ import annotations
 import argparse
 import logging
 import sqlite3
+import sys
 import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
-from soundtracker.config import settings
+BASE_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE_DIR / "src"))
+sys.path.insert(0, str(BASE_DIR / "scripts"))
+
+from soundtracker.config import settings  # noqa: E402
+from master_list_sources import DEFAULT_QUERIES, harvest_web_names  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -156,11 +162,20 @@ def build_imdb_rows(db_path: Path, min_credits: int) -> list[ComposerRow]:
     return rows
 
 
+def build_imdb_name_set(rows: list[ComposerRow]) -> set[str]:
+    return {normalize_name(row.name).lower() for row in rows if row.name}
+
+
 def merge_rows(
     imdb_rows: list[ComposerRow],
     existing_rows: list[ComposerRow],
+    web_names: dict[str, "WebName"],
+    min_sources: int,
+    allow_non_imdb: bool,
 ) -> list[ComposerRow]:
     merged: list[ComposerRow] = []
+
+    imdb_name_set = build_imdb_name_set(imdb_rows)
 
     existing_by_key: dict[tuple[str, Optional[int]], ComposerRow] = {}
     existing_by_name: dict[str, ComposerRow] = {}
@@ -174,6 +189,11 @@ def merge_rows(
     for row in imdb_rows:
         key = (normalize_name(row.name), row.birth_year)
         existing = existing_by_key.get(key) or existing_by_name.get(normalize_name(row.name))
+
+        web_key = normalize_name(row.name).lower()
+        web_entry = web_names.get(web_key)
+        if web_entry:
+            row.mediums.update(web_entry.mediums)
 
         if existing:
             if not row.birth_year:
@@ -196,6 +216,22 @@ def merge_rows(
             continue
         seen_keys.add(dedupe_key)
         merged.append(row)
+
+    if allow_non_imdb and web_names:
+        for key, entry in web_names.items():
+            if key in imdb_name_set:
+                continue
+            if len(entry.sources) < min_sources:
+                continue
+            merged.append(
+                ComposerRow(
+                    name=entry.name,
+                    birth_year=None,
+                    death_year=None,
+                    country="",
+                    mediums=set(entry.mediums),
+                )
+            )
 
     return merged
 
@@ -234,6 +270,12 @@ def main() -> None:
     parser.add_argument("--existing-master", type=Path, default=settings.output_dir / "composers_master_list.md")
     parser.add_argument("--output", type=Path, default=settings.output_dir / "composers_master_list.md")
     parser.add_argument("--min-credits", type=int, default=1)
+    parser.add_argument("--use-web", action="store_true", help="Use web sources to add names.")
+    parser.add_argument("--web-max-urls", type=int, default=60)
+    parser.add_argument("--web-max-urls-per-query", type=int, default=6)
+    parser.add_argument("--use-gemini", action="store_true")
+    parser.add_argument("--non-imdb-min-sources", type=int, default=1)
+    parser.add_argument("--allow-non-imdb", action="store_true")
     parser.add_argument("--skip-existing", action="store_true", help="Do not merge existing list data.")
 
     args = parser.parse_args()
@@ -241,7 +283,21 @@ def main() -> None:
 
     imdb_rows = build_imdb_rows(args.imdb_db, args.min_credits)
     existing_rows = [] if args.skip_existing else parse_existing_master_list(args.existing_master)
-    merged = merge_rows(imdb_rows, existing_rows)
+    web_names = {}
+    if args.use_web:
+        web_names = harvest_web_names(
+            DEFAULT_QUERIES,
+            max_urls_total=args.web_max_urls,
+            max_urls_per_query=args.web_max_urls_per_query,
+            use_gemini=args.use_gemini,
+        )
+    merged = merge_rows(
+        imdb_rows,
+        existing_rows,
+        web_names,
+        min_sources=args.non_imdb_min_sources,
+        allow_non_imdb=args.allow_non_imdb,
+    )
     write_markdown(merged, args.output)
 
 

@@ -815,6 +815,12 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.5.1 | Script global master list (IMDb base) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.5.2 | Orden alfabético + columna Medios | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.5.3 | Merge con master list existente (país/años) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.5.4 | Harvest masivo web (Perplexity/Gemini) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+
+### 8.6 Top 100 Compositores
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 8.6.1 | Script top 100 desde web sources | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[ ]` | |
 
 ---
 
