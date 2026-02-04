@@ -805,6 +805,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 8.4.3 | Integrar IMDb en filmografía | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.4.4 | Script para actualizar master list con IMDb | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.4.5 | Fix parser master list (columnas vacías) | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
+| 8.4.6 | Fix parser master list (valores no numéricos) | **GPT** | `gpt-5.1-codex-mini` | 🟢 | `[x]` | 2026-02-04 |
 
 ---
 

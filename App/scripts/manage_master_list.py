@@ -311,8 +311,8 @@ class MasterListManager:
         try:
             index = int(parts[0])
             name = parts[1]
-            birth_year = int(parts[2]) if len(parts) > 2 and parts[2] else None
-            death_year = int(parts[3]) if len(parts) > 3 and parts[3] else None
+            birth_year = self._parse_int(parts[2]) if len(parts) > 2 else None
+            death_year = self._parse_int(parts[3]) if len(parts) > 3 else None
             country = parts[4] if len(parts) > 4 else ""
 
             return ComposerEntry(
@@ -324,6 +324,16 @@ class MasterListManager:
             )
         except (ValueError, IndexError) as e:
             logger.warning(f"Error parseando fila: {line} - {e}")
+            return None
+
+    @staticmethod
+    def _parse_int(value: str) -> Optional[int]:
+        """Parse integer or return None if invalid."""
+        if not value:
+            return None
+        try:
+            return int(value)
+        except ValueError:
             return None
 
     def save(self, sort_by_index: bool = True) -> None:
