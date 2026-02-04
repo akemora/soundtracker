@@ -21,6 +21,7 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = BASE_DIR / 'outputs'
+INTERMEDIATE_DIR = BASE_DIR / 'intermediate_research'
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 PLACEHOLDER_IMAGE = 'https://example.com/placeholder.jpg'
@@ -90,6 +91,17 @@ EXTERNAL_DOMAINS = {
     'SoundtrackCollector': 'soundtrackcollector.com',
     'WhatSong': 'whatsong.org',
 }
+SOURCE_PACK_QUERIES = [
+    '{composer} compositor biografia',
+    '{composer} composer biography',
+    '{composer} entrevista compositor banda sonora',
+    '{composer} interview film composer',
+    '{composer} estilo musical orquestacion tecnica composicion',
+    '{composer} film score technique orchestration',
+    '{composer} premios y nominaciones banda sonora',
+    '{composer} awards nominations film music',
+    '{composer} legacy influence film music',
+]
 HEADERS = {'User-Agent': 'Soundtracker/1.0'}
 REQUEST_TIMEOUT = 10
 DEEP_RESEARCH_TIMEOUT = int(os.getenv('DEEP_RESEARCH_TIMEOUT', '60'))
@@ -107,6 +119,11 @@ OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.1-mini')
 OPENAI_API = os.getenv('OPENAI_API', 'https://api.openai.com/v1/chat/completions')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
+SOURCE_PACK_ENABLED = os.getenv('SOURCE_PACK_ENABLED', '1') == '1'
+SOURCE_PACK_REUSE = os.getenv('SOURCE_PACK_REUSE', '1') == '1'
+SOURCE_PACK_MAX_URLS = int(os.getenv('SOURCE_PACK_MAX_URLS', '18'))
+SOURCE_PACK_MAX_PARAGRAPHS = int(os.getenv('SOURCE_PACK_MAX_PARAGRAPHS', '6'))
+SOURCE_PACK_MAX_CHARS = int(os.getenv('SOURCE_PACK_MAX_CHARS', '24000'))
 DEEP_RESEARCH_ENABLED = os.getenv('DEEP_RESEARCH_ENABLED', '1') == '1'
 EXTERNAL_SNIPPET_MAX_CHARS = int(os.getenv('EXTERNAL_SNIPPET_MAX_CHARS', '700'))
 EXTERNAL_SNIPPET_SOURCES = int(os.getenv('EXTERNAL_SNIPPET_SOURCES', '12'))
@@ -582,6 +599,193 @@ def _build_research_outline(composer: str) -> str:
     return "\n\n".join(outlines)
 
 
+def _openai_source_profile(composer: str, pack_text: str, citations: List[str], outline: str) -> Optional[Dict]:
+    if not OPENAI_API_KEY:
+        return None
+    sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
+    red_tones_note = ''
+    if 'stothart' in composer.lower():
+        red_tones_note = (
+            'Incluye, si está documentado con fuentes fiables, la mención a la teoría de los '
+            '"tonos rojos" en su forma de pensar la música; si no hay fuentes claras, indícalo explícitamente. '
+        )
+    else:
+        red_tones_note = 'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
+    system_prompt = (
+        'Eres un investigador musical y divulgador. Responde SOLO con JSON válido. '
+        'Estructura: {"biography": {"text": "..."}, '
+        '"style": {"text": "..."}, "facts": {"text": "..."}}. '
+        'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
+        'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
+        'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta), '
+        'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
+        '(cronología, colaboraciones, obras clave). '
+        'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
+        'facts.text: 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
+        'excentricidades o rasgos humanos que lo hagan memorable. '
+        + red_tones_note +
+        'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
+        'Si hay incertidumbre, indícalo.'
+    )
+    user_prompt = (
+        f"Compositor: {composer}\n\n"
+        f"Fuentes (citas):\n{sources_text}\n\n"
+        f"Material:\n{pack_text}\n"
+    )
+    if outline:
+        user_prompt += f"\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
+    payload = {
+        'model': OPENAI_MODEL,
+        'messages': [
+            {'role': 'system', 'content': system_prompt},
+            {'role': 'user', 'content': user_prompt},
+        ],
+        'max_tokens': 3000,
+        'temperature': 0.2,
+    }
+    try:
+        resp = requests.post(
+            OPENAI_API,
+            headers={
+                'Authorization': f'Bearer {OPENAI_API_KEY}',
+                'Content-Type': 'application/json',
+            },
+            json=payload,
+            timeout=DEEP_RESEARCH_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        return None
+    choices = data.get('choices') or []
+    if not choices:
+        return None
+    content = (choices[0].get('message') or {}).get('content') or ''
+    return _safe_json_loads(content)
+
+
+def _gemini_source_profile(composer: str, pack_text: str, citations: List[str], outline: str) -> Optional[Dict]:
+    if not GEMINI_API_KEY:
+        return None
+    sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
+    red_tones_note = ''
+    if 'stothart' in composer.lower():
+        red_tones_note = (
+            'Incluye, si está documentado con fuentes fiables, la mención a la teoría de los '
+            '"tonos rojos" en su forma de pensar la música; si no hay fuentes claras, indícalo explícitamente. '
+        )
+    else:
+        red_tones_note = 'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
+    prompt = (
+        'Responde SOLO con JSON válido. '
+        'Estructura: {"biography": {"text": "..."}, '
+        '"style": {"text": "..."}, "facts": {"text": "..."}}. '
+        'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
+        'Texto en español, tono atractivo, pedagógico y ameno. '
+        'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta), '
+        'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente. '
+        'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
+        'facts.text: 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
+        'excentricidades o rasgos humanos que lo hagan memorable. '
+        + red_tones_note +
+        'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
+        'Si hay incertidumbre, indícalo.\n\n'
+        f'Compositor: {composer}\n\n'
+        f'Fuentes (citas):\n{sources_text}\n\n'
+        f'Material:\n{pack_text}\n'
+    )
+    if outline:
+        prompt += f"\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
+    payload = {
+        'contents': [
+            {'role': 'user', 'parts': [{'text': prompt}]},
+        ],
+        'generationConfig': {
+            'temperature': 0.2,
+            'maxOutputTokens': 3000,
+        },
+    }
+    try:
+        resp = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
+            params={'key': GEMINI_API_KEY},
+            json=payload,
+            timeout=DEEP_RESEARCH_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError):
+        return None
+    candidates = data.get('candidates') or []
+    if not candidates:
+        return None
+    parts = (candidates[0].get('content') or {}).get('parts') or []
+    text = ''.join(part.get('text', '') for part in parts)
+    return _safe_json_loads(text)
+
+
+def _merge_section(primary: str, secondary: str) -> str:
+    if not primary:
+        return secondary
+    if not secondary:
+        return primary
+    if len(secondary) > len(primary) * 1.2:
+        return secondary
+    if len(primary) > len(secondary) * 1.2:
+        return primary
+    return primary
+
+
+def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
+    if not (SOURCE_PACK_ENABLED and PPLX_API_KEY):
+        return None
+    pack = build_source_pack(composer)
+    if not pack:
+        return None
+    pack_text = pack.get('pack_text') or ''
+    citations = pack.get('citations') or []
+    if not pack_text or not citations:
+        return None
+    outline = _build_research_outline(composer)
+    openai_profile = _openai_source_profile(composer, pack_text, citations, outline)
+    gemini_profile = _gemini_source_profile(composer, pack_text, citations, outline)
+
+    def extract_text(profile: Optional[Dict], key: str) -> str:
+        if not profile:
+            return ''
+        section = profile.get(key)
+        if isinstance(section, dict):
+            return section.get('text') or ''
+        if isinstance(section, str):
+            return section
+        return ''
+
+    biography = _merge_section(
+        extract_text(openai_profile, 'biography'),
+        extract_text(gemini_profile, 'biography'),
+    )
+    style = _merge_section(
+        extract_text(openai_profile, 'style'),
+        extract_text(gemini_profile, 'style'),
+    )
+    facts = _merge_section(
+        extract_text(openai_profile, 'facts'),
+        extract_text(gemini_profile, 'facts'),
+    )
+
+    biography = _normalize_citations_text(biography, citations)
+    style = _normalize_citations_text(style, citations)
+    facts = _normalize_citations_text(facts, citations)
+    if not (biography or style or facts):
+        return None
+    return {
+        'biography': biography.strip(),
+        'style': style.strip(),
+        'facts': facts.strip(),
+        'citations': citations,
+    }
+
+
 def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
     if not (DEEP_RESEARCH_ENABLED and PPLX_API_KEY):
         return None
@@ -722,6 +926,82 @@ def extract_paragraphs_from_soup(soup: BeautifulSoup, max_paragraphs: int = 4) -
         if len(paragraphs) >= max_paragraphs:
             break
     return paragraphs
+
+
+def collect_source_urls(composer: str) -> List[str]:
+    if not (SOURCE_PACK_ENABLED and PPLX_API_KEY):
+        return []
+    urls: List[str] = []
+    for template in SOURCE_PACK_QUERIES:
+        query = template.format(composer=composer)
+        for url in search_perplexity(query, num=6):
+            if url in urls:
+                continue
+            netloc = urlparse(url).netloc.lower()
+            if netloc in BLOCKED_DOMAINS:
+                continue
+            if url.lower().endswith(('.pdf', '.ppt', '.pptx', '.doc', '.docx')):
+                continue
+            urls.append(url)
+            if len(urls) >= SOURCE_PACK_MAX_URLS:
+                return urls
+    return urls
+
+
+def extract_source_text(url: str) -> str:
+    html = fetch_url_text(url)
+    if not html:
+        return ''
+    soup = BeautifulSoup(html, 'html.parser')
+    for tag in soup(['script', 'style', 'noscript', 'svg']):
+        tag.decompose()
+    main = soup.find('article') or soup.find('main') or soup.body or soup
+    paragraphs = extract_paragraphs_from_soup(main, max_paragraphs=SOURCE_PACK_MAX_PARAGRAPHS)
+    return '\n'.join(paragraphs)
+
+
+def build_source_pack(composer: str) -> Optional[Dict[str, object]]:
+    if not (SOURCE_PACK_ENABLED and PPLX_API_KEY):
+        return None
+    slug = slugify(composer)
+    base_dir = INTERMEDIATE_DIR / slug
+    sources_dir = base_dir / 'sources'
+    pack_file = base_dir / 'source_pack.txt'
+    meta_file = base_dir / 'source_pack.json'
+
+    if SOURCE_PACK_REUSE and pack_file.exists() and meta_file.exists():
+        try:
+            meta = json.loads(meta_file.read_text(encoding='utf-8'))
+            citations = meta.get('citations') or []
+            pack_text = pack_file.read_text(encoding='utf-8')
+            if citations and pack_text:
+                return {'pack_text': pack_text, 'citations': citations}
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    urls = collect_source_urls(composer)
+    if not urls:
+        return None
+    sources_dir.mkdir(parents=True, exist_ok=True)
+    pack_parts: List[str] = []
+    citations: List[str] = []
+    for idx, url in enumerate(urls, 1):
+        text = extract_source_text(url)
+        if len(text) < 200:
+            continue
+        citations.append(url)
+        source_path = sources_dir / f"source_{idx:02}.txt"
+        source_path.write_text(f"URL: {url}\n\n{text}\n", encoding='utf-8')
+        pack_parts.append(f"[{len(citations)}] {url}\n{text}\n")
+        if sum(len(part) for part in pack_parts) >= SOURCE_PACK_MAX_CHARS:
+            break
+    if not citations:
+        return None
+    pack_text = '\n\n'.join(pack_parts).strip()
+    base_dir.mkdir(parents=True, exist_ok=True)
+    pack_file.write_text(pack_text, encoding='utf-8')
+    meta_file.write_text(json.dumps({'citations': citations}, ensure_ascii=False, indent=2), encoding='utf-8')
+    return {'pack_text': pack_text, 'citations': citations}
 
 
 def should_translate(text: str) -> bool:
@@ -2117,7 +2397,9 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
     deep_bio = False
     deep_style = False
     deep_facts = False
-    deep_profile = get_deep_research_profile(composer)
+    deep_profile = get_source_pack_profile(composer)
+    if not deep_profile:
+        deep_profile = get_deep_research_profile(composer)
     if deep_profile:
         if deep_profile.get('biography'):
             info['biography'] = deep_profile['biography']
