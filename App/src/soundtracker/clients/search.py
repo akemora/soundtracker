@@ -1,14 +1,14 @@
 """Web search client with fallback chain.
 
 Provides unified web search interface with multiple providers:
-Perplexity API, Google Search, and DuckDuckGo.
+Perplexity API and Google Search.
 """
 
 import logging
 import re
 import time
 from typing import Optional
-from urllib.parse import parse_qs, quote_plus, unquote, urlparse
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
@@ -24,18 +24,11 @@ class SearchClient(BaseClient):
     Tries multiple search providers in order:
     1. Perplexity API (if API key available)
     2. Google Search (via googlesearch-python)
-    3. DuckDuckGo HTML scraping
 
     Example:
         client = SearchClient()
         urls = client.search("John Williams best soundtracks", num=5)
     """
-
-    DUCKDUCKGO_ENDPOINTS = [
-        "https://duckduckgo.com/html/?q=",
-        "https://html.duckduckgo.com/html/?q=",
-        "https://lite.duckduckgo.com/lite/?q=",
-    ]
 
     def __init__(
         self,
@@ -98,8 +91,7 @@ class SearchClient(BaseClient):
         if urls:
             return urls
 
-        # Fall back to DuckDuckGo
-        return self._search_duckduckgo(query, num)
+        return []
 
     def _search_perplexity(self, query: str, num: int = 5) -> list[str]:
         """Search using Perplexity API.
@@ -197,57 +189,6 @@ class SearchClient(BaseClient):
             logger.debug("Google search failed: %s", e)
             return []
 
-    def _search_duckduckgo(self, query: str, num: int = 5) -> list[str]:
-        """Search using DuckDuckGo HTML scraping.
-
-        Args:
-            query: Search query.
-            num: Maximum results.
-
-        Returns:
-            List of URLs.
-        """
-        for base_url in self.DUCKDUCKGO_ENDPOINTS:
-            url = f"{base_url}{quote_plus(query)}"
-
-            try:
-                response = self.session.get(url, timeout=self.timeout)
-                if not response.ok:
-                    continue
-                html = response.text
-            except Exception:
-                continue
-
-            if not html:
-                continue
-
-            soup = BeautifulSoup(html, "html.parser")
-            results: list[str] = []
-
-            anchors = soup.select("a.result__a") or soup.find_all("a")
-            for a in anchors:
-                href = a.get("href")
-                if not href or not href.startswith("http"):
-                    continue
-
-                # Handle DuckDuckGo redirects
-                parsed = urlparse(href)
-                if parsed.netloc.endswith("duckduckgo.com") and parsed.path == "/l/":
-                    params = parse_qs(parsed.query)
-                    redirect = params.get("uddg", [])
-                    if redirect:
-                        href = unquote(redirect[0])
-
-                if href not in results:
-                    results.append(href)
-
-                if len(results) >= num:
-                    break
-
-            if results:
-                return results
-
-        return []
 
     def fetch_url_text(
         self,
