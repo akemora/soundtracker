@@ -101,7 +101,7 @@ EXTERNAL_DOMAINS = {
     'AllMusic': 'allmusic.com',
     'Discogs': 'discogs.com',
     'MusicBrainz': 'musicbrainz.org',
-    'Metacritic': 'metacritic.com',
+    'Metacritic': 'https://www.metacritic.com/browse/albums/genre/date/soundtrack',
     'Soundtrack.net': 'soundtrack.net',
     'OSTNews': 'ostnews.com',
     'VGMdb': 'vgmdb.net',
@@ -2340,15 +2340,19 @@ def get_detailed_awards(composer: str) -> List[Dict]:
 def get_external_sources(composer: str) -> List[Dict[str, str]]:
     info: List[Dict[str, str]] = []
     for name, domain in EXTERNAL_DOMAINS.items():
+        base_url = domain
+        if base_url.startswith("http"):
+            parsed = urlparse(base_url)
+            domain = parsed.netloc
         results = search_web(f"site:{domain} {composer}", num=EXTERNAL_DOMAIN_RESULTS)
         if not results:
-            results = [f"https://{domain}"]
+            results = [base_url if base_url.startswith("http") else f"https://{domain}"]
         for idx, url in enumerate(results, start=1):
             if not url:
                 continue
             netloc = urlparse(url).netloc.lower()
             if domain not in netloc:
-                url = f"https://{domain}"
+                url = base_url if base_url.startswith("http") else f"https://{domain}"
             label = name if idx == 1 else f"{name} ({idx})"
             info.append({'name': label, 'url': url, 'snippet': f"site:{domain}"})
     return info
