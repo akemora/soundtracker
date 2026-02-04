@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import logging
 import re
+import csv
 import sqlite3
 import sys
 from pathlib import Path
@@ -116,6 +117,32 @@ def build_imdb_person_checker(db_path: Path):
     return conn, is_person
 
 
+def load_seed_names(csv_path: Path) -> list[str]:
+    if not csv_path.exists():
+        return []
+    names: list[str] = []
+    with csv_path.open(encoding="utf-8") as handle:
+        reader = csv.reader(handle)
+        rows = list(reader)
+    if not rows:
+        return []
+    header = rows[0]
+    name_idx = None
+    for idx, col in enumerate(header):
+        if "compositor" in col.lower():
+            name_idx = idx
+            break
+    if name_idx is None:
+        return []
+    for row in rows[1:]:
+        if len(row) <= name_idx:
+            continue
+        name = row[name_idx].strip()
+        if name:
+            names.append(name)
+    return names
+
+
 def load_master_names(path: Path) -> dict[str, str]:
     names: dict[str, str] = {}
     if not path.exists():
@@ -163,9 +190,15 @@ def main() -> None:
     parser.add_argument("--web-max-urls", type=int, default=60)
     parser.add_argument("--web-max-urls-per-query", type=int, default=6)
     parser.add_argument("--gemini-max-urls", type=int, default=12)
-    parser.add_argument("--min-sources", type=int, default=1)
+    parser.add_argument("--min-sources", type=int, default=2)
     parser.add_argument("--imdb-db", type=Path, default=settings.imdb_db_path)
     parser.add_argument("--require-imdb-person", action="store_true", default=True)
+    parser.add_argument(
+        "--seed-csv",
+        type=Path,
+        default=BASE_DIR / "intermediate_research" / "investigacion_bso_100_compositores_verificacion_bloque_25_4_FINAL.csv",
+    )
+    parser.add_argument("--fill-with-seed", action="store_true", default=True)
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -188,6 +221,10 @@ def main() -> None:
     if args.require_imdb_person:
         imdb_conn, imdb_checker = build_imdb_person_checker(args.imdb_db)
 
+    seed_names = load_seed_names(args.seed_csv)
+    seed_keys = {normalize_name(name).lower() for name in seed_names}
+    seed_lookup = {normalize_name(name).lower(): name for name in seed_names}
+
     counts: dict[str, int] = {}
     for key, entry in web_names.items():
         if len(entry.sources) < args.min_sources:
@@ -200,13 +237,40 @@ def main() -> None:
             continue
         if key not in master_names:
             continue
+        if seed_names and key not in seed_keys:
+            continue
         counts[master_names[key]] = max(counts.get(master_names[key], 0), len(entry.sources))
 
     if imdb_conn:
         imdb_conn.close()
 
-    ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
-    top100 = ranked[:100]
+    if seed_names:
+        ranked = []
+        for seed in seed_names:
+            key = normalize_name(seed).lower()
+            if key not in master_names:
+                continue
+            name = master_names[key]
+            ranked.append((name, counts.get(name, 0)))
+        ranked = sorted(ranked, key=lambda item: (-item[1], item[0]))
+        top100: list[tuple[str, int]] = ranked[:100]
+    else:
+        ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+        top100 = ranked[:100]
+
+        if args.fill_with_seed and len(top100) < 100:
+            seen = {name for name, _ in top100}
+            for seed in seed_names:
+                key = normalize_name(seed).lower()
+                if key not in master_names:
+                    continue
+                name = master_names[key]
+                if name in seen:
+                    continue
+                top100.append((name, args.min_sources - 1))
+                seen.add(name)
+                if len(top100) >= 100:
+                    break
     write_top100(top100, args.output)
 
 

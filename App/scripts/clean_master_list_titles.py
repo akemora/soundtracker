@@ -225,11 +225,11 @@ def main() -> None:
         if len(row) <= 1:
             continue
         name = row[1]
-        if name in title_matches:
-            removed += 1
-            continue
         if name in people_matches:
             filtered.append(row)
+            continue
+        if name in title_matches:
+            removed += 1
             continue
         if not is_person_name(name):
             removed += 1
