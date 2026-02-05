@@ -18,6 +18,8 @@ venv/
 
 # Project outputs
 App/intermediate_research/
+Music Crawler/downloads/
+Music Crawler/.crawl_cache.json
 
 # Cache
 *.sqlite
