@@ -102,7 +102,7 @@ FASE 5 (Tests + CI)
 | 1.2.6 | Implementar método `is_expired(entry)` que compara timestamp | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.2.7 | Implementar método `get(query)` que respeta TTL | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 1.2.8 | Implementar método `set(query, status, path, url)` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 1.2.9 | Añadir flag `--refresh` al CLI que ignora cache | L | Claude | haiku | 🔴 | `[ ]` | |
+| 1.2.9 | Añadir flag `--refresh` al CLI que ignora cache | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.2.10 | Migrar `load_cache`/`save_cache` de `cli/crawl.py` a usar `CacheManager` | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 1.2.11 | Eliminar código legacy de cache en `cli/crawl.py` | L | Claude | haiku | 🟡 | `[ ]` | |
 

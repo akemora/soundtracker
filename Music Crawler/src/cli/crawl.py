@@ -167,6 +167,11 @@ Examples:
         help="Ignore cache and re-search all tracks",
     )
     parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Ignore cache and re-search all tracks",
+    )
+    parser.add_argument(
         "--sources",
         type=str,
         help="Comma-separated list of sources to use (e.g., youtube,deezer,spotify)",
@@ -228,7 +233,8 @@ Examples:
 
     # Load cache
     cache_path = args.output / ".crawl_cache.json"
-    cache = load_cache(cache_path) if not args.no_cache else {}
+    skip_cache = args.no_cache or args.refresh
+    cache = load_cache(cache_path) if not skip_cache else {}
 
     # Setup searchers and downloader
     free_searchers, paid_searchers = get_searchers(args.sources, args.fast)
