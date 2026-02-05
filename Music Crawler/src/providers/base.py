@@ -12,3 +12,8 @@ class SearchProvider(ABC):
     ) -> list[str]:
         """Search and return list of URLs."""
         pass
+
+    @abstractmethod
+    def get_rate_limit(self) -> float:
+        """Return seconds to wait between requests."""
+        pass
