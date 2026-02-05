@@ -14,6 +14,9 @@ from src.core.logger import configure_logging, get_logger
 from src.downloaders.ytdlp import YtDlpDownloader
 from src.models.track import CrawlResult, SearchResult, Track
 from src.parsers.track_list import parse_single_track, parse_track_list
+from src.providers.base import SearchProvider
+from src.providers.chrome import ChromeProvider
+from src.providers.perplexity import PerplexityProvider
 from src.report.generator import ReportGenerator
 
 # Free source searchers
@@ -59,6 +62,15 @@ ALL_SOURCES = {
 }
 
 
+def _build_web_provider() -> SearchProvider:
+    provider = PerplexityProvider()
+    if provider.api_key:
+        logger.info("Using Perplexity provider for web search")
+        return provider
+    logger.warning("PPLX_API_KEY not set; using Chrome provider")
+    return ChromeProvider()
+
+
 def get_searchers(sources_filter: str | None, fast_mode: bool) -> tuple[list, list]:
     """Get searchers based on filters."""
     if sources_filter:
@@ -71,6 +83,7 @@ def get_searchers(sources_filter: str | None, fast_mode: bool) -> tuple[list, li
 
     free_searchers = []
     paid_searchers = []
+    web_provider = _build_web_provider()
 
     for name in selected:
         if name not in ALL_SOURCES:
@@ -78,7 +91,10 @@ def get_searchers(sources_filter: str | None, fast_mode: bool) -> tuple[list, li
             continue
         info = ALL_SOURCES[name]
         max_results = 3 if name == "youtube" else 2
-        searcher = info["class"](max_results=max_results)
+        try:
+            searcher = info["class"](provider=web_provider, max_results=max_results)
+        except TypeError:
+            searcher = info["class"](max_results=max_results)
         if info["free"]:
             free_searchers.append(searcher)
         else:
