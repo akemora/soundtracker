@@ -1,9 +1,14 @@
 """Spotify searcher (search only, no download)."""
 
+import requests
+
+from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.providers.base import SearchProvider
-from src.providers.duckduckgo import DuckDuckGoProvider
+from src.providers.chrome import ChromeProvider
 from src.searchers.base import BaseSearcher
+
+logger = get_logger(__name__)
 
 
 class SpotifySearcher(BaseSearcher):
@@ -13,7 +18,7 @@ class SpotifySearcher(BaseSearcher):
     is_free = False  # Paid service
 
     def __init__(self, provider: SearchProvider | None = None, max_results: int = 3):
-        self.provider = provider or DuckDuckGoProvider()
+        self.provider = provider or ChromeProvider()
         self.max_results = max_results
 
     def search(self, track: Track) -> list[SearchResult]:

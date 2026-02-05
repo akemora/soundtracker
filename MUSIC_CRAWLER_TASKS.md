@@ -216,17 +216,17 @@ class SearchProvider(ABC):
 
 ---
 
-### 2.3 DuckDuckGoProvider (Fallback)
+### 2.3 ChromeProvider (Fallback)
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 2.3.1 | Crear `src/providers/duckduckgo.py` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
-| 2.3.2 | Extraer lógica de scraping DDG de searchers existentes | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
-| 2.3.3 | Implementar `DuckDuckGoProvider(SearchProvider)` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
-| 2.3.4 | Rate limit: 2.0 segundos (scraping requiere más cuidado) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 2.3.5 | Añadir `logger.warning("Using DuckDuckGo fallback...")` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 2.3.6 | Manejo de errores: HTML cambiado, blocked, timeout | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
-| 2.3.7 | Crear test con mock de HTML response | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
+| 2.3.1 | Crear `src/providers/chrome.py` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
+| 2.3.2 | Implementar `ChromeProvider(SearchProvider)` con Chrome headless | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
+| 2.3.3 | Parsear DOM y extraer URLs de resultados | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
+| 2.3.4 | Rate limit: 2.0 segundos (Chrome necesita pausa) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 2.3.5 | Log warning si no hay Chrome instalado | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 2.3.6 | Manejo de errores: timeout, HTML inesperado | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
+| 2.3.7 | Crear test con mock de HTML response (Chrome) | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 

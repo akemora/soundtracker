@@ -6,7 +6,7 @@ from src.core.config import settings
 from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.providers.base import SearchProvider
-from src.providers.duckduckgo import DuckDuckGoProvider
+from src.providers.chrome import ChromeProvider
 from src.searchers.base import BaseSearcher
 
 logger = get_logger(__name__)
@@ -23,7 +23,7 @@ class JamendoSearcher(BaseSearcher):
         self.max_results = max_results
         # Try to get client ID from environment
         self.client_id = settings.jamendo_client_id
-        self.provider: SearchProvider = provider or DuckDuckGoProvider()
+        self.provider: SearchProvider = provider or ChromeProvider()
 
     def search(self, track: Track) -> list[SearchResult]:
         """Search Jamendo - tries API first, falls back to web search."""

@@ -2,7 +2,7 @@
 
 from src.models.track import SearchResult, Track
 from src.providers.base import SearchProvider
-from src.providers.duckduckgo import DuckDuckGoProvider
+from src.providers.chrome import ChromeProvider
 from src.searchers.base import BaseSearcher
 
 
@@ -13,7 +13,7 @@ class FreeMusiceArchiveSearcher(BaseSearcher):
     is_free = True  # Creative Commons licensed
 
     def __init__(self, provider: SearchProvider | None = None, max_results: int = 3):
-        self.provider = provider or DuckDuckGoProvider()
+        self.provider = provider or ChromeProvider()
         self.max_results = max_results
 
     def search(self, track: Track) -> list[SearchResult]:
