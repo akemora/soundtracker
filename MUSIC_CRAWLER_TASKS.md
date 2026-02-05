@@ -467,11 +467,11 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.5.1 | Crear `App/scripts/etl_playlist.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.5.2 | Leer `playlist.json` de directorio de compositor | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.5.3 | UPSERT en tabla `composer_playlists` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.5.4 | DELETE + INSERT en tabla `playlist_tracks` (reemplazar todos) | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.5.5 | Integrar en `music_crawler_batch.py` | L | Claude | haiku | 🔴 | `[ ]` | |
+| 4.5.1 | Crear `App/scripts/etl_playlist.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.5.2 | Leer `playlist.json` de directorio de compositor | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.5.3 | UPSERT en tabla `composer_playlists` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.5.4 | DELETE + INSERT en tabla `playlist_tracks` (reemplazar todos) | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.5.5 | Integrar en `music_crawler_batch.py` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 
 ---
 

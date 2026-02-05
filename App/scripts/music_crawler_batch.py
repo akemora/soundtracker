@@ -154,6 +154,35 @@ def run_music_crawler(
     return result
 
 
+def run_playlist_generator(
+    composer_slug: str,
+    output_dir: Path,
+    env: dict[str, str],
+    db_path: Path,
+) -> subprocess.CompletedProcess[str]:
+    """Run Music Crawler playlist generator via subprocess."""
+    cmd = [
+        "python",
+        "-m",
+        "src.cli.crawl",
+        "playlist",
+        "--composer",
+        composer_slug,
+        "--db-path",
+        str(db_path),
+        "--output",
+        str(output_dir),
+    ]
+    result = subprocess.run(
+        cmd,
+        cwd=MUSIC_CRAWLER_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    return result
+
+
 def build_subprocess_env() -> dict[str, str]:
     """Build environment for Music Crawler subprocess."""
     env = os.environ.copy()
@@ -328,49 +357,87 @@ def main() -> None:
                     logger.warning("No Top 10 films for composer: %s", slug)
                     continue
 
-                track_list_path = write_track_list(rows)
                 output_dir = build_output_dir(slug)
-                try:
-                    result = run_music_crawler(
-                        track_list_path=track_list_path,
-                        output_dir=output_dir,
-                        composer_name=composer_name,
-                        env=env,
-                        search_only=args.playlist_only,
-                        refresh=args.force,
+
+                if not args.playlist_only:
+                    track_list_path = write_track_list(rows)
+                    try:
+                        result = run_music_crawler(
+                            track_list_path=track_list_path,
+                            output_dir=output_dir,
+                            composer_name=composer_name,
+                            env=env,
+                            search_only=False,
+                            refresh=args.force,
+                        )
+                    finally:
+                        track_list_path.unlink(missing_ok=True)
+
+                    if result.stdout:
+                        logger.info("Music Crawler stdout: %s", result.stdout)
+                    if result.stderr:
+                        logger.warning("Music Crawler stderr: %s", result.stderr)
+                    if result.returncode != 0:
+                        raise RuntimeError(f"Music Crawler failed for {slug}")
+
+                    results_path = output_dir / "results.json"
+                    if not results_path.exists():
+                        raise RuntimeError(f"Missing results.json for {slug}")
+
+                    etl_cmd = [
+                        "python",
+                        str(APP_ROOT / "scripts" / "etl_music.py"),
+                        str(results_path),
+                        "--db",
+                        str(DB_PATH),
+                    ]
+                    etl_result = subprocess.run(
+                        etl_cmd,
+                        capture_output=True,
+                        text=True,
                     )
-                finally:
-                    track_list_path.unlink(missing_ok=True)
+                    if etl_result.stdout:
+                        logger.info("ETL stdout: %s", etl_result.stdout)
+                    if etl_result.stderr:
+                        logger.warning("ETL stderr: %s", etl_result.stderr)
+                    if etl_result.returncode != 0:
+                        raise RuntimeError(f"ETL failed for {slug}")
 
-                if result.stdout:
-                    logger.info("Music Crawler stdout: %s", result.stdout)
-                if result.stderr:
-                    logger.warning("Music Crawler stderr: %s", result.stderr)
-                if result.returncode != 0:
-                    raise RuntimeError(f"Music Crawler failed for {slug}")
+                playlist_result = run_playlist_generator(
+                    composer_slug=slug,
+                    output_dir=output_dir,
+                    env=env,
+                    db_path=DB_PATH,
+                )
+                if playlist_result.stdout:
+                    logger.info("Playlist stdout: %s", playlist_result.stdout)
+                if playlist_result.stderr:
+                    logger.warning("Playlist stderr: %s", playlist_result.stderr)
+                if playlist_result.returncode != 0:
+                    raise RuntimeError(f"Playlist generation failed for {slug}")
 
-                results_path = output_dir / "results.json"
-                if not results_path.exists():
-                    raise RuntimeError(f"Missing results.json for {slug}")
+                playlist_path = output_dir / "playlist.json"
+                if not playlist_path.exists():
+                    raise RuntimeError(f"Missing playlist.json for {slug}")
 
-                etl_cmd = [
+                playlist_etl_cmd = [
                     "python",
-                    str(APP_ROOT / "scripts" / "etl_music.py"),
-                    str(results_path),
+                    str(APP_ROOT / "scripts" / "etl_playlist.py"),
+                    str(playlist_path),
                     "--db",
                     str(DB_PATH),
                 ]
-                etl_result = subprocess.run(
-                    etl_cmd,
+                playlist_etl_result = subprocess.run(
+                    playlist_etl_cmd,
                     capture_output=True,
                     text=True,
                 )
-                if etl_result.stdout:
-                    logger.info("ETL stdout: %s", etl_result.stdout)
-                if etl_result.stderr:
-                    logger.warning("ETL stderr: %s", etl_result.stderr)
-                if etl_result.returncode != 0:
-                    raise RuntimeError(f"ETL failed for {slug}")
+                if playlist_etl_result.stdout:
+                    logger.info("Playlist ETL stdout: %s", playlist_etl_result.stdout)
+                if playlist_etl_result.stderr:
+                    logger.warning("Playlist ETL stderr: %s", playlist_etl_result.stderr)
+                if playlist_etl_result.returncode != 0:
+                    raise RuntimeError(f"Playlist ETL failed for {slug}")
 
                 if args.commit:
                     commit_outputs(output_dir, slug)
