@@ -142,6 +142,8 @@ out/
 .nuxt/
 .cache/
 *.tsbuildinfo
+!frontend/src/lib/
+!frontend/src/lib/**
 
 # -----------------------------------------------------------------------------
 # Docker

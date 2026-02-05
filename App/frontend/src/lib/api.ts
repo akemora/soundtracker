@@ -9,6 +9,7 @@ import type {
   FilmListResponse,
   AwardListResponse,
   SearchResponse,
+  PlaylistResponse,
 } from "./types";
 
 // Server-side uses Docker network name, client-side uses localhost
@@ -106,6 +107,13 @@ export async function getFilmography(
  */
 export async function getAwards(slug: string): Promise<AwardListResponse> {
   return fetcher<AwardListResponse>(`/api/composers/${slug}/awards`);
+}
+
+/**
+ * Get composer playlist.
+ */
+export async function getPlaylist(slug: string): Promise<PlaylistResponse> {
+  return fetcher<PlaylistResponse>(`/api/composers/${slug}/playlist`);
 }
 
 /**

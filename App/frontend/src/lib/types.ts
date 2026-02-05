@@ -137,3 +137,41 @@ export interface SearchResponse {
   results: SearchResult[];
   count: number;
 }
+
+// Playlist types
+export interface PlaylistTrack {
+  position: number;
+  film: string;
+  film_year: number | null;
+  track_title: string;
+  is_original_pick: boolean;
+  source: string;
+  url: string;
+  embed_url: string | null;
+  is_free: boolean;
+  duration: string | null;
+  thumbnail: string | null;
+  fallback_reason?: string;
+  alternatives: Array<{
+    source: string;
+    url: string;
+    is_free: boolean;
+    title?: string;
+  }>;
+  purchase_links?: Array<{
+    source: string;
+    url: string;
+    price?: string | null;
+  }>;
+}
+
+export interface PlaylistResponse {
+  composer_slug: string;
+  composer_name: string;
+  generated_at: string;
+  updated_at: string;
+  total_tracks: number;
+  free_count: number;
+  paid_count: number;
+  tracks: PlaylistTrack[];
+}

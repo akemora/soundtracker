@@ -492,17 +492,17 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.7.1 | Crear `App/frontend/src/components/PlaylistPlayer.tsx` | H | Claude | opus | 🔴 | `[ ]` | |
-| 4.7.2 | Definir interfaces TypeScript para `PlaylistTrack`, `Playlist` | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.7.3 | Implementar estado: `currentTrack`, `isPlaying` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.7.4 | Implementar embed iframe para YouTube | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.7.5 | Implementar embed iframe para SoundCloud | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.7.6 | Implementar fallback UI para paid tracks (purchase links) | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.7.7 | Implementar lista de tracks con onClick navigation | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.7.8 | Añadir indicador visual para track activo | L | Claude | haiku | 🟡 | `[ ]` | |
-| 4.7.9 | Añadir badge para tracks de pago ($) | L | Claude | haiku | 🟡 | `[ ]` | |
-| 4.7.10 | Añadir thumbnails desde YouTube API | M | Claude | sonnet | 🟢 | `[ ]` | |
-| 4.7.11 | Estilos Tailwind responsive | M | Claude | sonnet | 🟡 | `[ ]` | |
+| 4.7.1 | Crear `App/frontend/src/components/PlaylistPlayer.tsx` | H | Claude | opus | 🔴 | `[x]` | 2026-02-05 |
+| 4.7.2 | Definir interfaces TypeScript para `PlaylistTrack`, `Playlist` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.7.3 | Implementar estado: `currentTrack`, `isPlaying` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.7.4 | Implementar embed iframe para YouTube | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.7.5 | Implementar embed iframe para SoundCloud | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.7.6 | Implementar fallback UI para paid tracks (purchase links) | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.7.7 | Implementar lista de tracks con onClick navigation | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.7.8 | Añadir indicador visual para track activo | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 4.7.9 | Añadir badge para tracks de pago ($) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 4.7.10 | Añadir thumbnails desde YouTube API | M | Claude | sonnet | 🟢 | `[x]` | 2026-02-05 |
+| 4.7.11 | Estilos Tailwind responsive | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -510,11 +510,11 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.8.1 | Crear `App/frontend/src/app/composers/[slug]/playlist/page.tsx` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.8.2 | Implementar fetch de playlist desde API | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.8.3 | Renderizar `<PlaylistPlayer />` con datos | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.8.4 | Manejar estado loading y error | L | Claude | haiku | 🟡 | `[ ]` | |
-| 4.8.5 | Añadir metadata SEO (title, description) | L | Claude | haiku | 🟢 | `[ ]` | |
+| 4.8.1 | Crear `App/frontend/src/app/composers/[slug]/playlist/page.tsx` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.8.2 | Implementar fetch de playlist desde API | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.8.3 | Renderizar `<PlaylistPlayer />` con datos | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.8.4 | Manejar estado loading y error | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 4.8.5 | Añadir metadata SEO (title, description) | L | Claude | haiku | 🟢 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -522,12 +522,12 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.9.1 | Modificar `App/frontend/src/app/composers/[slug]/page.tsx` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.9.2 | Añadir fetch de playlist en getServerSideProps/fetch | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.9.3 | Añadir sección "🎵 Escucha sus mejores temas" | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.9.4 | Renderizar `<PlaylistPlayer />` inline | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.9.5 | Añadir stats: "X tracks gratuitos, Y de pago" | L | Claude | haiku | 🟡 | `[ ]` | |
-| 4.9.6 | Añadir link a página standalone `/playlist` | L | Claude | haiku | 🟢 | `[ ]` | |
+| 4.9.1 | Modificar `App/frontend/src/app/composers/[slug]/page.tsx` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.9.2 | Añadir fetch de playlist en getServerSideProps/fetch | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.9.3 | Añadir sección "🎵 Escucha sus mejores temas" | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.9.4 | Renderizar `<PlaylistPlayer />` inline | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.9.5 | Añadir stats: "X tracks gratuitos, Y de pago" | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 4.9.6 | Añadir link a página standalone `/playlist` | L | Claude | haiku | 🟢 | `[x]` | 2026-02-05 |
 
 **Checkpoint Fase 4**: `[ ]` Completada
 
