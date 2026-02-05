@@ -3,6 +3,17 @@
 from __future__ import annotations
 
 import argparse
+import sqlite3
+from pathlib import Path
+
+
+APP_ROOT = Path(__file__).resolve().parents[1]
+DB_PATH = APP_ROOT / "data" / "soundtrackers.db"
+
+
+def get_db_connection(db_path: Path) -> sqlite3.Connection:
+    """Create a SQLite connection to the Soundtracker database."""
+    return sqlite3.connect(db_path)
 
 
 def main() -> None:
