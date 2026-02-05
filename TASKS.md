@@ -853,6 +853,54 @@ Cuando una tarea requiera una IA diferente a la actual:
 
 ---
 
+## FASE 9: Cobertura 100% (QA Total)
+
+**Duración estimada**: 4-7 días  
+**Estado**: `[ ]` Pendiente  
+**Dependencias**: Fases 0-8 completadas
+
+### 9.1 Baseline de Cobertura
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 9.1.1 | Medir cobertura actual App (pytest --cov=src) | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.1.2 | Medir cobertura actual Backend (pytest --cov) | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.1.3 | Medir cobertura actual Music Crawler (pytest --cov=src) | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.1.4 | Medir cobertura actual Frontend (jest --coverage) | **GPT** | `4o` | 🔴 | `[ ]` |  |
+
+### 9.2 App (Python) 100%
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 9.2.1 | Tests completos para `clients/*` y `utils/*` | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.2.2 | Tests completos para `services/*` | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.2.3 | Tests completos para `pipeline.py` y `logging_config.py` | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.2.4 | Ajustes de cobertura (branches) a 100% | **GPT** | `4o` | 🔴 | `[ ]` |  |
+
+### 9.3 Backend (FastAPI) 100%
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 9.3.1 | Tests exhaustivos routers + servicios | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.3.2 | Tests de errores/validación/timeouts | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.3.3 | Ajustes de cobertura (branches) a 100% | **GPT** | `4o` | 🔴 | `[ ]` |  |
+
+### 9.4 Music Crawler 100%
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 9.4.1 | Tests exhaustivos providers/searchers/cache | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.4.2 | Tests exhaustivos playlist/report/cli | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.4.3 | Ajustes de cobertura (branches) a 100% | **GPT** | `4o` | 🔴 | `[ ]` |  |
+
+### 9.5 Frontend 100%
+| # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
+|---|-------|-----|--------|-----------|--------|-------|
+| 9.5.1 | Tests unitarios para componentes UI/layout/composers/search | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.5.2 | Tests para pages/app y lib/api | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.5.3 | Tests de interacción (botones, links, fallbacks) | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.5.4 | Ajustes de cobertura (branches) a 100% | **GPT** | `4o` | 🔴 | `[ ]` |  |
+
+**Checkpoint Fase 9**: `[ ]` Pendiente
+
+---
+
 ## Resumen de Progreso
 
 | Fase | Total Tareas | Completadas | Progreso |
