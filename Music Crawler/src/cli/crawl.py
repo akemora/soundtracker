@@ -8,8 +8,8 @@ from pathlib import Path
 
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
-from rich.table import Table
 
+from src.core.logger import configure_logging, get_logger
 from src.downloaders.ytdlp import YtDlpDownloader
 from src.models.track import CrawlResult, SearchResult, Track
 from src.parsers.track_list import parse_single_track, parse_track_list
@@ -31,6 +31,7 @@ from src.searchers.spotify import ITunesSearcher, SpotifySearcher
 from src.searchers.tidal import QobuzSearcher, TidalSearcher
 
 console = Console()
+logger = get_logger(__name__)
 
 # Default output directory (relative to project)
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -72,7 +73,7 @@ def get_searchers(sources_filter: str | None, fast_mode: bool) -> tuple[list, li
 
     for name in selected:
         if name not in ALL_SOURCES:
-            console.print(f"[yellow]Warning: Unknown source '{name}', skipping[/yellow]")
+            logger.warning("Unknown source '%s', skipping", name)
             continue
         info = ALL_SOURCES[name]
         max_results = 3 if name == "youtube" else 2
@@ -86,21 +87,14 @@ def get_searchers(sources_filter: str | None, fast_mode: bool) -> tuple[list, li
 
 
 def print_available_sources() -> None:
-    """Print all available sources."""
-    table = Table(title="Available Music Sources")
-    table.add_column("Name", style="cyan")
-    table.add_column("Type", style="green")
-    table.add_column("Method")
-    table.add_column("Description")
-
+    """Log all available sources."""
+    logger.info("Available Music Sources:")
     for name, info in ALL_SOURCES.items():
         source_type = "Free" if info["free"] else "Paid"
         method = "API" if info["api"] else "Web Search"
-        table.add_row(name, source_type, method, info["desc"])
-
-    console.print(table)
-    console.print("\n[dim]Use --sources=youtube,deezer,spotify to select specific sources[/dim]")
-    console.print("[dim]Use --fast to only use API-based sources (faster, no rate limiting)[/dim]")
+        logger.info("  %s | %s | %s | %s", name, source_type, method, info["desc"])
+    logger.info("Use --sources=youtube,deezer,spotify to select specific sources")
+    logger.info("Use --fast to only use API-based sources (faster, no rate limiting)")
 
 
 def main() -> None:
@@ -190,6 +184,8 @@ Examples:
 
     args = parser.parse_args()
 
+    configure_logging()
+
     # List sources and exit if requested
     if args.list_sources:
         print_available_sources()
@@ -206,21 +202,21 @@ Examples:
             track.composer = args.composer
             tracks = [track]
         else:
-            console.print("[red]Failed to parse track[/red]")
+            logger.error("Failed to parse track")
             sys.exit(1)
     else:
         if not args.input_file.exists():
-            console.print(f"[red]File not found: {args.input_file}[/red]")
+            logger.error("File not found: %s", args.input_file)
             sys.exit(1)
         tracks = parse_track_list(args.input_file)
         for t in tracks:
             t.composer = args.composer
 
     if not tracks:
-        console.print("[red]No tracks found in input[/red]")
+        logger.error("No tracks found in input")
         sys.exit(1)
 
-    console.print(f"[green]Found {len(tracks)} tracks to search[/green]")
+    logger.info("Found %s tracks to search", len(tracks))
 
     # Setup output directory (use composer name if not specified)
     if args.output is None:
@@ -228,7 +224,7 @@ Examples:
         safe_composer = args.composer.replace(" ", "_").replace("/", "-")
         args.output = DEFAULT_DOWNLOADS / safe_composer
     args.output.mkdir(parents=True, exist_ok=True)
-    console.print(f"[dim]Output: {args.output}[/dim]")
+    logger.info("Output: %s", args.output)
 
     # Load cache
     cache_path = args.output / ".crawl_cache.json"
@@ -239,7 +235,7 @@ Examples:
 
     # Show which sources are being used
     all_sources = [s.name for s in free_searchers + paid_searchers]
-    console.print(f"[dim]Using sources: {', '.join(all_sources)}[/dim]")
+    logger.info("Using sources: %s", ", ".join(all_sources))
 
     downloader = YtDlpDownloader(
         output_dir=args.output,
@@ -279,15 +275,12 @@ Examples:
             progress.remove_task(task)
 
             # Print result
-            status_color = {
-                "downloaded": "green",
-                "free_available": "cyan",
-                "paid_only": "yellow",
-                "not_found": "red",
-            }[crawl_result.status]
-            console.print(
-                f"  [{status_color}]{crawl_result.status.upper()}[/{status_color}] "
-                f"{track.rank}. {track.film} - \"{track.cue_title}\""
+            logger.info(
+                "%s %s. %s - \"%s\"",
+                crawl_result.status.upper(),
+                track.rank,
+                track.film,
+                track.cue_title,
             )
 
     # Save cache
@@ -297,7 +290,7 @@ Examples:
     report_path = args.report or (args.output / "REPORT.md")
     generator = ReportGenerator(composer=args.composer)
     generator.generate(results, report_path)
-    console.print(f"\n[green]Report saved to: {report_path}[/green]")
+    logger.info("Report saved to: %s", report_path)
 
     # Print summary
     print_summary(results)
@@ -378,24 +371,18 @@ def save_cache(path: Path, cache: dict) -> None:
 
 
 def print_summary(results: list[CrawlResult]) -> None:
-    """Print a summary table."""
-    table = Table(title="Crawl Summary")
-    table.add_column("Status", style="bold")
-    table.add_column("Count", justify="right")
-
+    """Log a summary table."""
     downloaded = len([r for r in results if r.status == "downloaded"])
     free_available = len([r for r in results if r.status == "free_available"])
     paid_only = len([r for r in results if r.status == "paid_only"])
     not_found = len([r for r in results if r.status == "not_found"])
 
-    table.add_row("Downloaded", str(downloaded), style="green")
-    table.add_row("Free Available", str(free_available), style="cyan")
-    table.add_row("Paid Only", str(paid_only), style="yellow")
-    table.add_row("Not Found", str(not_found), style="red")
-    table.add_row("Total", str(len(results)), style="bold")
-
-    console.print()
-    console.print(table)
+    logger.info("Crawl Summary:")
+    logger.info("  Downloaded: %s", downloaded)
+    logger.info("  Free Available: %s", free_available)
+    logger.info("  Paid Only: %s", paid_only)
+    logger.info("  Not Found: %s", not_found)
+    logger.info("  Total: %s", len(results))
 
 
 if __name__ == "__main__":
