@@ -340,11 +340,11 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.5.1 | Crear `App/scripts/schema_music.sql` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.5.2 | Definir tabla `music_tracks` según MUSIC_CRAWLER_DEFINITIVE.md | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.5.3 | Definir tabla `composer_playlists` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.5.4 | Definir tabla `playlist_tracks` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.5.5 | Crear índices para queries frecuentes | L | Claude | haiku | 🟡 | `[ ]` | |
+| 3.5.1 | Crear `App/scripts/schema_music.sql` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.5.2 | Definir tabla `music_tracks` según MUSIC_CRAWLER_DEFINITIVE.md | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.5.3 | Definir tabla `composer_playlists` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.5.4 | Definir tabla `playlist_tracks` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.5.5 | Crear índices para queries frecuentes | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 3.5.6 | Ejecutar schema en `soundtrackers.db` | L | GPT | 4o-mini | 🔴 | `[ ]` | |
 
 ---
