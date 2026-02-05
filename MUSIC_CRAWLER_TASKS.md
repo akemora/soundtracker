@@ -115,7 +115,7 @@ FASE 5 (Tests + CI)
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
 | 1.3.1 | Modificar `Track.filename_base()` en `models/track.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
-| 1.3.2 | Implementar truncado a 200 caracteres máximo | L | Claude | haiku | 🔴 | `[ ]` | |
+| 1.3.2 | Implementar truncado a 200 caracteres máximo | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.3.3 | Añadir hash MD5 (6 chars) al final si se trunca | L | Claude | haiku | 🔴 | `[ ]` | |
 | 1.3.4 | Sanitizar caracteres no permitidos en Windows/Linux | L | Claude | haiku | 🟡 | `[ ]` | |
 | 1.3.5 | Añadir test unitario para filenames largos (>200 chars) | L | GPT | 4o-mini | 🟡 | `[ ]` | |

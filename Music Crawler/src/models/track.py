@@ -24,7 +24,10 @@ class Track:
         safe_film = "".join(c if c.isalnum() or c in " -" else "_" for c in self.film)
         safe_title = "".join(c if c.isalnum() or c in " -" else "_" for c in self.cue_title)
         full_name = f"{self.rank:02d}_{safe_film}_{safe_title}"
-        return full_name.lower().replace(" ", "_")
+        normalized = full_name.lower().replace(" ", "_")
+        if len(normalized) > 200:
+            return normalized[:200]
+        return normalized
 
 
 @dataclass
