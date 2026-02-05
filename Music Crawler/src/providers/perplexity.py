@@ -24,6 +24,7 @@ class PerplexityProvider(SearchProvider):
         model: Optional[str] = None,
         timeout: int = 10,
     ) -> None:
+        super().__init__()
         self.api_key = api_key or os.environ.get("PPLX_API_KEY")
         self.base_url = base_url.rstrip("/")
         self.model = model or os.environ.get("PPLX_MODEL", "sonar")
@@ -34,6 +35,7 @@ class PerplexityProvider(SearchProvider):
         self, query: str, num_results: int = 5, site_filter: str | None = None
     ) -> list[str]:
         """Search and return list of URLs."""
+        self.wait_rate_limit()
         data = self._request(query, site_filter=site_filter)
         if not data:
             return []

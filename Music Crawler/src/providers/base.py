@@ -2,9 +2,14 @@
 
 from abc import ABC, abstractmethod
 
+from src.core.rate_limiter import RateLimiter
+
 
 class SearchProvider(ABC):
     """Abstract base class for search providers."""
+
+    def __init__(self, rate_limiter: RateLimiter | None = None) -> None:
+        self.rate_limiter = rate_limiter or RateLimiter()
 
     @abstractmethod
     def search_urls(
@@ -21,3 +26,7 @@ class SearchProvider(ABC):
     def get_name(self) -> str:
         """Return provider name."""
         return self.__class__.__name__
+
+    def wait_rate_limit(self) -> None:
+        """Wait according to provider rate limit settings."""
+        self.rate_limiter.wait(self.get_name(), self.get_rate_limit())
