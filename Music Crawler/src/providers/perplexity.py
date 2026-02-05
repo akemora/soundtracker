@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from typing import Optional
 
 import requests
@@ -18,7 +19,7 @@ class PerplexityProvider(SearchProvider):
         base_url: str = "https://api.perplexity.ai/v2",
         timeout: int = 10,
     ) -> None:
-        self.api_key = api_key
+        self.api_key = api_key or os.environ.get("PPLX_API_KEY")
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.session = requests.Session()
