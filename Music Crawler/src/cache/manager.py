@@ -66,3 +66,13 @@ class CacheManager:
             parsed = parsed.replace(tzinfo=timezone.utc)
         age = datetime.now(timezone.utc) - parsed
         return age.total_seconds() > self.ttl_days * 86400
+
+    def get(self, query: str) -> CacheEntry | None:
+        """Get a cache entry if present and not expired."""
+        entry = self.data.get(query)
+        if not entry:
+            return None
+        if self.is_expired(entry):
+            self.data.pop(query, None)
+            return None
+        return entry
