@@ -376,18 +376,18 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.8.1 | Implementar `get_pending_composers(db_path)` en batch script | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.8.2 | Implementar `get_outdated_composers(db_path, days)` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.8.3 | Añadir flag `--pending` para listar compositores sin playlist | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.8.4 | Añadir flag `--outdated --days N` para listar desactualizados | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.8.5 | Añadir flag `--sync-new` para procesar solo pendientes | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.8.6 | Añadir flag `--sync-outdated` para procesar solo viejos | M | Claude | sonnet | 🟡 | `[ ]` | |
-| 3.8.7 | Añadir flag `--sync-all` para procesar todos | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.8.8 | Añadir flag `--force` para ignorar cache y regenerar | L | Claude | haiku | 🟡 | `[ ]` | |
-| 3.8.9 | Implementar loop de procesamiento batch con progress bar | M | Claude | sonnet | 🟡 | `[ ]` | |
-| 3.8.10 | Añadir flag `--commit` para auto-commit de cambios | L | Claude | haiku | 🟢 | `[ ]` | |
-| 3.8.11 | Logging de operaciones sync (compositores procesados, errores) | L | Claude | haiku | 🟡 | `[ ]` | |
-| 3.8.12 | Crear tabla `music_crawler_runs` para tracking (opcional) | M | Claude | sonnet | 🟢 | `[ ]` | |
+| 3.8.1 | Implementar `get_pending_composers(db_path)` en batch script | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.8.2 | Implementar `get_outdated_composers(db_path, days)` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.8.3 | Añadir flag `--pending` para listar compositores sin playlist | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.8.4 | Añadir flag `--outdated --days N` para listar desactualizados | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.8.5 | Añadir flag `--sync-new` para procesar solo pendientes | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.8.6 | Añadir flag `--sync-outdated` para procesar solo viejos | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
+| 3.8.7 | Añadir flag `--sync-all` para procesar todos | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.8.8 | Añadir flag `--force` para ignorar cache y regenerar | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 3.8.9 | Implementar loop de procesamiento batch con progress bar | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
+| 3.8.10 | Añadir flag `--commit` para auto-commit de cambios | L | Claude | haiku | 🟢 | `[x]` | 2026-02-05 |
+| 3.8.11 | Logging de operaciones sync (compositores procesados, errores) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 3.8.12 | Crear tabla `music_crawler_runs` para tracking (opcional) | M | Claude | sonnet | 🟢 | `[x]` | 2026-02-05 |
 
 **Checkpoint Fase 3**: `[ ]` Completada
 
