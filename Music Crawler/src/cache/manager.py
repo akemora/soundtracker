@@ -14,6 +14,15 @@ class CacheEntry(TypedDict):
     url: str
 
 
+CACHE_STATUSES = {
+    "downloaded",
+    "free_available",
+    "paid_only",
+    "not_found",
+    "error",
+}
+
+
 class CacheManager:
     """Handle cache persistence for search results."""
 
