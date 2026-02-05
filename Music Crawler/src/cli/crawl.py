@@ -9,6 +9,7 @@ from pathlib import Path
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
+from src.cache.manager import CacheManager
 from src.core.logger import configure_logging, get_logger
 from src.downloaders.ytdlp import YtDlpDownloader
 from src.models.track import CrawlResult, SearchResult, Track
@@ -234,7 +235,9 @@ Examples:
     # Load cache
     cache_path = args.output / ".crawl_cache.json"
     skip_cache = args.no_cache or args.refresh
-    cache = load_cache(cache_path) if not skip_cache else {}
+    cache_manager = CacheManager(cache_path)
+    if not skip_cache:
+        cache_manager.load()
 
     # Setup searchers and downloader
     free_searchers, paid_searchers = get_searchers(args.sources, args.fast)
@@ -267,16 +270,18 @@ Examples:
                 paid_searchers=paid_searchers,
                 downloader=downloader,
                 search_only=args.search_only,
-                cache=cache,
+                cache_manager=cache_manager,
             )
             results.append(crawl_result)
 
             # Update cache
             if crawl_result.downloaded_from:
-                cache[track.search_query()] = {
-                    "status": "downloaded",
-                    "path": str(crawl_result.downloaded_from.local_path),
-                }
+                cache_manager.set(
+                    track.search_query(),
+                    status="downloaded",
+                    path=str(crawl_result.downloaded_from.local_path),
+                    url=crawl_result.downloaded_from.url,
+                )
 
             progress.remove_task(task)
 
@@ -290,7 +295,7 @@ Examples:
             )
 
     # Save cache
-    save_cache(cache_path, cache)
+    cache_manager.save()
 
     # Generate report
     report_path = args.report or (args.output / "REPORT.md")
@@ -308,26 +313,29 @@ def process_track(
     paid_searchers: list,
     downloader: YtDlpDownloader,
     search_only: bool,
-    cache: dict,
+    cache_manager: CacheManager,
 ) -> CrawlResult:
     """Process a single track: search and optionally download."""
     result = CrawlResult(track=track)
 
     # Check cache
     cache_key = track.search_query()
-    if cache_key in cache and cache[cache_key].get("status") == "downloaded":
-        cached_path = Path(cache[cache_key]["path"])
-        if cached_path.exists():
-            result.downloaded_from = SearchResult(
-                track=track,
-                source="cache",
-                url="",
-                is_free=True,
-                quality="cached",
-                downloaded=True,
-                local_path=cached_path,
-            )
-            return result
+    cache_entry = cache_manager.get(cache_key)
+    if cache_entry and cache_entry.get("status") == "downloaded":
+        cached_path_str = cache_entry.get("path", "")
+        if cached_path_str:
+            cached_path = Path(cached_path_str)
+            if cached_path.exists():
+                result.downloaded_from = SearchResult(
+                    track=track,
+                    source="cache",
+                    url="",
+                    is_free=True,
+                    quality="cached",
+                    downloaded=True,
+                    local_path=cached_path,
+                )
+                return result
 
     # Search free sources first
     free_results: list[SearchResult] = []
