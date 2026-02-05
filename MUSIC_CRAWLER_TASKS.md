@@ -243,7 +243,7 @@ class SearchProvider(ABC):
 | 2.4.7 | Modificar `QobuzSearcher` para usar `SearchProvider` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 2.4.8 | Modificar `JamendoSearcher` para usar `SearchProvider` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 2.4.9 | Modificar `FMASearcher` para usar `SearchProvider` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
-| 2.4.10 | Eliminar código duplicado de scraping en cada searcher | M | Claude | sonnet | 🔴 | `[ ]` | |
+| 2.4.10 | Eliminar código duplicado de scraping en cada searcher | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 
 **Patrón de refactor**:
 ```python
