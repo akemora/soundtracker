@@ -63,4 +63,4 @@ class DuckDuckGoProvider(SearchProvider):
 
     def get_rate_limit(self) -> float:
         """Return seconds to wait between requests."""
-        return 1.0
+        return 2.0
