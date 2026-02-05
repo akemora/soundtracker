@@ -23,7 +23,8 @@ class Track:
         """Generate a safe filename base for this track."""
         safe_film = "".join(c if c.isalnum() or c in " -" else "_" for c in self.film)
         safe_title = "".join(c if c.isalnum() or c in " -" else "_" for c in self.cue_title)
-        return f"{self.rank:02d}_{safe_film}_{safe_title}".lower().replace(" ", "_")
+        full_name = f"{self.rank:02d}_{safe_film}_{safe_title}"
+        return full_name.lower().replace(" ", "_")
 
 
 @dataclass
