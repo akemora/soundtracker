@@ -5,6 +5,7 @@ import sys
 import time
 from pathlib import Path
 
+from dotenv import load_dotenv
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
@@ -99,6 +100,7 @@ def print_available_sources() -> None:
 
 def main() -> None:
     """Main CLI entry point."""
+    load_dotenv()
     parser = argparse.ArgumentParser(
         description="Search and download music tracks from legal sources",
         formatter_class=argparse.RawDescriptionHelpFormatter,
