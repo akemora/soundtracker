@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from typing import Any, Optional
 
 import requests
@@ -33,7 +34,29 @@ class PerplexityProvider(SearchProvider):
         data = self._request(query, site_filter=site_filter)
         if not data:
             return []
-        return []
+        urls: list[str] = []
+
+        for item in data.get("search_results") or []:
+            url = item.get("url")
+            if url and url not in urls:
+                urls.append(url)
+
+        if not urls:
+            for url in data.get("citations") or []:
+                if url and url not in urls:
+                    urls.append(url)
+
+        if not urls:
+            content = ""
+            choices = data.get("choices") or []
+            if choices:
+                content = (choices[0].get("message") or {}).get("content") or ""
+            for match in re.findall(r"https?://\\S+", content):
+                cleaned = match.strip(').,;]"\\'')
+                if cleaned not in urls:
+                    urls.append(cleaned)
+
+        return urls[:num_results]
 
     def get_rate_limit(self) -> float:
         """Return seconds to wait between requests."""
