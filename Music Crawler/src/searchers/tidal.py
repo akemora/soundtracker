@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 
 from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
+from src.providers.base import SearchProvider
+from src.providers.duckduckgo import DuckDuckGoProvider
 from src.searchers.base import BaseSearcher
 
 logger = get_logger(__name__)
@@ -19,7 +21,8 @@ class TidalSearcher(BaseSearcher):
     name = "tidal"
     is_free = False  # Premium service
 
-    def __init__(self, max_results: int = 3):
+    def __init__(self, provider: SearchProvider | None = None, max_results: int = 3):
+        self.provider = provider or DuckDuckGoProvider()
         self.max_results = max_results
 
     def search(self, track: Track) -> list[SearchResult]:
@@ -27,40 +30,21 @@ class TidalSearcher(BaseSearcher):
         query = self.build_query(track)
         results: list[SearchResult] = []
 
-        try:
-            # Search via DuckDuckGo
-            search_query = f"site:tidal.com {query}"
-            encoded_query = urllib.parse.quote(search_query)
-            url = f"https://html.duckduckgo.com/html/?q={encoded_query}"
-
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            }
-            response = requests.get(url, headers=headers, timeout=15)
-            response.raise_for_status()
-
-            soup = BeautifulSoup(response.text, "html.parser")
-            links = soup.find_all("a", class_="result__a", limit=self.max_results * 2)
-
-            for link in links:
-                href = link.get("href", "")
-                tidal_url = self._extract_url(href)
-                if tidal_url and "tidal.com" in tidal_url:
-                    title = link.get_text(strip=True)
-                    result = SearchResult(
-                        track=track,
-                        source=self.name,
-                        url=tidal_url,
-                        is_free=False,
-                        quality="MQA/FLAC (up to 24-bit/192kHz)",
-                        title=title,
-                    )
-                    results.append(result)
-                    if len(results) >= self.max_results:
-                        break
-
-        except requests.RequestException as exc:
-            logger.error("Tidal search failed for query '%s': %s", query, exc, exc_info=True)
+        urls = self.provider.search_urls(
+            query,
+            num_results=self.max_results,
+            site_filter="tidal.com",
+        )
+        for url in urls:
+            result = SearchResult(
+                track=track,
+                source=self.name,
+                url=url,
+                is_free=False,
+                quality="MQA/FLAC (up to 24-bit/192kHz)",
+                title=url,
+            )
+            results.append(result)
 
         return results
 
