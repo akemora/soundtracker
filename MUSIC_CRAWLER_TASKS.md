@@ -404,10 +404,10 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.1.1 | Añadir subcommand `playlist` al CLI de Music Crawler | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.1.2 | Argumentos: `--composer`, `--db-path`, `--output` | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.1.3 | Validar que composer existe en DB | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.1.4 | Cargar Top 10 films desde DB | M | Claude | sonnet | 🔴 | `[ ]` | |
+| 4.1.1 | Añadir subcommand `playlist` al CLI de Music Crawler | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.1.2 | Argumentos: `--composer`, `--db-path`, `--output` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.1.3 | Validar que composer existe en DB | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.1.4 | Cargar Top 10 films desde DB | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -415,18 +415,18 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.2.1 | Crear `src/playlist/__init__.py` | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 4.2.2 | Crear `src/playlist/models.py` con `Playlist`, `PlaylistTrack` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.2.3 | Crear `src/playlist/generator.py` con clase `PlaylistGenerator` | H | Claude | opus | 🔴 | `[ ]` | |
-| 4.2.4 | Implementar `__init__(composer_slug, db_path, searchers)` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.2.5 | Implementar `_get_top_films()` - obtiene Top 10 del compositor | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.2.6 | Implementar `_get_popular_track(film)` - identifica track principal | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.2.7 | Implementar `_search_free_source(track)` - busca en fuentes gratuitas | H | Claude | opus | 🔴 | `[ ]` | |
-| 4.2.8 | Implementar `SourcePriority` enum (YouTube=100, SoundCloud=90, etc.) | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.2.9 | Implementar `_get_alternative_tracks(film)` - otros tracks de la BSO | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.2.10 | Implementar `_find_playable_track(film, position)` con fallback completo | H | Claude | opus | 🔴 | `[ ]` | |
-| 4.2.11 | Implementar `generate()` - orquesta todo y retorna Playlist | H | Claude | opus | 🔴 | `[ ]` | |
-| 4.2.12 | Implementar `_get_purchase_links(track)` - iTunes, Amazon, Bandcamp | M | Claude | sonnet | 🟡 | `[ ]` | |
+| 4.2.1 | Crear `src/playlist/__init__.py` | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.2 | Crear `src/playlist/models.py` con `Playlist`, `PlaylistTrack` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.3 | Crear `src/playlist/generator.py` con clase `PlaylistGenerator` | H | Claude | opus | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.4 | Implementar `__init__(composer_slug, db_path, searchers)` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.5 | Implementar `_get_top_films()` - obtiene Top 10 del compositor | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.6 | Implementar `_get_popular_track(film)` - identifica track principal | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.7 | Implementar `_search_free_source(track)` - busca en fuentes gratuitas | H | Claude | opus | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.8 | Implementar `SourcePriority` enum (YouTube=100, SoundCloud=90, etc.) | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.9 | Implementar `_get_alternative_tracks(film)` - otros tracks de la BSO | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.10 | Implementar `_find_playable_track(film, position)` con fallback completo | H | Claude | opus | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.11 | Implementar `generate()` - orquesta todo y retorna Playlist | H | Claude | opus | 🔴 | `[x]` | 2026-02-05 |
+| 4.2.12 | Implementar `_get_purchase_links(track)` - iTunes, Amazon, Bandcamp | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 
 **Algoritmo de Fallback** (implementar en 4.2.10):
 ```
@@ -442,12 +442,12 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.3.1 | Crear `src/playlist/embed.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.3.2 | Implementar `EmbedResolver.resolve(source, url) -> embed_url` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.3.3 | Implementar `_youtube_embed(url)` - extraer video_id y generar embed | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.3.4 | Implementar `_soundcloud_embed(url)` - widget player URL | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.3.5 | Implementar `_spotify_embed(url)` - embed track URL | L | Claude | haiku | 🟡 | `[ ]` | |
-| 4.3.6 | Manejar URLs inválidas o no soportadas (return None) | L | Claude | haiku | 🟡 | `[ ]` | |
+| 4.3.1 | Crear `src/playlist/embed.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.3.2 | Implementar `EmbedResolver.resolve(source, url) -> embed_url` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.3.3 | Implementar `_youtube_embed(url)` - extraer video_id y generar embed | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.3.4 | Implementar `_soundcloud_embed(url)` - widget player URL | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.3.5 | Implementar `_spotify_embed(url)` - embed track URL | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 4.3.6 | Manejar URLs inválidas o no soportadas (return None) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 4.3.7 | Crear tests unitarios para cada resolver | M | GPT | 4o | 🟡 | `[ ]` | |
 
 ---
@@ -456,10 +456,10 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.4.1 | Definir schema JSON según MUSIC_CRAWLER_DEFINITIVE.md | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.4.2 | Implementar `Playlist.to_json()` method | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.4.3 | Incluir metadata: generated_at, updated_at, free_count, paid_count | L | Claude | haiku | 🔴 | `[ ]` | |
-| 4.4.4 | Guardar en `{output_dir}/playlist.json` | L | Claude | haiku | 🔴 | `[ ]` | |
+| 4.4.1 | Definir schema JSON según MUSIC_CRAWLER_DEFINITIVE.md | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.4.2 | Implementar `Playlist.to_json()` method | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.4.3 | Incluir metadata: generated_at, updated_at, free_count, paid_count | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 4.4.4 | Guardar en `{output_dir}/playlist.json` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 
 ---
 

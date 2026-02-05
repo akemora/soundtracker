@@ -2,9 +2,10 @@
 
 import argparse
 from datetime import datetime
+import json
+from pathlib import Path
 import sys
 import time
-from pathlib import Path
 
 from dotenv import load_dotenv
 from rich.console import Console
@@ -18,6 +19,7 @@ from src.parsers.track_list import parse_single_track, parse_track_list
 from src.providers.base import SearchProvider
 from src.providers.chrome import ChromeProvider
 from src.providers.perplexity import PerplexityProvider
+from src.playlist.generator import PlaylistGenerator
 from src.report.generator import ReportGenerator
 
 # Free source searchers
@@ -41,6 +43,8 @@ logger = get_logger(__name__)
 # Default output directory (relative to project)
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 DEFAULT_DOWNLOADS = PROJECT_ROOT / "downloads"
+DEFAULT_DB_PATH = PROJECT_ROOT.parent / "App" / "data" / "soundtrackers.db"
+DEFAULT_PLAYLIST_OUTPUT = PROJECT_ROOT.parent / "App" / "data" / "music_crawler"
 
 # All available sources with metadata
 ALL_SOURCES = {
@@ -115,11 +119,11 @@ def print_available_sources() -> None:
     logger.info("Use --fast to only use API-based sources (faster, no rate limiting)")
 
 
-def main() -> None:
-    """Main CLI entry point."""
-    load_dotenv()
-    parser = argparse.ArgumentParser(
-        description="Search and download music tracks from legal sources",
+def build_crawl_parser(subparsers: argparse._SubParsersAction) -> argparse.ArgumentParser:
+    """Build parser for crawl mode."""
+    crawl_parser = subparsers.add_parser(
+        "crawl",
+        help="Search and download music tracks",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -129,92 +133,117 @@ Examples:
   python -m src.cli.crawl --track "Treasure Island Main Title"
         """,
     )
-
-    parser.add_argument(
+    crawl_parser.add_argument(
         "input_file",
         nargs="?",
         type=Path,
         help="Path to track list file",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--track",
         "-t",
         type=str,
         help="Search for a single track (format: 'Film - Title' or just 'Title')",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--output",
         "-o",
         type=Path,
         default=None,
         help="Output directory (default: downloads/{composer}/)",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--format",
         "-f",
         choices=["mp3", "flac", "wav", "best"],
         default="mp3",
         help="Audio format (default: mp3)",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--quality",
         "-q",
         choices=["128", "192", "256", "320", "best"],
         default="320",
         help="Audio quality for MP3 (default: 320)",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--report",
         "-r",
         type=Path,
         help="Report output path (default: OUTPUT_DIR/REPORT.md)",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--json",
         type=Path,
         help="Results JSON output path (default: OUTPUT_DIR/results.json)",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--search-only",
         "-s",
         action="store_true",
         help="Search only, don't download",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--composer",
         default="Herbert Stothart",
         help="Composer name for search queries",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--no-cache",
         action="store_true",
         help="Ignore cache and re-search all tracks",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--refresh",
         action="store_true",
         help="Ignore cache and re-search all tracks",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--sources",
         type=str,
         help="Comma-separated list of sources to use (e.g., youtube,deezer,spotify)",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--list-sources",
         action="store_true",
         help="List all available sources and exit",
     )
-    parser.add_argument(
+    crawl_parser.add_argument(
         "--fast",
         action="store_true",
         help="Fast mode: only use API-based sources (youtube, archive, deezer, itunes)",
     )
+    return crawl_parser
 
-    args = parser.parse_args()
 
-    configure_logging()
+def build_playlist_parser(subparsers: argparse._SubParsersAction) -> argparse.ArgumentParser:
+    """Build parser for playlist mode."""
+    playlist_parser = subparsers.add_parser(
+        "playlist",
+        help="Generate a playable playlist JSON from the DB",
+    )
+    playlist_parser.add_argument(
+        "--composer",
+        required=True,
+        help="Composer slug (e.g., john_williams)",
+    )
+    playlist_parser.add_argument(
+        "--db-path",
+        type=Path,
+        default=DEFAULT_DB_PATH,
+        help="Path to soundtrackers.db",
+    )
+    playlist_parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Output directory (default: App/data/music_crawler/{slug}/)",
+    )
+    return playlist_parser
 
+
+def run_crawl(args: argparse.Namespace) -> None:
+    """Run crawl mode."""
     # List sources and exit if requested
     if args.list_sources:
         print_available_sources()
@@ -222,7 +251,8 @@ Examples:
 
     # Validate input
     if not args.input_file and not args.track:
-        parser.error("Either input_file or --track is required")
+        logger.error("Either input_file or --track is required", exc_info=True)
+        sys.exit(1)
 
     # Parse tracks
     if args.track:
@@ -333,6 +363,58 @@ Examples:
 
     # Print summary
     print_summary(results)
+
+
+def run_playlist(args: argparse.Namespace) -> None:
+    """Run playlist generation mode."""
+    output_dir = args.output or (DEFAULT_PLAYLIST_OUTPUT / args.composer)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    generator = PlaylistGenerator(
+        composer_slug=args.composer,
+        db_path=args.db_path,
+    )
+    try:
+        playlist = generator.generate()
+    finally:
+        generator.close()
+
+    payload = playlist.to_json()
+    playlist_path = output_dir / "playlist.json"
+    playlist_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    logger.info("Playlist JSON saved to: %s", playlist_path)
+
+
+def main() -> None:
+    """Main CLI entry point."""
+    load_dotenv()
+    parser = argparse.ArgumentParser(
+        description="Search and download music tracks from legal sources",
+    )
+    subparsers = parser.add_subparsers(dest="command")
+
+    build_crawl_parser(subparsers)
+    build_playlist_parser(subparsers)
+
+    argv = sys.argv[1:]
+    if not argv:
+        parser.print_help()
+        sys.exit(1)
+    if argv[0] not in {"crawl", "playlist"}:
+        argv = ["crawl", *argv]
+
+    args = parser.parse_args(argv)
+
+    configure_logging()
+
+    if args.command == "playlist":
+        run_playlist(args)
+        return
+
+    run_crawl(args)
 
 
 def process_track(
