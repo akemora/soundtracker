@@ -341,16 +341,17 @@ class PlaylistGenerator:
             return searchers.get("free", []), searchers.get("paid", [])
 
         provider = self._build_provider()
+
         free_searchers = [
-            YouTubeSearcher(),
-            SoundCloudSearcher(provider=provider, max_results=2),
-            ArchiveOrgSearcher(provider=provider, max_results=2),
+            self._safe_init_searcher(YouTubeSearcher, provider, 2),
+            self._safe_init_searcher(SoundCloudSearcher, provider, 2),
+            self._safe_init_searcher(ArchiveOrgSearcher, provider, 2),
         ]
         paid_searchers = [
-            SpotifySearcher(provider=provider, max_results=1),
-            ITunesSearcher(provider=provider, max_results=1),
-            AmazonMusicSearcher(provider=provider, max_results=1),
-            BandcampSearcher(provider=provider, max_results=1),
+            self._safe_init_searcher(SpotifySearcher, provider, 1),
+            self._safe_init_searcher(ITunesSearcher, provider, 1),
+            self._safe_init_searcher(AmazonMusicSearcher, provider, 1),
+            self._safe_init_searcher(BandcampSearcher, provider, 1),
         ]
         return free_searchers, paid_searchers
 
@@ -361,3 +362,9 @@ class PlaylistGenerator:
             return provider
         logger.warning("PPLX_API_KEY not set; using Chrome provider for playlist search")
         return ChromeProvider()
+
+    def _safe_init_searcher(self, cls, provider, max_results: int):
+        try:
+            return cls(provider=provider, max_results=max_results)
+        except TypeError:
+            return cls(max_results=max_results)
