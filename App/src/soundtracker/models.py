@@ -28,6 +28,8 @@ class Film:
         title: Display title (may be localized).
         original_title: Original release title.
         title_es: Spanish title for display.
+        title_es_literal: Literal Spanish translation of the title.
+        title_es_distribution: Spanish distribution title (Spain), if any.
         year: Release year.
         poster_url: URL to poster image (TMDB or web).
         poster_path: TMDB poster path segment.
@@ -44,6 +46,8 @@ class Film:
     title: str
     original_title: Optional[str] = None
     title_es: Optional[str] = None
+    title_es_literal: Optional[str] = None
+    title_es_distribution: Optional[str] = None
     year: Optional[int] = None
     poster_url: Optional[str] = None
     poster_path: Optional[str] = None
@@ -61,7 +65,9 @@ class Film:
         if self.original_title is None:
             self.original_title = self.title
         if self.title_es is None:
-            self.title_es = self.original_title
+            self.title_es = self.title
+        if self.title_es_distribution is None and self.title_es:
+            self.title_es_distribution = self.title_es
 
     @property
     def display_title(self) -> str:
@@ -79,6 +85,8 @@ class Film:
             "title": self.title,
             "original_title": self.original_title,
             "title_es": self.title_es,
+            "title_es_literal": self.title_es_literal,
+            "title_es_distribution": self.title_es_distribution,
             "year": self.year,
             "poster_url": self.poster_url,
             "poster_path": self.poster_path,
@@ -99,6 +107,8 @@ class Film:
             title=data.get("title", ""),
             original_title=data.get("original_title"),
             title_es=data.get("title_es"),
+            title_es_literal=data.get("title_es_literal"),
+            title_es_distribution=data.get("title_es_distribution"),
             year=data.get("year"),
             poster_url=data.get("poster_url"),
             poster_path=data.get("poster_path"),

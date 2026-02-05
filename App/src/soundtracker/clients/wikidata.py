@@ -247,6 +247,30 @@ class WikidataClient(BaseClient):
         if not data:
             return None, None
 
+        bindings = data.get("results", {}).get("bindings", [])
+        if not bindings:
+            return None, None
+
+        item = bindings[0]
+        birth_year = None
+        death_year = None
+
+        birth_str = item.get("birthYear", {}).get("value")
+        if birth_str:
+            try:
+                birth_year = int(birth_str)
+            except ValueError:
+                pass
+
+        death_str = item.get("deathYear", {}).get("value")
+        if death_str:
+            try:
+                death_year = int(death_str)
+            except ValueError:
+                pass
+
+        return birth_year, death_year
+
     def get_birth_death_dates(self, qid: str) -> tuple[Optional[str], Optional[str]]:
         """Get birth and death dates for a person.
 
@@ -348,54 +372,3 @@ class WikidataClient(BaseClient):
             "wins": item.get("wins", {}).get("value"),
             "nominations": item.get("noms", {}).get("value"),
         }
-
-        bindings = data.get("results", {}).get("bindings", [])
-        if not bindings:
-            return None, None
-
-        item = bindings[0]
-        birth_year = None
-        death_year = None
-
-        birth_str = item.get("birthYear", {}).get("value")
-        if birth_str:
-            try:
-                birth_year = int(birth_str)
-            except ValueError:
-                pass
-
-        death_str = item.get("deathYear", {}).get("value")
-        if death_str:
-            try:
-                death_year = int(death_str)
-            except ValueError:
-                pass
-
-        return birth_year, death_year
-
-    def get_country(self, qid: str) -> Optional[str]:
-        """Get country of citizenship for a person.
-
-        Args:
-            qid: Wikidata QID.
-
-        Returns:
-            Country name or None.
-        """
-        query = f"""
-        SELECT ?countryLabel WHERE {{
-          wd:{qid} wdt:P27 ?country .
-          SERVICE wikibase:label {{ bd:serviceParam wikibase:language "es,en". }}
-        }}
-        LIMIT 1
-        """
-
-        data = self._sparql_query(query)
-        if not data:
-            return None
-
-        bindings = data.get("results", {}).get("bindings", [])
-        if not bindings:
-            return None
-
-        return bindings[0].get("countryLabel", {}).get("value")

@@ -165,7 +165,7 @@ def build_wikipedia_url(title: str, lang: str = "en") -> str:
 
 
 def clean_redirect_url(href: str) -> str:
-    """Clean a DuckDuckGo redirect URL.
+    """Clean a search redirect URL.
 
     Args:
         href: Potentially redirected URL.
@@ -176,6 +176,11 @@ def clean_redirect_url(href: str) -> str:
     from urllib.parse import parse_qs, unquote
 
     parsed = urlparse(href)
+    if parsed.netloc.endswith("google.com") and parsed.path == "/url":
+        params = parse_qs(parsed.query)
+        redirect = params.get("q") or params.get("url") or []
+        if redirect:
+            return unquote(redirect[0])
     if parsed.netloc.endswith("duckduckgo.com") and parsed.path == "/l/":
         params = parse_qs(parsed.query)
         redirect = params.get("uddg", [])

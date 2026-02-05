@@ -27,7 +27,9 @@ describe("ComposerCard", () => {
 
   it("renders composer name", () => {
     render(<ComposerCard composer={mockComposer} />);
-    expect(screen.getByText("John Williams")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: /John Williams/ })
+    ).toBeInTheDocument();
   });
 
   it("renders country and lifespan", () => {
@@ -47,7 +49,7 @@ describe("ComposerCard", () => {
 
   it("renders wins badge when composer has wins", () => {
     render(<ComposerCard composer={mockComposer} />);
-    expect(screen.getByText(/5.*🏆/)).toBeInTheDocument();
+    expect(screen.getByText(/★\s*5/)).toBeInTheDocument();
   });
 
   it("renders photo when available", () => {

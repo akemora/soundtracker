@@ -46,8 +46,10 @@ describe("PlaylistPlayer", () => {
       />
     );
 
-    expect(screen.getByText("Main Title")).toBeInTheDocument();
-    expect(screen.getByText("Star Wars")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Main Title" })
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Star Wars").length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByText("Theme"));
 

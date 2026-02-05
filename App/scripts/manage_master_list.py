@@ -539,18 +539,19 @@ class OutputFilesManager:
             return output_file.path
 
         # Archivar
-        ARCHIVE_DIR.mkdir(exist_ok=True)
+        archive_dir = self.output_dir / "_archived"
+        archive_dir.mkdir(exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Mover archivo
-        archive_path = ARCHIVE_DIR / f"{timestamp}_{output_file.path.name}"
+        archive_path = archive_dir / f"{timestamp}_{output_file.path.name}"
         shutil.move(str(output_file.path), str(archive_path))
         logger.info(f"Archivado: {output_file.path.name} -> {archive_path.name}")
 
         # Mover carpeta si existe
         folder = self.output_dir / f"{index:03d}_{output_file.slug}"
         if folder.is_dir():
-            archive_folder = ARCHIVE_DIR / f"{timestamp}_{folder.name}"
+            archive_folder = archive_dir / f"{timestamp}_{folder.name}"
             shutil.move(str(folder), str(archive_folder))
             logger.info(f"Archivada carpeta: {folder.name}")
 

@@ -25,6 +25,8 @@ class TestSpotifyClient:
     def test_is_available_false_without_credentials(self, monkeypatch) -> None:
         """is_available should be False when credentials missing."""
         monkeypatch.setattr(settings, "spotify_enabled", True)
+        monkeypatch.setattr(settings, "spotify_client_id", None)
+        monkeypatch.setattr(settings, "spotify_client_secret", None)
         client = SpotifyClient(client_id=None, client_secret=None)
 
         assert client.is_available is False

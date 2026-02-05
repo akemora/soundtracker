@@ -1,14 +1,16 @@
 """Web search client with fallback chain.
 
 Provides unified web search interface with multiple providers:
-Perplexity API and Google Search.
+Perplexity API, Chrome (headless), and Google Search.
 """
 
 import logging
 import re
+import shutil
+import subprocess
 import time
 from typing import Optional
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -17,13 +19,46 @@ from soundtracker.config import settings
 
 logger = logging.getLogger(__name__)
 
+CHROME_CANDIDATES = (
+    "google-chrome",
+    "google-chrome-stable",
+    "chromium",
+    "chromium-browser",
+)
+
+
+def _find_chrome_binary() -> Optional[str]:
+    for candidate in CHROME_CANDIDATES:
+        path = shutil.which(candidate)
+        if path:
+            return path
+    return None
+
+
+def _extract_google_urls(html: str) -> list[str]:
+    soup = BeautifulSoup(html, "html.parser")
+    urls: list[str] = []
+    for link in soup.find_all("a", href=True):
+        href = link["href"]
+        if href.startswith("/url?"):
+            match = re.search(r"[?&]q=([^&]+)", href)
+            if match:
+                target = match.group(1)
+                if target.startswith("http") and target not in urls:
+                    urls.append(target)
+        elif href.startswith("http") and "google.com" not in href:
+            if href not in urls:
+                urls.append(href)
+    return urls
+
 
 class SearchClient(BaseClient):
     """Unified web search client with fallback chain.
 
     Tries multiple search providers in order:
     1. Perplexity API (if API key available)
-    2. Google Search (via googlesearch-python)
+    2. Chrome headless (Google results)
+    3. Google Search (via googlesearch-python)
 
     Example:
         client = SearchClient()
@@ -53,6 +88,7 @@ class SearchClient(BaseClient):
         self.perplexity_api_key = perplexity_api_key or settings.perplexity_key
         self.perplexity_model = perplexity_model or settings.pplx_model
         self._search_pause = search_pause
+        self._chrome_path = _find_chrome_binary()
 
     @property
     def is_enabled(self) -> bool:
@@ -85,6 +121,11 @@ class SearchClient(BaseClient):
             urls = self._search_perplexity(query, num)
             if urls:
                 return urls
+
+        # Try Chrome headless (Google results)
+        urls = self._search_chrome(query, num)
+        if urls:
+            return urls
 
         # Try Google
         urls = self._search_google(query, num)
@@ -188,6 +229,48 @@ class SearchClient(BaseClient):
         except Exception as e:
             logger.debug("Google search failed: %s", e)
             return []
+
+    def _search_chrome(self, query: str, num: int = 5) -> list[str]:
+        """Search using headless Chrome.
+
+        Args:
+            query: Search query.
+            num: Maximum results.
+
+        Returns:
+            List of URLs.
+        """
+        if not self._chrome_path:
+            return []
+
+        search_url = f"https://www.google.com/search?q={quote(query)}"
+        cmd = [
+            self._chrome_path,
+            "--headless=new",
+            "--disable-gpu",
+            "--no-sandbox",
+            "--dump-dom",
+            "--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+            search_url,
+        ]
+
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+            if result.returncode != 0:
+                logger.debug("Chrome search failed: %s", result.stderr)
+                return []
+            urls = _extract_google_urls(result.stdout)
+            return urls[:num]
+        except subprocess.TimeoutExpired:
+            logger.debug("Chrome search timed out")
+        except Exception as e:
+            logger.debug("Chrome search error: %s", e)
+        return []
 
 
     def fetch_url_text(

@@ -14,9 +14,22 @@ Usage:
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
+import os
+import sys
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict,
+    PydanticBaseSettingsSource,
+)
+
+
+def _disable_dotenv() -> bool:
+    """Return True when dotenv loading should be disabled."""
+    if os.environ.get("SOUNDTRACKER_DISABLE_DOTENV") in {"1", "true", "yes"}:
+        return True
+    return "pytest" in sys.modules or os.environ.get("PYTEST_CURRENT_TEST") is not None
 
 
 class Settings(BaseSettings):
@@ -32,6 +45,20 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore",
     )
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        """Customize settings sources to avoid dotenv during tests."""
+        if _disable_dotenv():
+            return (init_settings, env_settings, file_secret_settings)
+        return (init_settings, env_settings, dotenv_settings, file_secret_settings)
 
     # ==========================================================================
     # Paths

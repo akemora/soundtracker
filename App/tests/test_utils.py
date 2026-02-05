@@ -334,11 +334,10 @@ class TestCleanRedirectUrl:
         url = "https://example.com"
         assert clean_redirect_url(url) == url
 
-    def test_duckduckgo_redirect(self):
-        """Test DuckDuckGo redirect cleaning."""
-        # This is a simplified test - actual DDG redirects are more complex
-        url = "https://example.com/page"
-        assert clean_redirect_url(url) == url
+    def test_google_redirect(self):
+        """Test Google redirect cleaning."""
+        url = "https://www.google.com/url?q=https%3A%2F%2Fexample.com%2Fpage"
+        assert clean_redirect_url(url) == "https://example.com/page"
 
 
 class TestExtractUrlsFromText:

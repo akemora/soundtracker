@@ -57,7 +57,7 @@ class PerplexityProvider(SearchProvider):
             if choices:
                 content = (choices[0].get("message") or {}).get("content") or ""
             for match in re.findall(r"https?://\\S+", content):
-                cleaned = match.strip(').,;]"\\'')
+                cleaned = match.strip(").,;]\"\\'")
                 if cleaned not in urls:
                     urls.append(cleaned)
 

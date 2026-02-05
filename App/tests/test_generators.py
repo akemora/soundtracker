@@ -126,8 +126,8 @@ class TestMarkdownGenerator:
             generator.generate(info, output_path)
 
             content = output_path.read_text()
-            assert "## Filmografía" in content
-            assert "| Año | Título | Título original | Póster |" in content
+            assert "## Filmografía completa" in content
+            assert "| Año | Título | Título original | Traducción literal (ES) | Título en España | Póster |" in content
             assert "| 1977 |" in content
             assert "Star Wars" in content
 

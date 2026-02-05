@@ -6,7 +6,7 @@ This module provides clients for various external APIs used by SOUNDTRACKER:
 - Wikidata
 - YouTube
 - Spotify
-- Web Search (Perplexity, Google, DuckDuckGo)
+- Web Search (Perplexity, Chrome, Google)
 """
 
 from soundtracker.clients.base import BaseClient

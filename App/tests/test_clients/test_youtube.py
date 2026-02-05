@@ -25,6 +25,7 @@ class TestYouTubeClient:
     def test_is_available_false_without_key(self, monkeypatch) -> None:
         """is_available should be False without API key."""
         monkeypatch.setattr(settings, "youtube_enabled", True)
+        monkeypatch.setattr(settings, "youtube_api_key", None)
         client = YouTubeClient(api_key=None)
 
         assert client.is_available is False

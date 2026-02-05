@@ -3,6 +3,7 @@
 from unittest.mock import Mock
 
 from soundtracker.clients.tmdb import TMDBClient
+from soundtracker.config import settings
 
 
 class DummyCache:
@@ -26,6 +27,7 @@ class TestTMDBClient:
 
     def test_health_check_no_api_key(self) -> None:
         """health_check should return False without API key."""
+        settings.tmdb_api_key = None
         client = TMDBClient(api_key=None)
 
         assert client.health_check() is False

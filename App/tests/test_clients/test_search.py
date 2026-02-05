@@ -22,28 +22,26 @@ class TestSearchClient:
         client = SearchClient(perplexity_api_key="key")
         client._search_perplexity = Mock(return_value=["http://a"])
         client._search_google = Mock(return_value=["http://b"])
-        client._search_duckduckgo = Mock(return_value=["http://c"])
+        client._search_chrome = Mock(return_value=["http://c"])
 
         result = client.search("query", num=1)
 
         assert result == ["http://a"]
         client._search_google.assert_not_called()
-        client._search_duckduckgo.assert_not_called()
+        client._search_chrome.assert_not_called()
 
-    def test_search_falls_back_to_duckduckgo(self, monkeypatch) -> None:
-        """search should fall back to DuckDuckGo when others fail."""
+    def test_search_falls_back_to_chrome(self, monkeypatch) -> None:
+        """search should fall back to Chrome when others fail."""
         monkeypatch.setattr(settings, "search_web_enabled", True)
         monkeypatch.setattr(settings, "pplx_api_key", None)
         monkeypatch.setattr(settings, "perplexity_api_key", None)
         monkeypatch.setattr(SearchClient, "_search_google", lambda *_: [])
-        monkeypatch.setattr(
-            SearchClient, "_search_duckduckgo", lambda *_: ["http://ddg"]
-        )
+        monkeypatch.setattr(SearchClient, "_search_chrome", lambda *_: ["http://chrome"])
         client = SearchClient(perplexity_api_key=None)
 
         result = client.search("query", num=1)
 
-        assert result == ["http://ddg"]
+        assert result == ["http://chrome"]
 
     def test_search_perplexity_uses_citations(self, monkeypatch) -> None:
         """_search_perplexity should extract citations."""
