@@ -131,7 +131,17 @@ class ReportGenerator:
         source_counts: dict[str, int] = defaultdict(int)
 
         for result in results:
-            for alt in result.free_alternatives + result.paid_alternatives:
+            free_alternatives = result.free_alternatives
+            if result.downloaded_from:
+                free_alternatives = [
+                    alt
+                    for alt in free_alternatives
+                    if not (
+                        alt.source == result.downloaded_from.source
+                        and alt.url == result.downloaded_from.url
+                    )
+                ]
+            for alt in free_alternatives + result.paid_alternatives:
                 source_counts[alt.source] += 1
             if result.downloaded_from:
                 source_counts[result.downloaded_from.source] += 1

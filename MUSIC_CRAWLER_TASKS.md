@@ -143,7 +143,7 @@ def filename_base(self) -> str:
 |---|-------|-----|-----|--------|-----------|--------|-------|
 | 1.4.1 | Analizar `_format_sources_summary()` en `report/generator.py` | L | Gemini | flash | 🟡 | `[x]` | 2026-02-05 |
 | 1.4.2 | Identificar bug: downloaded_from se cuenta doble | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 1.4.3 | Fix: excluir downloaded_from de free_alternatives antes de contar | M | Claude | sonnet | 🟡 | `[ ]` | |
+| 1.4.3 | Fix: excluir downloaded_from de free_alternatives antes de contar | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 1.4.4 | Añadir test unitario para verificar conteos correctos | L | GPT | 4o-mini | 🟢 | `[ ]` | |
 
 ---
