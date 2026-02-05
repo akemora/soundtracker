@@ -16,6 +16,7 @@ from .composer import (
 )
 from .film import FilmDetail, FilmListResponse, FilmSummary
 from .music import MusicResponse, MusicTrack
+from .playlist import PlaylistResponse, PlaylistTrack
 from .search import SearchResponse, SearchResult
 
 __all__ = [
@@ -42,4 +43,7 @@ __all__ = [
     # Music models
     "MusicTrack",
     "MusicResponse",
+    # Playlist models
+    "PlaylistTrack",
+    "PlaylistResponse",
 ]

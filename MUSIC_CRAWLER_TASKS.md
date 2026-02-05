@@ -479,11 +479,11 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 4.6.1 | Crear `App/backend/app/services/playlist_service.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.6.2 | Implementar `get_playlist_by_composer(slug)` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.6.3 | Añadir endpoint `GET /api/composers/{slug}/playlist` a `music.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 4.6.4 | Añadir endpoint `POST /api/composers/{slug}/playlist/refresh` | M | Claude | sonnet | 🟡 | `[ ]` | |
-| 4.6.5 | Crear modelos Pydantic para response | L | Claude | haiku | 🟡 | `[ ]` | |
+| 4.6.1 | Crear `App/backend/app/services/playlist_service.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.6.2 | Implementar `get_playlist_by_composer(slug)` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.6.3 | Añadir endpoint `GET /api/composers/{slug}/playlist` a `music.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 4.6.4 | Añadir endpoint `POST /api/composers/{slug}/playlist/refresh` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
+| 4.6.5 | Crear modelos Pydantic para response | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 4.6.6 | Añadir tests para endpoints | M | GPT | 4o | 🟡 | `[ ]` | |
 
 ---
