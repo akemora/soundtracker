@@ -360,8 +360,8 @@ def load_cache(path: Path) -> dict:
     if path.exists():
         try:
             return json.loads(path.read_text())
-        except json.JSONDecodeError:
-            pass
+        except json.JSONDecodeError as exc:
+            logger.error("Failed to parse cache file %s: %s", path, exc)
     return {}
 
 

@@ -6,8 +6,11 @@ import urllib.parse
 import requests
 from bs4 import BeautifulSoup
 
+from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.searchers.base import BaseSearcher
+
+logger = get_logger(__name__)
 
 
 class MusopenSearcher(BaseSearcher):
@@ -55,8 +58,8 @@ class MusopenSearcher(BaseSearcher):
                     if len(results) >= self.max_results:
                         break
 
-        except requests.RequestException:
-            pass
+        except requests.RequestException as exc:
+            logger.error("Musopen search failed for query '%s': %s", query, exc)
 
         return results
 
@@ -115,8 +118,8 @@ class IMSLPSearcher(BaseSearcher):
                     if len(results) >= self.max_results:
                         break
 
-        except requests.RequestException:
-            pass
+        except requests.RequestException as exc:
+            logger.error("IMSLP search failed for query '%s': %s", query, exc)
 
         return results
 

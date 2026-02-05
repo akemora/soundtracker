@@ -4,8 +4,11 @@ import json
 import subprocess
 from typing import Any
 
+from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.searchers.base import BaseSearcher
+
+logger = get_logger(__name__)
 
 
 class YouTubeSearcher(BaseSearcher):
@@ -54,11 +57,10 @@ class YouTubeSearcher(BaseSearcher):
                 except json.JSONDecodeError:
                     continue
 
-        except subprocess.TimeoutExpired:
-            pass
-        except FileNotFoundError:
-            # yt-dlp not installed
-            pass
+        except subprocess.TimeoutExpired as exc:
+            logger.error("YouTube search timed out for query '%s': %s", query, exc)
+        except FileNotFoundError as exc:
+            logger.error("yt-dlp not installed for YouTube search '%s': %s", query, exc)
 
         return results
 

@@ -7,8 +7,11 @@ import urllib.parse
 import requests
 from bs4 import BeautifulSoup
 
+from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.searchers.base import BaseSearcher
+
+logger = get_logger(__name__)
 
 
 class JamendoSearcher(BaseSearcher):
@@ -53,8 +56,8 @@ class JamendoSearcher(BaseSearcher):
                 if result:
                     results.append(result)
 
-        except requests.RequestException:
-            pass
+        except requests.RequestException as exc:
+            logger.error("Jamendo API search failed for query '%s': %s", query, exc)
 
         return results
 
@@ -123,8 +126,8 @@ class JamendoSearcher(BaseSearcher):
                     if len(results) >= self.max_results:
                         break
 
-        except requests.RequestException:
-            pass
+        except requests.RequestException as exc:
+            logger.error("Jamendo web search failed for query '%s': %s", query, exc)
 
         return results
 

@@ -2,8 +2,11 @@
 
 import requests
 
+from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.searchers.base import BaseSearcher
+
+logger = get_logger(__name__)
 
 
 class DeezerSearcher(BaseSearcher):
@@ -39,8 +42,8 @@ class DeezerSearcher(BaseSearcher):
                 if result:
                     results.append(result)
 
-        except requests.RequestException:
-            pass
+        except requests.RequestException as exc:
+            logger.error("Deezer search failed for query '%s': %s", query, exc)
 
         return results
 

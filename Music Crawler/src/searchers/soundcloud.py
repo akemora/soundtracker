@@ -6,8 +6,11 @@ import urllib.parse
 import requests
 from bs4 import BeautifulSoup
 
+from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.searchers.base import BaseSearcher
+
+logger = get_logger(__name__)
 
 
 class SoundCloudSearcher(BaseSearcher):
@@ -59,8 +62,8 @@ class SoundCloudSearcher(BaseSearcher):
                     if len(results) >= self.max_results:
                         break
 
-        except requests.RequestException:
-            pass
+        except requests.RequestException as exc:
+            logger.error("SoundCloud search failed for query '%s': %s", query, exc)
 
         return results
 

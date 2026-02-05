@@ -3,7 +3,10 @@
 import subprocess
 from pathlib import Path
 
+from src.core.logger import get_logger
 from src.models.track import SearchResult
+
+logger = get_logger(__name__)
 
 
 class YtDlpDownloader:
@@ -97,6 +100,6 @@ class YtDlpDownloader:
             if process.returncode == 0:
                 import json
                 return json.loads(process.stdout)
-        except (subprocess.TimeoutExpired, FileNotFoundError):
-            pass
+        except (subprocess.TimeoutExpired, FileNotFoundError) as exc:
+            logger.error("yt-dlp info failed for url '%s': %s", url, exc)
         return None
