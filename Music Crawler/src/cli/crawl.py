@@ -1,7 +1,6 @@
 """Main CLI entry point for Music Crawler."""
 
 import argparse
-import json
 import sys
 import time
 from pathlib import Path
@@ -367,21 +366,6 @@ def process_track(
         result.not_found = True
 
     return result
-
-
-def load_cache(path: Path) -> dict:
-    """Load cache from JSON file."""
-    if path.exists():
-        try:
-            return json.loads(path.read_text())
-        except json.JSONDecodeError as exc:
-            logger.error("Failed to parse cache file %s: %s", path, exc, exc_info=True)
-    return {}
-
-
-def save_cache(path: Path, cache: dict) -> None:
-    """Save cache to JSON file."""
-    path.write_text(json.dumps(cache, indent=2))
 
 
 def print_summary(results: list[CrawlResult]) -> None:
