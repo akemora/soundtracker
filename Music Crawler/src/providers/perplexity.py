@@ -60,7 +60,7 @@ class PerplexityProvider(SearchProvider):
 
     def get_rate_limit(self) -> float:
         """Return seconds to wait between requests."""
-        return 1.0
+        return 0.5
 
     def _request(self, query: str, site_filter: str | None = None) -> dict[str, Any] | None:
         if not self.api_key:
