@@ -159,7 +159,7 @@ def filename_base(self) -> str:
 | 1.5.5 | Definir `Settings` class con todas las variables de entorno | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 1.5.6 | Migrar constantes hardcodeadas a Settings | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 
-**Checkpoint Fase 1**: `[ ]` Completada
+**Checkpoint Fase 1**: `[x]` Completada (2026-02-05)
 
 ---
 
