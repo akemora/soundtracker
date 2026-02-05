@@ -325,13 +325,13 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.4.1 | Crear `App/scripts/etl_music.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.4.2 | Leer `results.json` de directorio de compositor | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.4.3 | Mapear campos a tabla `music_tracks` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.4.4 | Buscar `composer_id` por slug | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.4.5 | Buscar `film_id` por título (si existe) | L | Claude | haiku | 🟡 | `[ ]` | |
-| 3.4.6 | Implementar UPSERT (INSERT OR REPLACE) | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.4.7 | Actualizar `updated_at` en cada insert | L | Claude | haiku | 🟡 | `[ ]` | |
+| 3.4.1 | Crear `App/scripts/etl_music.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.4.2 | Leer `results.json` de directorio de compositor | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.4.3 | Mapear campos a tabla `music_tracks` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.4.4 | Buscar `composer_id` por slug | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.4.5 | Buscar `film_id` por título (si existe) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 3.4.6 | Implementar UPSERT (INSERT OR REPLACE) | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.4.7 | Actualizar `updated_at` en cada insert | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 3.4.8 | Integrar ETL en `music_crawler_batch.py` (ejecutar después de crawler) | L | Claude | haiku | 🔴 | `[ ]` | |
 
 ---
