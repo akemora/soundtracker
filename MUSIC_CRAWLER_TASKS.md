@@ -220,7 +220,7 @@ class SearchProvider(ABC):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 2.3.1 | Crear `src/providers/duckduckgo.py` | M | Claude | sonnet | 🟡 | `[ ]` | |
+| 2.3.1 | Crear `src/providers/duckduckgo.py` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 2.3.2 | Extraer lógica de scraping DDG de searchers existentes | M | Claude | sonnet | 🟡 | `[ ]` | |
 | 2.3.3 | Implementar `DuckDuckGoProvider(SearchProvider)` | M | Claude | sonnet | 🟡 | `[ ]` | |
 | 2.3.4 | Rate limit: 2.0 segundos (scraping requiere más cuidado) | L | Claude | haiku | 🟡 | `[ ]` | |
