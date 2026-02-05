@@ -269,7 +269,7 @@ class SpotifySearcher(BaseSearcher):
 | 2.5.3 | Implementar exponential backoff para errores 429/5xx | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.5.4 | Config: max_retries=3, initial_delay=1s, max_delay=30s | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 2.5.5 | Integrar RateLimiter en SearchProvider base | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
-| 2.5.6 | Crear test para backoff con mock de respuestas 429 | M | GPT | 4o | 🟡 | `[ ]` | |
+| 2.5.6 | Crear test para backoff con mock de respuestas 429 | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
 
 **Checkpoint Fase 2**: `[ ]` Completada
 
