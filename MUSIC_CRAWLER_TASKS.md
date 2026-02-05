@@ -155,7 +155,7 @@ def filename_base(self) -> str:
 | 1.5.1 | Cambiar `requires-python` de `>=3.12` a `>=3.11` en `pyproject.toml` | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
 | 1.5.2 | Añadir `python-dotenv` a dependencias si no está | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
 | 1.5.3 | Añadir `load_dotenv()` al inicio de `cli/crawl.py` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 1.5.4 | Crear `src/core/config.py` con pydantic-settings | M | Claude | sonnet | 🟡 | `[ ]` | |
+| 1.5.4 | Crear `src/core/config.py` con pydantic-settings | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 1.5.5 | Definir `Settings` class con todas las variables de entorno | M | Claude | sonnet | 🟡 | `[ ]` | |
 | 1.5.6 | Migrar constantes hardcodeadas a Settings | L | Claude | haiku | 🟡 | `[ ]` | |
 
