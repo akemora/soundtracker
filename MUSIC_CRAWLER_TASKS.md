@@ -80,7 +80,7 @@ FASE 5 (Tests + CI)
 | 1.1.3 | Configurar niveles: DEBUG, INFO, WARNING, ERROR | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.1.4 | Añadir rotación de logs (max 5 archivos, 10MB cada uno) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 1.1.5 | Reemplazar todos los `print()` por `logger.info/debug` en `cli/crawl.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
-| 1.1.6 | Reemplazar `print()` en `report/generator.py` | L | Claude | haiku | 🔴 | `[ ]` | |
+| 1.1.6 | Reemplazar `print()` en `report/generator.py` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.1.7 | Reemplazar `print()` en `downloaders/ytdlp.py` | L | Claude | haiku | 🔴 | `[ ]` | |
 | 1.1.8 | Buscar y eliminar TODOS los `except: pass` (grep recursivo) | M | Gemini | flash | 🔴 | `[ ]` | |
 | 1.1.9 | Reemplazar `except: pass` por `except Exception as e: logger.error(...)` | M | Claude | sonnet | 🔴 | `[ ]` | |
