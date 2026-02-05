@@ -76,7 +76,7 @@ FASE 5 (Tests + CI)
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
 | 1.1.1 | Crear `src/core/logger.py` con configuración base de logging | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 1.1.2 | Definir formato de log: `[TIMESTAMP] [LEVEL] [MODULE] message` | L | Claude | haiku | 🔴 | `[ ]` | |
+| 1.1.2 | Definir formato de log: `[TIMESTAMP] [LEVEL] [MODULE] message` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.1.3 | Configurar niveles: DEBUG, INFO, WARNING, ERROR | L | Claude | haiku | 🔴 | `[ ]` | |
 | 1.1.4 | Añadir rotación de logs (max 5 archivos, 10MB cada uno) | L | Claude | haiku | 🟡 | `[ ]` | |
 | 1.1.5 | Reemplazar todos los `print()` por `logger.info/debug` en `cli/crawl.py` | M | Claude | sonnet | 🔴 | `[ ]` | |

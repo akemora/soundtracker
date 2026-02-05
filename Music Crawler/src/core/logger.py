@@ -6,6 +6,7 @@ import logging
 from typing import Optional
 
 _DEFAULT_LOGGER_NAME = "music_crawler"
+_LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
 
 
 def configure_logging(level: Optional[int] = None) -> None:
@@ -15,9 +16,9 @@ def configure_logging(level: Optional[int] = None) -> None:
         level: Optional logging level to set globally.
     """
     if level is None:
-        logging.basicConfig()
+        logging.basicConfig(format=_LOG_FORMAT)
     else:
-        logging.basicConfig(level=level)
+        logging.basicConfig(level=level, format=_LOG_FORMAT)
 
 
 def get_logger(name: Optional[str] = None) -> logging.Logger:
