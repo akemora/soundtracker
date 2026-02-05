@@ -291,11 +291,11 @@ class SpotifySearcher(BaseSearcher):
 | 3.1.3 | Implementar conexión a `soundtrackers.db` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 3.1.4 | Implementar query para obtener Top 10 films de un compositor | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 3.1.5 | Generar `track_list.txt` temporal desde resultados de query | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 3.1.6 | Ejecutar Music Crawler via `subprocess.run` desde su directorio | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.1.7 | Pasar env vars: `PPLX_API_KEY` al subprocess | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.1.8 | Definir output dir: `App/data/music_crawler/{slug}/` | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.1.9 | Capturar y loggear stdout/stderr del subprocess | L | Claude | haiku | 🟡 | `[ ]` | |
-| 3.1.10 | Manejar errores de subprocess (returncode != 0) | L | Claude | haiku | 🟡 | `[ ]` | |
+| 3.1.6 | Ejecutar Music Crawler via `subprocess.run` desde su directorio | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.1.7 | Pasar env vars: `PPLX_API_KEY` al subprocess | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.1.8 | Definir output dir: `App/data/music_crawler/{slug}/` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.1.9 | Capturar y loggear stdout/stderr del subprocess | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
+| 3.1.10 | Manejar errores de subprocess (returncode != 0) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
