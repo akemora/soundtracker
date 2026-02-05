@@ -20,6 +20,7 @@ venv/
 App/intermediate_research/
 Music Crawler/downloads/
 Music Crawler/.crawl_cache.json
+App/data/music_crawler/*/downloads/
 
 # Cache
 *.sqlite

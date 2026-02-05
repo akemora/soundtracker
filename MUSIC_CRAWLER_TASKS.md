@@ -353,12 +353,12 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.6.1 | Crear `App/backend/app/services/music_service.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.6.2 | Implementar `get_tracks_by_composer(slug, status)` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.6.3 | Crear `App/backend/app/routers/music.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.6.4 | Implementar `GET /api/composers/{slug}/music` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.6.5 | Añadir router a `main.py` | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.6.6 | Crear modelo Pydantic para response | L | Claude | haiku | 🟡 | `[ ]` | |
+| 3.6.1 | Crear `App/backend/app/services/music_service.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.6.2 | Implementar `get_tracks_by_composer(slug, status)` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.6.3 | Crear `App/backend/app/routers/music.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.6.4 | Implementar `GET /api/composers/{slug}/music` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.6.5 | Añadir router a `main.py` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.6.6 | Crear modelo Pydantic para response | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 3.6.7 | Añadir tests para endpoint | M | GPT | 4o | 🟡 | `[ ]` | |
 
 ---
@@ -367,8 +367,8 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.7.1 | Añadir `App/data/music_crawler/*/downloads/` a `.gitignore` | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 3.7.2 | Verificar que `results.json` y `playlist.json` NO están ignorados | L | GPT | 4o-mini | 🟡 | `[ ]` | |
+| 3.7.1 | Añadir `App/data/music_crawler/*/downloads/` a `.gitignore` | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 3.7.2 | Verificar que `results.json` y `playlist.json` NO están ignorados | L | GPT | 4o-mini | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 

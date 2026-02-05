@@ -39,15 +39,6 @@ class TidalSearcher(BaseSearcher):
 
         return results
 
-    def _extract_url(self, ddg_url: str) -> str | None:
-        """Extract actual URL from DuckDuckGo redirect."""
-        match = re.search(r"uddg=([^&]+)", ddg_url)
-        if match:
-            return urllib.parse.unquote(match.group(1))
-        if "tidal.com" in ddg_url:
-            return ddg_url
-        return None
-
 
 class QobuzSearcher(BaseSearcher):
     """Search Qobuz for tracks (log only) - Hi-res audio specialist."""

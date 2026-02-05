@@ -11,6 +11,7 @@ from .composer_service import (
     list_composers,
 )
 from .search_service import search_composers, search_suggestions
+from .music_service import get_tracks_by_composer
 
 __all__ = [
     # Composer services
@@ -22,4 +23,6 @@ __all__ = [
     # Search services
     "search_composers",
     "search_suggestions",
+    # Music services
+    "get_tracks_by_composer",
 ]

@@ -15,6 +15,7 @@ from .composer import (
     PaginationInfo,
 )
 from .film import FilmDetail, FilmListResponse, FilmSummary
+from .music import MusicResponse, MusicTrack
 from .search import SearchResponse, SearchResult
 
 __all__ = [
@@ -38,4 +39,7 @@ __all__ = [
     # Search models
     "SearchResult",
     "SearchResponse",
+    # Music models
+    "MusicTrack",
+    "MusicResponse",
 ]
