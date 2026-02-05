@@ -345,7 +345,7 @@ class SpotifySearcher(BaseSearcher):
 | 3.5.3 | Definir tabla `composer_playlists` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 3.5.4 | Definir tabla `playlist_tracks` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 3.5.5 | Crear índices para queries frecuentes | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 3.5.6 | Ejecutar schema en `soundtrackers.db` | L | GPT | 4o-mini | 🔴 | `[ ]` | |
+| 3.5.6 | Ejecutar schema en `soundtrackers.db` | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
 
 ---
 
