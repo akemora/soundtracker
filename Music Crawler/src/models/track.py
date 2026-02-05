@@ -22,8 +22,8 @@ class Track:
 
     def filename_base(self) -> str:
         """Generate a safe filename base for this track."""
-        safe_film = "".join(c if c.isalnum() or c in " -" else "_" for c in self.film)
-        safe_title = "".join(c if c.isalnum() or c in " -" else "_" for c in self.cue_title)
+        safe_film = _sanitize_component(self.film)
+        safe_title = _sanitize_component(self.cue_title)
         full_name = f"{self.rank:02d}_{safe_film}_{safe_title}"
         normalized = full_name.lower().replace(" ", "_")
         if len(normalized) > 200:
@@ -73,3 +73,9 @@ class CrawlResult:
             return "paid_only"
         else:
             return "not_found"
+_ALLOWED_FILENAME_CHARS = set(" -_")
+
+
+def _sanitize_component(value: str) -> str:
+    sanitized = "".join(c if c.isalnum() or c in _ALLOWED_FILENAME_CHARS else "_" for c in value)
+    return sanitized.strip().strip(".")
