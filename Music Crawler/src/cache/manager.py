@@ -76,3 +76,14 @@ class CacheManager:
             self.data.pop(query, None)
             return None
         return entry
+
+    def set(self, query: str, status: str, path: str | Path | None, url: str | None) -> None:
+        """Set a cache entry."""
+        if status not in CACHE_STATUSES:
+            raise ValueError(f"Unsupported cache status: {status}")
+        self.data[query] = {
+            "status": status,
+            "timestamp": _current_timestamp(),
+            "path": str(path) if path else "",
+            "url": url or "",
+        }
