@@ -8,7 +8,10 @@ from typing import Any, Optional
 
 import requests
 
+from src.core.logger import get_logger
 from src.providers.base import SearchProvider
+
+logger = get_logger(__name__)
 
 
 class PerplexityProvider(SearchProvider):
@@ -64,6 +67,7 @@ class PerplexityProvider(SearchProvider):
 
     def _request(self, query: str, site_filter: str | None = None) -> dict[str, Any] | None:
         if not self.api_key:
+            logger.error("PPLX_API_KEY is not set", exc_info=True)
             return None
 
         final_query = query
@@ -83,14 +87,28 @@ class PerplexityProvider(SearchProvider):
             "temperature": 0.2,
         }
 
-        response = self.session.post(
-            f"{self.base_url}/chat/completions",
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-            json=payload,
-            timeout=self.timeout,
-        )
-        response.raise_for_status()
-        return response.json()
+        try:
+            response = self.session.post(
+                f"{self.base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.HTTPError as exc:
+            status = exc.response.status_code if exc.response else None
+            if status in {401, 403}:
+                logger.error("Perplexity API key unauthorized", exc_info=True)
+            elif status == 429:
+                logger.error("Perplexity API rate limited", exc_info=True)
+            else:
+                logger.error("Perplexity API request failed", exc_info=True)
+        except requests.Timeout:
+            logger.error("Perplexity API request timed out", exc_info=True)
+        except requests.RequestException:
+            logger.error("Perplexity API request error", exc_info=True)
+        return None

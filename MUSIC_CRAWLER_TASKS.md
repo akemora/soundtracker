@@ -211,7 +211,7 @@ class SearchProvider(ABC):
 | 2.2.4 | Implementar llamada a Perplexity API para búsqueda web | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.2.5 | Parsear respuesta y extraer URLs | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.2.6 | Rate limit: 0.5 segundos (API es más tolerante) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 2.2.7 | Manejo de errores: API key inválida, rate limit, timeout | M | Claude | sonnet | 🔴 | `[ ]` | |
+| 2.2.7 | Manejo de errores: API key inválida, rate limit, timeout | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.2.8 | Crear test con mock de API response | M | GPT | 4o | 🟡 | `[ ]` | |
 
 ---
