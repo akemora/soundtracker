@@ -1,14 +1,12 @@
 """Jamendo searcher - Creative Commons licensed music."""
 
-import re
-import urllib.parse
-
 import requests
-from bs4 import BeautifulSoup
 
 from src.core.config import settings
 from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
+from src.providers.base import SearchProvider
+from src.providers.duckduckgo import DuckDuckGoProvider
 from src.searchers.base import BaseSearcher
 
 logger = get_logger(__name__)
@@ -21,10 +19,11 @@ class JamendoSearcher(BaseSearcher):
     is_free = True  # Creative Commons licensed
     API_URL = "https://api.jamendo.com/v3.0/tracks"
 
-    def __init__(self, max_results: int = 3):
+    def __init__(self, max_results: int = 3, provider: SearchProvider | None = None):
         self.max_results = max_results
         # Try to get client ID from environment
         self.client_id = settings.jamendo_client_id
+        self.provider: SearchProvider = provider or DuckDuckGoProvider()
 
     def search(self, track: Track) -> list[SearchResult]:
         """Search Jamendo - tries API first, falls back to web search."""
@@ -95,47 +94,20 @@ class JamendoSearcher(BaseSearcher):
         query = self.build_query(track)
         results: list[SearchResult] = []
 
-        try:
-            search_query = f"site:jamendo.com {query}"
-            encoded_query = urllib.parse.quote(search_query)
-            url = f"https://html.duckduckgo.com/html/?q={encoded_query}"
-
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            }
-            response = requests.get(url, headers=headers, timeout=15)
-            response.raise_for_status()
-
-            soup = BeautifulSoup(response.text, "html.parser")
-            links = soup.find_all("a", class_="result__a", limit=self.max_results * 2)
-
-            for link in links:
-                href = link.get("href", "")
-                jamendo_url = self._extract_url(href)
-                if jamendo_url and "jamendo.com" in jamendo_url:
-                    title = link.get_text(strip=True)
-                    result = SearchResult(
-                        track=track,
-                        source=self.name,
-                        url=jamendo_url,
-                        is_free=True,
-                        quality="MP3 (Creative Commons)",
-                        title=title,
-                    )
-                    results.append(result)
-                    if len(results) >= self.max_results:
-                        break
-
-        except requests.RequestException as exc:
-            logger.error("Jamendo web search failed for query '%s': %s", query, exc, exc_info=True)
+        urls = self.provider.search_urls(
+            query,
+            num_results=self.max_results,
+            site_filter="jamendo.com",
+        )
+        for url in urls:
+            result = SearchResult(
+                track=track,
+                source=self.name,
+                url=url,
+                is_free=True,
+                quality="MP3 (Creative Commons)",
+                title=url,
+            )
+            results.append(result)
 
         return results
-
-    def _extract_url(self, ddg_url: str) -> str | None:
-        """Extract actual URL from DuckDuckGo redirect."""
-        match = re.search(r"uddg=([^&]+)", ddg_url)
-        if match:
-            return urllib.parse.unquote(match.group(1))
-        if "jamendo.com" in ddg_url:
-            return ddg_url
-        return None
