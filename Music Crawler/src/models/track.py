@@ -1,5 +1,6 @@
 """Data models for tracks and search results."""
 
+import hashlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -26,7 +27,8 @@ class Track:
         full_name = f"{self.rank:02d}_{safe_film}_{safe_title}"
         normalized = full_name.lower().replace(" ", "_")
         if len(normalized) > 200:
-            return normalized[:200]
+            hash_suffix = hashlib.md5(normalized.encode()).hexdigest()[:6]
+            return f"{normalized[:193]}_{hash_suffix}"
         return normalized
 
 
