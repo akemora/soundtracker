@@ -165,7 +165,7 @@ def filename_base(self) -> str:
 
 ## FASE 2: SearchProvider (3 días)
 
-**Estado**: `[ ]` Pendiente
+**Estado**: `[x]` Completada (2026-02-05)
 **Requiere**: Fase 1 completada
 **Bloquea**: Fases 3, 4, 5
 **Directorio de trabajo**: `Music Crawler/`
@@ -448,7 +448,7 @@ class SpotifySearcher(BaseSearcher):
 | 4.3.4 | Implementar `_soundcloud_embed(url)` - widget player URL | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 4.3.5 | Implementar `_spotify_embed(url)` - embed track URL | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 4.3.6 | Manejar URLs inválidas o no soportadas (return None) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 4.3.7 | Crear tests unitarios para cada resolver | M | GPT | 4o | 🟡 | `[ ]` | |
+| 4.3.7 | Crear tests unitarios para cada resolver | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -484,7 +484,7 @@ class SpotifySearcher(BaseSearcher):
 | 4.6.3 | Añadir endpoint `GET /api/composers/{slug}/playlist` a `music.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 4.6.4 | Añadir endpoint `POST /api/composers/{slug}/playlist/refresh` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 4.6.5 | Crear modelos Pydantic para response | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 4.6.6 | Añadir tests para endpoints | M | GPT | 4o | 🟡 | `[ ]` | |
+| 4.6.6 | Añadir tests para endpoints | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -529,13 +529,13 @@ class SpotifySearcher(BaseSearcher):
 | 4.9.5 | Añadir stats: "X tracks gratuitos, Y de pago" | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 4.9.6 | Añadir link a página standalone `/playlist` | L | Claude | haiku | 🟢 | `[x]` | 2026-02-05 |
 
-**Checkpoint Fase 4**: `[ ]` Completada
+**Checkpoint Fase 4**: `[x]` Completada (2026-02-05)
 
 ---
 
 ## FASE 5: Tests + CI (2 días)
 
-**Estado**: `[ ]` Pendiente
+**Estado**: `[x]` Completada (2026-02-05)
 **Requiere**: Fase 4 completada
 **Directorio de trabajo**: `Music Crawler/` y `App/`
 
@@ -543,12 +543,12 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 5.1.1 | Crear `Music Crawler/tests/test_searchers.py` | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.1.2 | Mock de `SearchProvider.search_urls()` | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.1.3 | Mock de `requests.get()` para parsing | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.1.4 | Test `YouTubeSearcher` con mock | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.1.5 | Test `SpotifySearcher` con mock | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.1.6 | Test al menos 5 searchers más | M | GPT | 4o | 🟡 | `[ ]` | |
+| 5.1.1 | Crear `Music Crawler/tests/test_searchers.py` | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.1.2 | Mock de `SearchProvider.search_urls()` | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.1.3 | Mock de `requests.get()` para parsing | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.1.4 | Test `YouTubeSearcher` con mock | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.1.5 | Test `SpotifySearcher` con mock | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.1.6 | Test al menos 5 searchers más | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -556,11 +556,11 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 5.2.1 | Crear `Music Crawler/tests/test_cache.py` | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.2.2 | Test: set/get básico | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.2.3 | Test: TTL expiration | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.2.4 | Test: 5 estados diferentes | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.2.5 | Test: --refresh flag ignora cache | L | GPT | 4o-mini | 🟡 | `[ ]` | |
+| 5.2.1 | Crear `Music Crawler/tests/test_cache.py` | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.2.2 | Test: set/get básico | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.2.3 | Test: TTL expiration | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.2.4 | Test: 5 estados diferentes | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.2.5 | Test: --refresh flag ignora cache | L | GPT | 4o-mini | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -568,10 +568,10 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 5.3.1 | Crear `App/tests/test_etl_music.py` | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.3.2 | Test: parse results.json válido | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.3.3 | Test: insert en DB (SQLite in-memory) | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.3.4 | Test: upsert no duplica | M | GPT | 4o | 🟡 | `[ ]` | |
+| 5.3.1 | Crear `App/tests/test_etl_music.py` | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.3.2 | Test: parse results.json válido | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.3.3 | Test: insert en DB (SQLite in-memory) | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.3.4 | Test: upsert no duplica | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -579,14 +579,14 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 5.4.1 | Crear `Music Crawler/tests/test_playlist.py` | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.4.2 | Mock de DB con Top 10 films | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.4.3 | Mock de searchers | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.4.4 | Test: track popular encontrado gratis | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.4.5 | Test: fallback a track alternativo | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.4.6 | Test: paid_only con purchase_links | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.4.7 | Test: EmbedResolver para YouTube | L | GPT | 4o-mini | 🟡 | `[ ]` | |
-| 5.4.8 | Test: EmbedResolver para SoundCloud | L | GPT | 4o-mini | 🟡 | `[ ]` | |
+| 5.4.1 | Crear `Music Crawler/tests/test_playlist.py` | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.4.2 | Mock de DB con Top 10 films | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.4.3 | Mock de searchers | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.4.4 | Test: track popular encontrado gratis | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.4.5 | Test: fallback a track alternativo | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.4.6 | Test: paid_only con purchase_links | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.4.7 | Test: EmbedResolver para YouTube | L | GPT | 4o-mini | 🟡 | `[x]` | 2026-02-05 |
+| 5.4.8 | Test: EmbedResolver para SoundCloud | L | GPT | 4o-mini | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -594,10 +594,10 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 5.5.1 | Crear `App/backend/tests/test_music_router.py` | M | GPT | 4o | 🔴 | `[ ]` | |
-| 5.5.2 | Test: GET /music con compositor válido | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.5.3 | Test: GET /playlist con compositor válido | L | GPT | 4o-mini | 🔴 | `[ ]` | |
-| 5.5.4 | Test: 404 para compositor inexistente | L | GPT | 4o-mini | 🟡 | `[ ]` | |
+| 5.5.1 | Crear `App/backend/tests/test_music_router.py` | M | GPT | 4o | 🔴 | `[x]` | 2026-02-05 |
+| 5.5.2 | Test: GET /music con compositor válido | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.5.3 | Test: GET /playlist con compositor válido | L | GPT | 4o-mini | 🔴 | `[x]` | 2026-02-05 |
+| 5.5.4 | Test: 404 para compositor inexistente | L | GPT | 4o-mini | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
@@ -605,12 +605,12 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 5.6.1 | Crear/modificar `.github/workflows/ci.yml` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 5.6.2 | Añadir job separado para Music Crawler tests | L | Claude | haiku | 🔴 | `[ ]` | |
-| 5.6.3 | Configurar Python 3.11, instalar deps, pytest | L | Claude | haiku | 🔴 | `[ ]` | |
-| 5.6.4 | Añadir badge de CI al README | L | GPT | 4o-mini | 🟢 | `[ ]` | |
+| 5.6.1 | Crear/modificar `.github/workflows/ci.yml` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 5.6.2 | Añadir job separado para Music Crawler tests | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 5.6.3 | Configurar Python 3.11, instalar deps, pytest | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 5.6.4 | Añadir badge de CI al README | L | GPT | 4o-mini | 🟢 | `[x]` | 2026-02-05 |
 
-**Checkpoint Fase 5**: `[ ]` Completada
+**Checkpoint Fase 5**: `[x]` Completada (2026-02-05)
 
 ---
 

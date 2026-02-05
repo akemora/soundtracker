@@ -1,6 +1,8 @@
 # SOUNDTRACKER
 
-> Enciclopedia de Compositores de Bandas Sonoras
+> Enciclopedia de Compositores de Bandas Sonoras con Playlists Integradas
+
+[![CI](https://github.com/akemora/soundtracker/actions/workflows/ci.yml/badge.svg)](https://github.com/akemora/soundtracker/actions/workflows/ci.yml)
 
 ---
 
@@ -16,6 +18,7 @@ SOUNDTRACKER es una enciclopedia web de compositores de bandas sonoras con datos
 - **Premios y nominaciones** (Oscar, BAFTA, Grammy, etc.)
 - **País de origen** de cada compositor
 - **Fuentes externas** verificadas
+- **🎵 Playlist reproducible** con temas de sus mejores bandas sonoras (próximamente)
 
 ## Estado del Proyecto
 
@@ -28,7 +31,7 @@ SOUNDTRACKER es una enciclopedia web de compositores de bandas sonoras con datos
 | Frontend | ✅ Implementado | Next.js 14 presente (pendiente de validación reciente) |
 | Docker | ✅ Configurado | Multi-stage builds + Compose |
 | CI/CD | ⚠️ Configurado | Workflows existentes (no verificados en esta actualización) |
-| Music Crawler | ✅ Módulo CLI | Submódulo independiente (integración pendiente) |
+| Music Crawler | ⚠️ En desarrollo | Submódulo CLI + Playlist Generator (ver plan v4.0) |
 
 ## Estado Actual (2026-02-05)
 
@@ -36,7 +39,17 @@ SOUNDTRACKER es una enciclopedia web de compositores de bandas sonoras con datos
 - El pipeline convive en dos rutas: `scripts/create_composer_files.py` (monolítico) y `src/soundtracker/` (modular).
 - Se añadió control de cambios por compositor (`control_changes.md`) y control general (`control_composers.md`).
 - El batch controller existe y escribe progreso en `outputs/batch_last_index.txt`.
-- El módulo `Music Crawler` está incluido como CLI independiente; integración con SOUNDTRACKER pendiente.
+- **Music Crawler v4.0**: Plan definitivo aprobado con Playlist Generator (ver `MUSIC_CRAWLER_DEFINITIVE.md`).
+
+### Próximas Funcionalidades (Music Crawler + Playlist)
+
+| Feature | Estado | Descripción |
+|---------|--------|-------------|
+| Playlist Generator | 📋 Planificado | Genera playlist por compositor desde Top 10 BSOs |
+| Embeds Reproducibles | 📋 Planificado | YouTube/SoundCloud embebidos en frontend |
+| Fallback Inteligente | 📋 Planificado | Busca alternativas si track no disponible gratis |
+| API Playlist | 📋 Planificado | `GET /api/composers/{slug}/playlist` |
+| Descargas Locales | ✅ Existente | Archivos en `downloads/` para uso local |
 
 ## Inicio Rápido
 
@@ -179,7 +192,11 @@ App/
 |-----------|-----------|
 | `README.md` | Guía de inicio rápido |
 | `DEPLOY.md` | Guía de despliegue Docker |
+| `DEVELOPMENT_PLAN.md` | Roadmap completo del proyecto |
 | `TASKS.md` | Lista de tareas con checklist |
+| `MUSIC_CRAWLER_DEFINITIVE.md` | **Plan detallado Music Crawler + Playlist v4.0** |
+| `MUSIC_CRAWLER_TASKS.md` | **Tareas detalladas para Music Crawler** |
+| `AI_DEV_GUIDE.md` | **Guía de entrada para IAs** (leer primero) |
 | `CONVENTIONS.md` | Estándares de código Python |
 | `CONVENTIONS_FRONTEND.md` | Estándares de frontend |
 | `AGENTS.md` | Protocolo para agentes IA |
@@ -196,4 +213,4 @@ Proyecto privado.
 
 ---
 
-**Versión**: 3.0 | **Actualizado**: 2026-02-03
+**Versión**: 4.0 | **Actualizado**: 2026-02-05
