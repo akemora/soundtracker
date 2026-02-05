@@ -286,7 +286,7 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.1.1 | Crear `App/scripts/music_crawler_batch.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
+| 3.1.1 | Crear `App/scripts/music_crawler_batch.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 3.1.2 | Implementar CLI con argparse: `--composer`, `--all`, `--playlist-only` | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 3.1.3 | Implementar conexión a `soundtrackers.db` | L | Claude | haiku | 🔴 | `[ ]` | |
 | 3.1.4 | Implementar query para obtener Top 10 films de un compositor | M | Claude | sonnet | 🔴 | `[ ]` | |
