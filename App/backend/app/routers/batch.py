@@ -26,6 +26,8 @@ LOG_DIR = ROOT_DIR / "logs"
 LOG_FILE = LOG_DIR / "batch_progress.log"
 PID_FILE = LOG_DIR / "batch_progress.pid"
 STATE_FILE = LOG_DIR / "batch_progress.json"
+QUOTA_ALERT_FILE = LOG_DIR / "quota_alert.txt"
+PROGRESS_FILE = ROOT_DIR / "outputs" / "batch_last_index.txt"
 SCRIPT_PATH = ROOT_DIR / "scripts" / "create_composer_files.py"
 ENV_FILE = ROOT_DIR / ".env"
 
@@ -100,15 +102,24 @@ def _clear_state() -> None:
 
 
 def _latest_completed_index() -> int:
+    if PROGRESS_FILE.exists():
+        try:
+            lines = [line.strip() for line in PROGRESS_FILE.read_text(encoding="utf-8").splitlines() if line.strip()]
+            if lines:
+                parts = lines[-1].split()
+                if parts and parts[0].isdigit():
+                    return int(parts[0])
+        except OSError:
+            pass
     outputs = list((ROOT_DIR / "outputs").glob("[0-9][0-9][0-9]_*.md"))
     if not outputs:
         return 1
-    newest = max(outputs, key=lambda p: p.stat().st_mtime)
-    stem = newest.name.split("_", 1)[0]
-    try:
-        return int(stem)
-    except ValueError:
-        return 1
+    indices: list[int] = []
+    for path in outputs:
+        stem = path.name.split("_", 1)[0]
+        if stem.isdigit():
+            indices.append(int(stem))
+    return max(indices) if indices else 1
 
 
 def _tail_log(lines: int) -> list[str]:
@@ -131,6 +142,14 @@ def _tail_log(lines: int) -> list[str]:
         return data.decode("utf-8", errors="ignore").splitlines()[-lines:]
     except OSError:
         return []
+
+
+def _clear_quota_alert() -> None:
+    try:
+        if QUOTA_ALERT_FILE.exists():
+            QUOTA_ALERT_FILE.write_text("", encoding="utf-8")
+    except OSError:
+        pass
 
 
 def _build_env(start_index: int) -> dict[str, str]:
@@ -192,12 +211,19 @@ def batch_status(lines: int = Query(40, ge=0, le=500)) -> dict[str, Any]:
             state = json.loads(STATE_FILE.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             state = {}
+    alert_text = ""
+    if QUOTA_ALERT_FILE.exists():
+        try:
+            alert_text = QUOTA_ALERT_FILE.read_text(encoding="utf-8").strip()
+        except OSError:
+            alert_text = ""
     return {
         "running": running,
         "pid": pid,
         "state": state,
         "latest_index": _latest_completed_index(),
         "log_tail": _tail_log(lines),
+        "quota_alert": alert_text,
     }
 
 
@@ -214,6 +240,7 @@ def batch_start(start_index: int | None = None) -> dict[str, Any]:
     if start_index < 1:
         raise HTTPException(status_code=400, detail="start_index must be >= 1")
 
+    _clear_quota_alert()
     new_pid = _start_batch(start_index)
     return {"started": True, "pid": new_pid, "start_index": start_index}
 
@@ -239,6 +266,9 @@ def batch_ui() -> str:
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>SOUNDTRACKER | Batch</title>
     <style>
       :root {
@@ -316,7 +346,10 @@ def batch_ui() -> str:
         border-radius: 12px;
         padding: 12px;
         overflow: auto;
+        overflow-y: scroll;
         max-height: 360px;
+        min-height: 260px;
+        scrollbar-gutter: stable;
         border: 1px solid #1f2937;
       }
       .muted { color: var(--muted); }
@@ -333,9 +366,10 @@ def batch_ui() -> str:
           <span class="muted" id="pid"></span>
           <span class="muted" id="latest"></span>
         </div>
+        <div id="quotaAlert" class="muted" style="margin-top: 8px;"></div>
         <div class="row" style="margin-top: 12px;">
           <label>Start index:</label>
-          <input id="startIndex" type="number" min="1" value="1" />
+          <input id="startIndex" type="text" inputmode="numeric" pattern="[0-9]*" value="1" />
           <button class="start" onclick="startBatch()">Iniciar (auto)</button>
           <button class="ghost" onclick="resumeBatch()">Reanudar</button>
           <button class="stop" onclick="stopBatch()">Parar</button>
@@ -359,18 +393,54 @@ def batch_ui() -> str:
 
     <script>
       let logLines = 80;
+      let lastLogSnapshot = [];
+      let clearMode = false;
+      let startIndexEdited = false;
+
+      const startIndexEl = document.getElementById('startIndex');
+      startIndexEl.addEventListener('input', () => {
+        startIndexEdited = true;
+      });
 
       async function refreshStatus() {
-        const res = await fetch(`/batch/status?lines=${logLines}`);
-        const data = await res.json();
+        let data;
+        try {
+          const res = await fetch(`/batch/status?lines=${logLines}`);
+          data = await res.json();
+        } catch (err) {
+          console.error(err);
+          return;
+        }
         const statusEl = document.getElementById('status');
         statusEl.textContent = data.running ? 'En marcha' : 'Detenido';
         statusEl.className = 'status ' + (data.running ? 'running' : 'stopped');
         document.getElementById('pid').textContent = data.pid ? `PID: ${data.pid}` : '';
         document.getElementById('latest').textContent = `Último índice procesado: ${data.latest_index}`;
-        document.getElementById('startIndex').value = data.latest_index + 1;
-        document.getElementById('log').textContent = data.log_tail.join('\\n');
-        document.getElementById('logMeta').textContent = `(${data.log_tail.length} líneas)`;
+        if (!startIndexEdited && document.activeElement !== startIndexEl) {
+          startIndexEl.value = data.latest_index + 1;
+        }
+        const lines = data.log_tail || [];
+        let displayLines = lines;
+        if (clearMode && lastLogSnapshot.length > 0) {
+          const lastLine = lastLogSnapshot[lastLogSnapshot.length - 1];
+          const idx = lines.lastIndexOf(lastLine);
+          displayLines = idx >= 0 ? lines.slice(idx + 1) : lines;
+          clearMode = false;
+        }
+        document.getElementById('log').textContent = displayLines.join('\\n');
+        document.getElementById('logMeta').textContent = `(${displayLines.length} líneas)`;
+        lastLogSnapshot = lines;
+
+        const quotaAlert = document.getElementById('quotaAlert');
+        if (data.quota_alert) {
+          quotaAlert.textContent = `ALERTA CUOTA: ${data.quota_alert}`;
+          quotaAlert.style.color = '#f87171';
+          quotaAlert.style.fontWeight = '700';
+        } else {
+          quotaAlert.textContent = '';
+          quotaAlert.style.color = '';
+          quotaAlert.style.fontWeight = '';
+        }
       }
 
       async function startBatch() {
@@ -383,12 +453,13 @@ def batch_ui() -> str:
       }
 
       async function resumeBatch() {
-        const idx = parseInt(document.getElementById('startIndex').value, 10);
+        const idx = parseInt(startIndexEl.value, 10);
         const res = await fetch(`/batch/start?start_index=${idx}`, { method: 'POST' });
         if (!res.ok) {
           const err = await res.json();
           alert(err.detail || 'Error al reanudar');
         }
+        startIndexEdited = false;
         await refreshStatus();
       }
 
@@ -411,9 +482,9 @@ def batch_ui() -> str:
       }
 
       function clearLog() {
-        logLines = 0;
         document.getElementById('log').textContent = '';
         document.getElementById('logMeta').textContent = '(0 líneas)';
+        clearMode = true;
       }
 
       refreshStatus();

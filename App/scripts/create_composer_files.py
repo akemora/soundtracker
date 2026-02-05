@@ -1,11 +1,12 @@
 import base64
+import hashlib
 import json
 import math
 import os
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -23,6 +24,25 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = BASE_DIR / 'outputs'
 INTERMEDIATE_DIR = BASE_DIR / 'intermediate_research'
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+CONTROL_STATE_PATH = OUTPUT_DIR / "control_state.json"
+CONTROL_TABLE_PATH = OUTPUT_DIR / "control_composers.md"
+BATCH_PROGRESS_PATH = OUTPUT_DIR / "batch_last_index.txt"
+
+def load_dotenv(path: Path) -> Dict[str, str]:
+    data: Dict[str, str] = {}
+    if not path.exists():
+        return data
+    for line in path.read_text(encoding='utf-8').splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith('#') or '=' not in stripped:
+            continue
+        key, value = stripped.split('=', 1)
+        data[key.strip()] = value.strip().strip('"').strip("'")
+    return data
+
+
+DOTENV = load_dotenv(BASE_DIR / '.env')
 
 sys.path.insert(0, str(BASE_DIR / 'src'))
 try:
@@ -104,6 +124,7 @@ EXTERNAL_DOMAINS = {
     'SoundtrackInfo': 'soundtrackinfo.com',
     'SoundtrackFest': 'soundtrackfest.com',
     'BandasSonorasDeCine': 'bandassonorasdecine.com',
+    'FilmAffinity': 'filmaffinity.com',
     'FMDB': 'fmdb.net',
     'Film Music Review': 'fmrev.com',
     'Cinescores': 'cinescores.dudaone.com',
@@ -131,6 +152,10 @@ SOURCE_PACK_QUERIES = [
     '{composer} awards nominations film music',
     '{composer} premios y nominaciones banda sonora',
     '{composer} legacy influence film music -site:wikipedia.org',
+    '{composer} interview soundtrack composer',
+    '{composer} compositional technique film music',
+    '{composer} orchestration approach film composer',
+    '{composer} estilo musical compositor entrevista',
 ]
 
 
@@ -138,7 +163,59 @@ def log(message: str, level: str = 'INFO') -> None:
     numeric = LOG_LEVELS.get(level, 20)
     threshold = LOG_LEVELS.get(LOG_LEVEL, 20)
     if numeric >= threshold:
-        print(f"[{level}] {message}", flush=True)
+        stamp = datetime.now(timezone.utc).astimezone().strftime("%H:%M:%S")
+        print(f"[{level}] {stamp} {message}", flush=True)
+
+
+QUOTA_ALERT_PATH = (BASE_DIR / "logs" / "quota_alert.txt")
+QUOTA_HINTS = (
+    "insufficient_quota",
+    "insufficient quota",
+    "quota",
+    "credits",
+    "credit",
+    "billing",
+    "payment required",
+    "balance",
+)
+
+
+def is_quota_error(text: str) -> bool:
+    lowered = (text or "").lower()
+    return any(hint in lowered for hint in QUOTA_HINTS)
+
+
+def trim_text_to_limit(text: str, limit: int) -> str:
+    if not text:
+        return text
+    if limit <= 0 or len(text) <= limit:
+        return text
+    trimmed = text[:limit]
+    return trimmed.rsplit(' ', 1)[0] if ' ' in trimmed else trimmed
+
+
+def handle_quota_error(provider: str, detail: str) -> None:
+    QUOTA_ALERT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%H:%M:%S")
+    message = f"{stamp} | {provider} quota/billing error: {detail}"
+    log(f"QUOTA ALERT: {message}", "ERROR")
+    try:
+        QUOTA_ALERT_PATH.write_text(message + "\n", encoding="utf-8")
+    except OSError:
+        pass
+    raise SystemExit(2)
+
+
+def handle_provider_alert(provider: str, detail: str) -> None:
+    QUOTA_ALERT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%H:%M:%S")
+    message = f"{stamp} | {provider} auth/error: {detail}"
+    log(f"PROVIDER ALERT: {message}", "ERROR")
+    try:
+        QUOTA_ALERT_PATH.write_text(message + "\n", encoding="utf-8")
+    except OSError:
+        pass
+    raise SystemExit(2)
 
 
 def perplexity_post(payload: Dict, timeout: int) -> Optional[Dict]:
@@ -164,12 +241,26 @@ def perplexity_post(payload: Dict, timeout: int) -> Optional[Dict]:
                 if resp.text:
                     snippet = resp.text[:400].replace('\n', ' ')
                     log(f"PPLX error body: {snippet}", "WARNING")
+                    if resp.status_code in {401, 402, 403, 429} and is_quota_error(snippet):
+                        handle_quota_error("Perplexity", snippet)
+                if resp.status_code == 401:
+                    handle_provider_alert("Perplexity", "401 Authorization Required")
                 last_error = resp.status_code
                 continue
+            if resp.status_code in {401, 402, 403, 429} and resp.text:
+                snippet = resp.text[:400].replace('\n', ' ')
+                if is_quota_error(snippet):
+                    handle_quota_error("Perplexity", snippet)
+                if resp.status_code == 401:
+                    handle_provider_alert("Perplexity", "401 Authorization Required")
             resp.raise_for_status()
             return resp.json()
         except (requests.RequestException, ValueError) as exc:
             last_error = getattr(exc, 'response', None)
+            if isinstance(exc, requests.RequestException) and exc.response is not None:
+                snippet = exc.response.text[:400].replace('\n', ' ')
+                if exc.response.status_code in {401, 402, 403, 429} and is_quota_error(snippet):
+                    handle_quota_error("Perplexity", snippet)
             continue
     if last_error:
         log(f"PPLX request failed (status {last_error})", "WARNING")
@@ -192,24 +283,36 @@ def openai_generate_text(system_prompt: str, user_prompt: str, max_tokens: int =
         }
         if OPENAI_REASONING_EFFORT:
             payload['reasoning'] = {'effort': OPENAI_REASONING_EFFORT}
-        try:
-            resp = requests.post(
-                OPENAI_RESPONSES_API,
-                headers={
-                    'Authorization': f'Bearer {OPENAI_API_KEY}',
-                    'Content-Type': 'application/json',
-                },
-                json=payload,
-                timeout=DEEP_RESEARCH_TIMEOUT,
-            )
-            log(f"OpenAI responses -> {resp.status_code}", "INFO")
-            resp.raise_for_status()
-            data = resp.json()
-        except (requests.RequestException, ValueError) as exc:
-            if isinstance(exc, requests.RequestException) and exc.response is not None:
-                snippet = exc.response.text[:400].replace('\n', ' ')
-                log(f"OpenAI responses error body: {snippet}", "WARNING")
-            log(f"OpenAI responses failed: {exc}", "WARNING")
+        data = None
+        for attempt in range(OPENAI_RETRIES + 1):
+            try:
+                resp = requests.post(
+                    OPENAI_RESPONSES_API,
+                    headers={
+                        'Authorization': f'Bearer {OPENAI_API_KEY}',
+                        'Content-Type': 'application/json',
+                    },
+                    json=payload,
+                    timeout=OPENAI_TIMEOUT,
+                )
+                log(f"OpenAI responses -> {resp.status_code}", "INFO")
+                if resp.status_code in {401, 402, 403, 429} and resp.text:
+                    snippet = resp.text[:400].replace('\n', ' ')
+                    if is_quota_error(snippet):
+                        handle_quota_error("OpenAI", snippet)
+                resp.raise_for_status()
+                data = resp.json()
+                break
+            except (requests.RequestException, ValueError) as exc:
+                if isinstance(exc, requests.RequestException) and exc.response is not None:
+                    snippet = exc.response.text[:400].replace('\n', ' ')
+                    log(f"OpenAI responses error body: {snippet}", "WARNING")
+                    if exc.response.status_code in {401, 402, 403, 429} and is_quota_error(snippet):
+                        handle_quota_error("OpenAI", snippet)
+                log(f"OpenAI responses failed: {exc}", "WARNING")
+                if attempt < OPENAI_RETRIES:
+                    time.sleep(OPENAI_BACKOFF * (attempt + 1))
+        if not data:
             return _openai_chat_fallback(system_prompt, user_prompt, max_tokens)
         text_parts: List[str] = []
         for output in data.get('output') or []:
@@ -230,24 +333,36 @@ def _openai_chat_fallback(system_prompt: str, user_prompt: str, max_tokens: int)
         'max_tokens': max_tokens,
         'temperature': 0.2,
     }
-    try:
-        resp = requests.post(
-            OPENAI_API,
-            headers={
-                'Authorization': f'Bearer {OPENAI_API_KEY}',
-                'Content-Type': 'application/json',
-            },
-            json=payload,
-            timeout=DEEP_RESEARCH_TIMEOUT,
-        )
-        log(f"OpenAI chat -> {resp.status_code}", "INFO")
-        resp.raise_for_status()
-        data = resp.json()
-    except (requests.RequestException, ValueError) as exc:
-        if isinstance(exc, requests.RequestException) and exc.response is not None:
-            snippet = exc.response.text[:400].replace('\n', ' ')
-            log(f"OpenAI chat error body: {snippet}", "WARNING")
-        log(f"OpenAI chat failed: {exc}", "WARNING")
+    data = None
+    for attempt in range(OPENAI_RETRIES + 1):
+        try:
+            resp = requests.post(
+                OPENAI_API,
+                headers={
+                    'Authorization': f'Bearer {OPENAI_API_KEY}',
+                    'Content-Type': 'application/json',
+                },
+                json=payload,
+                timeout=OPENAI_TIMEOUT,
+            )
+            log(f"OpenAI chat -> {resp.status_code}", "INFO")
+            if resp.status_code in {401, 402, 403, 429} and resp.text:
+                snippet = resp.text[:400].replace('\n', ' ')
+                if is_quota_error(snippet):
+                    handle_quota_error("OpenAI", snippet)
+            resp.raise_for_status()
+            data = resp.json()
+            break
+        except (requests.RequestException, ValueError) as exc:
+            if isinstance(exc, requests.RequestException) and exc.response is not None:
+                snippet = exc.response.text[:400].replace('\n', ' ')
+                log(f"OpenAI chat error body: {snippet}", "WARNING")
+                if exc.response.status_code in {401, 402, 403, 429} and is_quota_error(snippet):
+                    handle_quota_error("OpenAI", snippet)
+            log(f"OpenAI chat failed: {exc}", "WARNING")
+            if attempt < OPENAI_RETRIES:
+                time.sleep(OPENAI_BACKOFF * (attempt + 1))
+    if not data:
         return ''
     choices = data.get('choices') or []
     if not choices:
@@ -274,9 +389,15 @@ def gemini_generate_text(prompt: str, max_tokens: int = 1500) -> str:
             json=payload,
             timeout=DEEP_RESEARCH_TIMEOUT,
         )
+        if resp.status_code >= 400:
+            snippet = resp.text[:400].replace('\n', ' ')
+            log(f"Gemini error body: {snippet}", "WARNING")
         resp.raise_for_status()
         data = resp.json()
     except (requests.RequestException, ValueError) as exc:
+        if isinstance(exc, requests.RequestException) and exc.response is not None:
+            snippet = exc.response.text[:400].replace('\n', ' ')
+            log(f"Gemini error body: {snippet}", "WARNING")
         log(f"Gemini generation failed: {exc}", "WARNING")
         return ''
     candidates = data.get('candidates') or []
@@ -284,8 +405,16 @@ def gemini_generate_text(prompt: str, max_tokens: int = 1500) -> str:
         return ''
     parts = (candidates[0].get('content') or {}).get('parts') or []
     return ''.join(part.get('text', '') for part in parts).strip()
-HEADERS = {'User-Agent': 'Soundtracker/1.0'}
-REQUEST_TIMEOUT = 10
+HEADERS = {
+    'User-Agent': 'Soundtracker/1.0',
+    'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+}
+REQUEST_TIMEOUT = int(os.getenv('REQUEST_TIMEOUT', '10'))
+IMAGE_TIMEOUT = int(os.getenv('IMAGE_TIMEOUT', '30'))
+IMAGE_RETRIES = int(os.getenv('IMAGE_RETRIES', '2'))
+IMAGE_BACKOFF = float(os.getenv('IMAGE_BACKOFF', '1.5'))
+GOOGLE_IMAGE_FALLBACK = os.getenv('GOOGLE_IMAGE_FALLBACK', '1') == '1'
+GOOGLE_IMAGE_RESULTS = int(os.getenv('GOOGLE_IMAGE_RESULTS', '6'))
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 LOG_LEVELS = {'DEBUG': 10, 'INFO': 20, 'WARNING': 30, 'ERROR': 40}
 DEEP_RESEARCH_TIMEOUT = int(os.getenv('DEEP_RESEARCH_TIMEOUT', '60'))
@@ -294,7 +423,8 @@ POSTER_SEARCH_RESULTS = 2
 POSTER_WEB_FALLBACK = os.getenv('POSTER_WEB_FALLBACK', '1') == '1'
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 TMDB_API = 'https://api.themoviedb.org/3'
-TMDB_IMAGE = 'https://image.tmdb.org/t/p/w500'
+TMDB_IMAGE = 'https://image.tmdb.org/t/p/original'
+TMDB_IMAGE_SIZES = ['original', 'w500', 'w342', 'w185']
 PPLX_API_KEY = os.getenv('PPLX_API_KEY') or os.getenv('PERPLEXITY_API_KEY')
 PPLX_MODEL = os.getenv('PPLX_MODEL', 'sonar')
 PPLX_API = os.getenv('PPLX_API', 'https://api.perplexity.ai')
@@ -315,19 +445,47 @@ OPENAI_USE_RESPONSES = os.getenv('OPENAI_USE_RESPONSES', '1') == '1'
 OPENAI_REASONING_EFFORT = os.getenv('OPENAI_REASONING_EFFORT', 'medium').lower()
 if OPENAI_REASONING_EFFORT not in {'low', 'medium', 'high'}:
     OPENAI_REASONING_EFFORT = 'medium'
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+OPENAI_TIMEOUT = int(os.getenv('OPENAI_TIMEOUT', '120'))
+OPENAI_RETRIES = int(os.getenv('OPENAI_RETRIES', '2'))
+OPENAI_BACKOFF = float(os.getenv('OPENAI_BACKOFF', '2.0'))
+OPENAI_MAX_INPUT_CHARS = int(os.getenv('OPENAI_MAX_INPUT_CHARS', '20000'))
+GEMINI_MAX_INPUT_CHARS = int(os.getenv('GEMINI_MAX_INPUT_CHARS', '20000'))
+GEMINI_API_KEY = DOTENV.get('GEMINI_API_KEY') or os.getenv('GEMINI_API_KEY')
 GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.5-flash')
 SOURCE_PACK_ENABLED = os.getenv('SOURCE_PACK_ENABLED', '1') == '1'
 SOURCE_PACK_REUSE = os.getenv('SOURCE_PACK_REUSE', '1') == '1'
 SOURCE_PACK_GOOGLE_FALLBACK = os.getenv('SOURCE_PACK_GOOGLE_FALLBACK', '1') == '1'
-SOURCE_PACK_MAX_URLS = int(os.getenv('SOURCE_PACK_MAX_URLS', '24'))
-SOURCE_PACK_MAX_PARAGRAPHS = int(os.getenv('SOURCE_PACK_MAX_PARAGRAPHS', '8'))
-SOURCE_PACK_MAX_CHARS = int(os.getenv('SOURCE_PACK_MAX_CHARS', '32000'))
+SOURCE_PACK_MAX_URLS = int(os.getenv('SOURCE_PACK_MAX_URLS', '40'))
+SOURCE_PACK_MAX_PARAGRAPHS = int(os.getenv('SOURCE_PACK_MAX_PARAGRAPHS', '12'))
+SOURCE_PACK_MAX_CHARS = int(os.getenv('SOURCE_PACK_MAX_CHARS', '60000'))
 DEEP_RESEARCH_ENABLED = os.getenv('DEEP_RESEARCH_ENABLED', '1') == '1'
 EXTERNAL_SNIPPET_MAX_CHARS = int(os.getenv('EXTERNAL_SNIPPET_MAX_CHARS', '700'))
-EXTERNAL_SNIPPET_SOURCES = int(os.getenv('EXTERNAL_SNIPPET_SOURCES', '12'))
+EXTERNAL_SNIPPET_SOURCES = int(os.getenv('EXTERNAL_SNIPPET_SOURCES', '18'))
 MIN_PARAGRAPH_LEN = int(os.getenv('MIN_PARAGRAPH_LEN', '50'))
 MAX_BIO_PARAGRAPHS = int(os.getenv('MAX_BIO_PARAGRAPHS', '6'))
+MIN_BIO_LENGTH = int(os.getenv('MIN_BIO_LENGTH', '1500'))
+
+
+def compute_content_targets(
+    film_count: int,
+    awards_count: int,
+    known_for_count: int,
+) -> Tuple[int, int, int]:
+    """Scale content length targets based on composer prominence."""
+    film_count = max(film_count or 0, 0)
+    awards_count = max(awards_count or 0, 0)
+    known_for_count = max(known_for_count or 0, 0)
+
+    bio_bonus = min(4500, film_count * 25 + awards_count * 150 + known_for_count * 200)
+    min_bio = min(8000, MIN_BIO_LENGTH + bio_bonus)
+
+    style_bonus = min(1400, film_count * 8 + awards_count * 50 + known_for_count * 60)
+    min_style = min(1800, 350 + style_bonus)
+
+    facts_bonus = min(1400, film_count * 7 + awards_count * 40 + known_for_count * 50)
+    min_facts = min(1700, 280 + facts_bonus)
+
+    return min_bio, min_style, min_facts
 EXTERNAL_DOMAIN_RESULTS = int(os.getenv('EXTERNAL_DOMAIN_RESULTS', '3'))
 TOP_MIN_VOTE_COUNT = int(os.getenv('TOP_MIN_VOTE_COUNT', '50'))
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
@@ -348,13 +506,71 @@ NOISE_HINTS = [
     'otras secciones',
     'menu',
 ]
+PLATFORM_TOKENS = [
+    'ps4',
+    'ps5',
+    'playstation',
+    'xbox',
+    'xbox series',
+    'switch',
+    'nintendo',
+    'pc',
+    'steam',
+    'netflix',
+    'prime video',
+    'amazon',
+    'disney',
+    'apple tv',
+    'hbo',
+    'hulu',
+    'starz',
+    'peacock',
+    'paramount',
+]
+COMMON_NAME_TOKENS = {
+    'williams',
+    'smith',
+    'johnson',
+    'brown',
+    'jones',
+    'garcia',
+    'miller',
+    'davis',
+    'rodriguez',
+    'martinez',
+    'hernandez',
+    'lopez',
+    'gonzalez',
+    'wilson',
+    'anderson',
+    'thomas',
+    'taylor',
+    'moore',
+    'jackson',
+    'martin',
+    'lee',
+    'perez',
+    'thompson',
+    'white',
+    'harris',
+    'sanchez',
+    'clark',
+    'ramirez',
+    'lewis',
+    'robinson',
+    'walker',
+    'young',
+}
 BLOCKED_DOMAINS = {
     'shutterstock.com',
     'letterboxd.com',
     'remix.berklee.edu',
     'movieposters.com',
     'etsy.com',
+    'www.etsy.com',
     'impawards.com',
+    'filmscoremonthly.com',
+    'www.filmscoremonthly.com',
 }
 TMDB_CACHE_PATH = OUTPUT_DIR / 'tmdb_cache.json'
 TRANSLATE_ENDPOINT = 'https://translate.googleapis.com/translate_a/single'
@@ -381,6 +597,10 @@ ENGLISH_HINTS = [
     ' original ',
     ' score ',
 ]
+
+
+def is_unlimited_limit(limit: int) -> bool:
+    return limit <= 0
 
 BAD_TITLES = {
     'main page', 'contents', 'current events', 'random article', 'about wikipedia',
@@ -454,7 +674,7 @@ def fetch_url_text(url: str) -> str:
         resp.raise_for_status()
         return resp.text
     except requests.RequestException as exc:
-        print(f"    - failed to fetch {url}: {exc}")
+        log(f"failed to fetch {url}: {exc}", "WARNING")
         return ''
 
 
@@ -464,11 +684,222 @@ def clean_text(text: str) -> str:
     return cleaned
 
 
+def now_local_stamp() -> str:
+    return datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def compute_hash(text: str) -> str:
+    if text is None:
+        return ''
+    return hashlib.sha256(text.encode('utf-8')).hexdigest()
+
+
+def extract_headings(text: str) -> set[str]:
+    headings = set()
+    for line in (text or '').splitlines():
+        if line.startswith('## '):
+            headings.add(line[3:].strip())
+    return headings
+
+
+def diff_stats(old_text: str, new_text: str) -> tuple[int, int]:
+    import difflib
+
+    added = 0
+    removed = 0
+    for line in difflib.ndiff(old_text.splitlines(), new_text.splitlines()):
+        if line.startswith('+ ') and not line.startswith('+++'):
+            added += 1
+        elif line.startswith('- ') and not line.startswith('---'):
+            removed += 1
+    return added, removed
+
+
+def load_control_state() -> Dict[str, Dict]:
+    if not CONTROL_STATE_PATH.exists():
+        return {}
+    try:
+        data = json.loads(CONTROL_STATE_PATH.read_text(encoding='utf-8'))
+        if isinstance(data, dict):
+            return data
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return {}
+
+
+def save_control_state(state: Dict[str, Dict]) -> None:
+    CONTROL_STATE_PATH.write_text(
+        json.dumps(state, ensure_ascii=False, indent=2),
+        encoding='utf-8',
+    )
+
+
+def file_mtime_stamp(path: Path) -> str:
+    try:
+        stamp = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
+        return stamp.astimezone().strftime("%Y-%m-%d %H:%M:%S")
+    except OSError:
+        return ""
+
+
+def count_control_rows(path: Path) -> str:
+    if not path.exists():
+        return ""
+    try:
+        lines = path.read_text(encoding='utf-8').splitlines()
+    except OSError:
+        return ""
+    rows = [line for line in lines if line.startswith("|") and "Fecha" not in line and "---" not in line]
+    return str(len(rows)) if rows else ""
+
+
+def update_control_table(state: Dict[str, Dict], composers: List[Tuple[Optional[int], str]]) -> None:
+    lines = [
+        "| # | Compositor | Estado | Generado | Modificaciones | Última modificación |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for position, (explicit_idx, name) in enumerate(composers, start=1):
+        idx = explicit_idx or position
+        record = state.get(name, {})
+        if record:
+            status = "Generado"
+            generated_at = record.get('generated_at', '')
+            modified_count = str(record.get('modified_count', 0))
+            last_modified = record.get('last_modified', '')
+        else:
+            slug = slugify(name)
+            md_path = OUTPUT_DIR / f"{idx:03}_{slug}.md"
+            control_path = OUTPUT_DIR / f"{idx:03}_{slug}" / "control_changes.md"
+            if md_path.exists():
+                status = "Generado"
+                generated_at = file_mtime_stamp(md_path)
+                last_modified = generated_at
+                modified_count = count_control_rows(control_path)
+            else:
+                status = "Pendiente"
+                generated_at = ''
+                modified_count = ''
+                last_modified = ''
+        lines.append(
+            f"| {idx} | {escape_table_cell(name)} | {status} | "
+            f"{escape_table_cell(generated_at)} | {escape_table_cell(modified_count)} | "
+            f"{escape_table_cell(last_modified)} |"
+        )
+    CONTROL_TABLE_PATH.write_text('\n'.join(lines).strip() + '\n', encoding='utf-8')
+
+
+def update_composer_control(
+    composer: str,
+    composer_folder: Path,
+    old_text: str,
+    new_text: str,
+) -> bool:
+    if old_text == new_text:
+        return False
+    composer_folder.mkdir(parents=True, exist_ok=True)
+    control_path = composer_folder / "control_changes.md"
+    added, removed = diff_stats(old_text, new_text)
+    old_heads = extract_headings(old_text)
+    new_heads = extract_headings(new_text)
+    added_heads = sorted(new_heads - old_heads)
+    removed_heads = sorted(old_heads - new_heads)
+    added_text = "; ".join(added_heads) if added_heads else "—"
+    removed_text = "; ".join(removed_heads) if removed_heads else "—"
+    action = "Creado" if not old_text else "Actualizado"
+    if not control_path.exists():
+        control_path.write_text(
+            f"# Control de cambios — {composer}\n\n"
+            "| Fecha | Acción | Líneas añadidas | Líneas eliminadas | Secciones añadidas | Secciones eliminadas | Hash |\n"
+            "| --- | --- | --- | --- | --- | --- | --- |\n",
+            encoding='utf-8',
+        )
+    hash_value = compute_hash(new_text)[:12]
+    row = (
+        f"| {now_local_stamp()} | {action} | {added} | {removed} | "
+        f"{escape_table_cell(added_text)} | {escape_table_cell(removed_text)} | {hash_value} |\n"
+    )
+    with control_path.open('a', encoding='utf-8') as handle:
+        handle.write(row)
+    return True
+
+
+def write_batch_progress(index: int, composer: str) -> None:
+    try:
+        BATCH_PROGRESS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with BATCH_PROGRESS_PATH.open("a", encoding="utf-8") as handle:
+            handle.write(f"{index}\t{composer}\t{now_local_stamp()}\n")
+    except OSError:
+        pass
+
+
 def truncate_text(text: str, max_chars: int) -> str:
     if len(text) <= max_chars:
         return text
     trimmed = text[:max_chars].rsplit(' ', 1)[0]
     return trimmed.rstrip() + '...'
+
+
+def is_platform_noise(text: str) -> bool:
+    lowered = text.lower()
+    if lowered.startswith(('plataformas', 'platforms', 'streaming')):
+        return True
+    if ('temporada' in lowered or 'season' in lowered or 'episod' in lowered) and (
+        '%' in lowered or 'enlace' in lowered or 'link' in lowered
+    ):
+        return True
+    token_hits = sum(1 for token in PLATFORM_TOKENS if token in lowered)
+    return token_hits >= 2
+
+
+def filter_noise_paragraphs(text: str) -> str:
+    parts = [p.strip() for p in re.split(r'\n{1,}', text or '') if p.strip()]
+    cleaned = [p for p in parts if not is_platform_noise(p)]
+    return '\n'.join(cleaned)
+
+
+def snippet_mentions_composer(text: str, composer: str) -> bool:
+    if not text:
+        return False
+    tokens = [token for token in _composer_tokens(composer) if len(token) >= 3]
+    if not tokens:
+        tokens = [token for token in _composer_tokens(composer) if len(token) >= 2]
+    if not tokens:
+        return True
+    lowered = text.lower()
+    hits = [token for token in tokens if token in lowered]
+    if len(hits) >= 2:
+        return True
+    if not hits:
+        return False
+    return hits[0] not in COMMON_NAME_TOKENS
+
+
+def is_snippet_relevant(text: str, composer: str) -> bool:
+    if not text:
+        return False
+    if is_platform_noise(text) or is_noise_text(text):
+        return False
+    if not snippet_mentions_composer(text, composer):
+        return False
+    return True
+
+
+def is_snippet_relevant_strict(text: str, composer: str) -> bool:
+    if not is_snippet_relevant(text, composer):
+        return False
+    tokens = [token for token in _composer_tokens(composer) if len(token) >= 3]
+    lowered = text.lower()
+    if tokens:
+        full_name = ' '.join(tokens)
+        if full_name and full_name in lowered:
+            return True
+        hits = [token for token in tokens if token in lowered]
+        if len(hits) >= 2:
+            return True
+        if hits and hits[0] not in COMMON_NAME_TOKENS and len(hits[0]) > 5:
+            return True
+        return False
+    return True
 
 
 def load_tmdb_cache() -> Dict[str, Dict]:
@@ -503,30 +934,58 @@ def save_streaming_cache(cache: Dict[str, Dict]) -> None:
         pass
 
 
+def _tmdb_alternate_urls(url: str) -> List[str]:
+    if 'image.tmdb.org/t/p/' not in url:
+        return [url]
+    try:
+        base, rest = url.split('/t/p/', 1)
+    except ValueError:
+        return [url]
+    if '/' not in rest:
+        return [url]
+    size, path = rest.split('/', 1)
+    urls = []
+    for size_option in TMDB_IMAGE_SIZES:
+        if size_option == size:
+            urls.append(url)
+        else:
+            urls.append(f"{base}/t/p/{size_option}/{path}")
+    return urls
+
+
 def download_image(url: str, path: Path) -> Optional[str]:
     if not url:
         return None
     path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        resp = requests.get(
-            url,
-            headers={
-                'User-Agent': HEADERS['User-Agent'],
-                'Referer': 'https://en.wikipedia.org',
-            },
-            timeout=REQUEST_TIMEOUT,
-            stream=True,
-        )
-        resp.raise_for_status()
-        with path.open('wb') as fh:
-            for chunk in resp.iter_content(8192):
-                fh.write(chunk)
-        return str(path)
-    except requests.RequestException as exc:
-        print(f"    - image download error {url}: {exc}")
+    last_exc: Optional[Exception] = None
+    for candidate in _tmdb_alternate_urls(url):
+        for attempt in range(IMAGE_RETRIES + 1):
+            try:
+                resp = requests.get(
+                    candidate,
+                    headers={
+                        'User-Agent': HEADERS['User-Agent'],
+                        'Referer': 'https://en.wikipedia.org',
+                    },
+                    timeout=IMAGE_TIMEOUT,
+                    stream=True,
+                )
+                resp.raise_for_status()
+                with path.open('wb') as fh:
+                    for chunk in resp.iter_content(8192):
+                        fh.write(chunk)
+                return str(path)
+            except requests.RequestException as exc:
+                last_exc = exc
+                if attempt < IMAGE_RETRIES:
+                    time.sleep(IMAGE_BACKOFF * (attempt + 1))
+                if path.exists():
+                    path.unlink()
         if path.exists():
             path.unlink()
-        return None
+    if last_exc:
+        log(f"image download error {url}: {last_exc}", "WARNING")
+    return None
 
 
 def download_posters_bulk(entries: List[Dict], composer_folder: Path) -> None:
@@ -729,6 +1188,9 @@ def _build_section_prompt(
     sources_text: str,
     pack_text: str,
     red_tones_note: str,
+    min_bio: int,
+    min_style: int,
+    min_facts: int,
 ) -> Tuple[str, str, int]:
     base = (
         'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
@@ -740,17 +1202,19 @@ def _build_section_prompt(
         system_prompt = (
             'Eres un investigador musical y divulgador. '
             + base +
-            'Redacta la biografía en 8-14 párrafos o más si hace falta. '
+            'Redacta la biografía en 8-14 párrafos o más si hace falta '
+            f'(mínimo {min_bio} caracteres). '
             'Incluye subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
             '(cronología, colaboraciones, obras clave). '
             + red_tones_note
         )
-        max_tokens = 2600
+        max_tokens = 3200
     elif section == 'style':
         system_prompt = (
             'Eres un investigador musical y divulgador. '
             + base +
-            'Redacta 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
+            f'Redacta 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias '
+            f'(mínimo {min_style} caracteres). '
             + red_tones_note
         )
         max_tokens = 1400
@@ -759,7 +1223,8 @@ def _build_section_prompt(
             'Eres un investigador musical y divulgador. '
             + base +
             'Redacta 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
-            'excentricidades o rasgos humanos que lo hagan memorable. '
+            f'excentricidades o rasgos humanos que lo hagan memorable '
+            f'(mínimo {min_facts} caracteres). '
             + red_tones_note
         )
         max_tokens = 1200
@@ -776,11 +1241,16 @@ def _openai_source_profile(
     pack_text: str,
     citations: List[str],
     outline: str,
+    min_bio: int,
+    min_style: int,
+    min_facts: int,
     debug_dir: Optional[Path] = None,
 ) -> Optional[Dict]:
     if not OPENAI_API_KEY:
         return None
+    pack_text = trim_text_to_limit(pack_text, OPENAI_MAX_INPUT_CHARS)
     sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
+    sources_text = trim_text_to_limit(sources_text, 8000)
     red_tones_note = ''
     if 'stothart' in composer.lower():
         red_tones_note = (
@@ -791,9 +1261,36 @@ def _openai_source_profile(
         red_tones_note = 'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
     if outline:
         pack_text = f"{pack_text}\n\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
-    biography_prompt = _build_section_prompt(composer, 'biography', sources_text, pack_text, red_tones_note)
-    style_prompt = _build_section_prompt(composer, 'style', sources_text, pack_text, red_tones_note)
-    facts_prompt = _build_section_prompt(composer, 'facts', sources_text, pack_text, red_tones_note)
+    biography_prompt = _build_section_prompt(
+        composer,
+        'biography',
+        sources_text,
+        pack_text,
+        red_tones_note,
+        min_bio,
+        min_style,
+        min_facts,
+    )
+    style_prompt = _build_section_prompt(
+        composer,
+        'style',
+        sources_text,
+        pack_text,
+        red_tones_note,
+        min_bio,
+        min_style,
+        min_facts,
+    )
+    facts_prompt = _build_section_prompt(
+        composer,
+        'facts',
+        sources_text,
+        pack_text,
+        red_tones_note,
+        min_bio,
+        min_style,
+        min_facts,
+    )
     bio = openai_generate_text(*biography_prompt)
     style = openai_generate_text(*style_prompt)
     facts = openai_generate_text(*facts_prompt)
@@ -819,11 +1316,16 @@ def _gemini_source_profile(
     pack_text: str,
     citations: List[str],
     outline: str,
+    min_bio: int,
+    min_style: int,
+    min_facts: int,
     debug_dir: Optional[Path] = None,
 ) -> Optional[Dict]:
     if not GEMINI_API_KEY:
         return None
+    pack_text = trim_text_to_limit(pack_text, GEMINI_MAX_INPUT_CHARS)
     sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
+    sources_text = trim_text_to_limit(sources_text, 8000)
     red_tones_note = ''
     if 'stothart' in composer.lower():
         red_tones_note = (
@@ -834,9 +1336,36 @@ def _gemini_source_profile(
         red_tones_note = 'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
     if outline:
         pack_text = f"{pack_text}\n\nGuía adicional (contraste GPT/Gemini):\n{outline}\n"
-    biography_prompt = _build_section_prompt(composer, 'biography', sources_text, pack_text, red_tones_note)
-    style_prompt = _build_section_prompt(composer, 'style', sources_text, pack_text, red_tones_note)
-    facts_prompt = _build_section_prompt(composer, 'facts', sources_text, pack_text, red_tones_note)
+    biography_prompt = _build_section_prompt(
+        composer,
+        'biography',
+        sources_text,
+        pack_text,
+        red_tones_note,
+        min_bio,
+        min_style,
+        min_facts,
+    )
+    style_prompt = _build_section_prompt(
+        composer,
+        'style',
+        sources_text,
+        pack_text,
+        red_tones_note,
+        min_bio,
+        min_style,
+        min_facts,
+    )
+    facts_prompt = _build_section_prompt(
+        composer,
+        'facts',
+        sources_text,
+        pack_text,
+        red_tones_note,
+        min_bio,
+        min_style,
+        min_facts,
+    )
     bio = gemini_generate_text(
         f"{biography_prompt[0]}\n\n{biography_prompt[1]}", max_tokens=biography_prompt[2]
     )
@@ -875,7 +1404,12 @@ def _merge_section(primary: str, secondary: str) -> str:
     return primary
 
 
-def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
+def get_source_pack_profile(
+    composer: str,
+    min_bio: Optional[int] = None,
+    min_style: Optional[int] = None,
+    min_facts: Optional[int] = None,
+) -> Optional[Dict[str, object]]:
     if not (SOURCE_PACK_ENABLED and PPLX_API_KEY):
         return None
     pack = build_source_pack(composer)
@@ -890,8 +1424,29 @@ def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
     outline = _build_research_outline(composer)
     log(f"Source pack: running synthesis for {composer}", "INFO")
     debug_dir = INTERMEDIATE_DIR / slugify(composer)
-    openai_profile = _openai_source_profile(composer, pack_text, citations, outline, debug_dir)
-    gemini_profile = _gemini_source_profile(composer, pack_text, citations, outline, debug_dir)
+    min_bio = min_bio or MIN_BIO_LENGTH
+    min_style = min_style or 350
+    min_facts = min_facts or 280
+    openai_profile = _openai_source_profile(
+        composer,
+        pack_text,
+        citations,
+        outline,
+        min_bio,
+        min_style,
+        min_facts,
+        debug_dir,
+    )
+    gemini_profile = _gemini_source_profile(
+        composer,
+        pack_text,
+        citations,
+        outline,
+        min_bio,
+        min_style,
+        min_facts,
+        debug_dir,
+    )
 
     def extract_text(profile: Optional[Dict], key: str) -> str:
         if not profile:
@@ -915,9 +1470,6 @@ def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
         extract_text(openai_profile, 'facts'),
         extract_text(gemini_profile, 'facts'),
     )
-    min_bio = 900
-    min_style = 350
-    min_facts = 280
     needs_deep = (
         len(biography or '') < min_bio
         or len(style or '') < min_style
@@ -925,13 +1477,89 @@ def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
     )
     if needs_deep:
         log(f"Source pack: short synthesis, trying deep research for {composer}", "WARNING")
-        deep_profile = get_deep_research_profile(composer)
+        deep_profile = get_deep_research_profile(composer, min_bio, min_style, min_facts)
         if deep_profile:
             deep_citations = deep_profile.get('citations') or []
             biography = _merge_section(biography, deep_profile.get('biography') or '')
             style = _merge_section(style, deep_profile.get('style') or '')
             facts = _merge_section(facts, deep_profile.get('facts') or '')
             citations = _dedupe_list(citations + list(deep_citations))
+
+    if len(biography or '') < min_bio:
+        log(f"Source pack: biography below {min_bio} chars, expanding for {composer}", "WARNING")
+        sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
+        red_tones_note = ''
+        if 'stothart' in composer.lower():
+            red_tones_note = (
+                'Incluye, si está documentado con fuentes fiables, la mención a la teoría de los '
+                '"tonos rojos" en su forma de pensar la música; si no hay fuentes claras, indícalo explícitamente. '
+            )
+        else:
+            red_tones_note = (
+                'No menciones la teoría de los "tonos rojos" (es específica de Stothart). '
+            )
+        system_prompt = (
+            'Eres un investigador musical y divulgador. '
+            'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
+            'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
+            'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
+            'Si hay incertidumbre, indícalo. '
+            f'Reescribe y amplía la biografía alcanzando un mínimo de {min_bio} caracteres, '
+            'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
+            '(cronología, colaboraciones, obras clave). '
+            + red_tones_note
+        )
+        user_prompt = (
+            f"Compositor: {composer}\n\n"
+            f"Biografía actual:\n{trim_text_to_limit(biography, 4000)}\n\n"
+            f"Fuentes (citas):\n{sources_text}\n\n"
+            f"Material:\n{pack_text}\n"
+        )
+        expanded = openai_generate_text(system_prompt, user_prompt, max_tokens=3600)
+        if expanded:
+            biography = _merge_section(biography, expanded)
+
+    if len(style or '') < min_style:
+        log(f"Source pack: style below {min_style} chars, expanding for {composer}", "WARNING")
+        sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
+        system_prompt = (
+            'Eres un investigador musical y divulgador. '
+            'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
+            'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
+            'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
+            f'Reescribe y amplía el apartado de estilo alcanzando un mínimo de {min_style} caracteres. '
+            'Cubre técnicas de composición, orquestación, influencias y rasgos sonoros distintivos.'
+        )
+        user_prompt = (
+            f"Compositor: {composer}\n\n"
+            f"Texto actual:\n{trim_text_to_limit(style, 2500)}\n\n"
+            f"Fuentes (citas):\n{sources_text}\n\n"
+            f"Material:\n{pack_text}\n"
+        )
+        expanded = openai_generate_text(system_prompt, user_prompt, max_tokens=2400)
+        if expanded:
+            style = _merge_section(style, expanded)
+
+    if len(facts or '') < min_facts:
+        log(f"Source pack: facts below {min_facts} chars, expanding for {composer}", "WARNING")
+        sources_text = '\n'.join(f"[{idx}] {url}" for idx, url in enumerate(citations, 1))
+        system_prompt = (
+            'Eres un investigador musical y divulgador. '
+            'Usa EXCLUSIVAMENTE las fuentes listadas y no inventes. '
+            'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
+            'Cada párrafo debe terminar con citas [1], [2] usando la lista global de fuentes. '
+            f'Reescribe y amplía las curiosidades alcanzando un mínimo de {min_facts} caracteres. '
+            'Debe ser narrativo, sin listas, con hábitos, método de trabajo o rasgos humanos.'
+        )
+        user_prompt = (
+            f"Compositor: {composer}\n\n"
+            f"Texto actual:\n{trim_text_to_limit(facts, 2500)}\n\n"
+            f"Fuentes (citas):\n{sources_text}\n\n"
+            f"Material:\n{pack_text}\n"
+        )
+        expanded = openai_generate_text(system_prompt, user_prompt, max_tokens=2400)
+        if expanded:
+            facts = _merge_section(facts, expanded)
 
     citations = _dedupe_wikipedia_citations(citations, composer)
     biography = _normalize_citations_text(biography, citations)
@@ -947,9 +1575,17 @@ def get_source_pack_profile(composer: str) -> Optional[Dict[str, object]]:
     }
 
 
-def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
+def get_deep_research_profile(
+    composer: str,
+    min_bio: Optional[int] = None,
+    min_style: Optional[int] = None,
+    min_facts: Optional[int] = None,
+) -> Optional[Dict[str, object]]:
     if not (DEEP_RESEARCH_ENABLED and PPLX_API_KEY):
         return None
+    min_bio = min_bio or MIN_BIO_LENGTH
+    min_style = min_style or 350
+    min_facts = min_facts or 280
     outline = _build_research_outline(composer)
     red_tones_note = ''
     if 'stothart' in composer.lower():
@@ -967,12 +1603,14 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
         '"style": {"text": "..."}, "facts": {"text": "..."}, '
         '"citations": ["url", ...]}. '
         'Texto en español, tono atractivo, pedagógico y ameno (no excesivamente académico). '
-        'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta), '
+        'biography.text: informe largo y detallado (8-14 párrafos o más si hace falta, '
+        f'mínimo {min_bio} caracteres), '
         'con subtítulos Markdown (###) y al menos 2 tablas cuando sea pertinente '
         '(cronología, colaboraciones, obras clave). '
-        'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias. '
+        f'style.text: 4-6 párrafos sobre estilo, técnicas de composición, orquestación e influencias '
+        f'(mínimo {min_style} caracteres). '
         'facts.text: 2-4 párrafos narrativos (NO listas) sobre hábitos, método de trabajo, '
-        'excentricidades o rasgos humanos que lo hagan memorable. '
+        f'excentricidades o rasgos humanos que lo hagan memorable (mínimo {min_facts} caracteres). '
         + red_tones_note +
         'Cada párrafo debe terminar con citas [1], [2] usando la lista global "citations". '
         'Usa fuentes fiables y no inventes. '
@@ -987,7 +1625,7 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
             {'role': 'system', 'content': system_prompt},
             {'role': 'user', 'content': user_prompt},
         ],
-        'max_tokens': 2400,
+        'max_tokens': 3000,
         'temperature': 0.2,
         'search_mode': PPLX_DEEP_MODE,
     }
@@ -1020,9 +1658,6 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
         biography = extract_text(parsed.get('biography'))
         style = extract_text(parsed.get('style'))
         facts = extract_text(parsed.get('facts'))
-        min_bio = 900
-        min_style = 350
-        min_facts = 280
         if allow_mode_fallback and payload_data.get('search_mode') and (
             len(biography or '') < min_bio or len(style or '') < min_style or len(facts or '') < min_facts
         ):
@@ -1052,23 +1687,64 @@ def get_deep_research_profile(composer: str) -> Optional[Dict[str, object]]:
 def search_web(query: str, num: int = 3, pause: float = 1.2) -> List[str]:
     if not SEARCH_WEB_ENABLED:
         return []
+    deduped: List[str] = []
     if PPLX_API_KEY:
+        log(f"PPLX primary: {query}", "INFO")
         urls = search_perplexity(query, num=num)
-        if urls:
-            return urls
-    try:
-        log(f"Google search fallback: {query}", "INFO")
-        time.sleep(pause)
-        results = list(search(query, num=num, stop=num, pause=pause))
-        deduped = []
-        for url in results:
+        for url in urls:
+            netloc = urlparse(url).netloc.lower()
+            if netloc in BLOCKED_DOMAINS:
+                continue
             if url not in deduped:
                 deduped.append(url)
         if deduped:
-            return deduped
+            return deduped[:num]
+    try:
+        log(f"Google fallback: {query}", "INFO")
+        time.sleep(pause)
+        results = list(search(query, num=num, stop=num, pause=pause))
+        for url in results:
+            netloc = urlparse(url).netloc.lower()
+            if netloc in BLOCKED_DOMAINS:
+                continue
+            if url not in deduped:
+                deduped.append(url)
+        if len(deduped) >= max(1, num // 2):
+            return deduped[:num]
     except Exception:
         pass
-    return []
+    return deduped
+
+
+def search_google_images(query: str, num: int = 6) -> List[str]:
+    if not SEARCH_WEB_ENABLED or num <= 0:
+        return []
+    try:
+        resp = requests.get(
+            "https://www.google.com/search",
+            params={"tbm": "isch", "q": query},
+            headers=HEADERS,
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+        images: List[str] = []
+        for img in soup.find_all("img"):
+            url = img.get("data-src") or img.get("src") or ""
+            if not url.startswith("http"):
+                continue
+            if url.startswith("data:"):
+                continue
+            netloc = urlparse(url).netloc.lower()
+            if netloc in BLOCKED_DOMAINS:
+                continue
+            if url not in images:
+                images.append(url)
+            if len(images) >= num:
+                break
+        return images
+    except requests.RequestException:
+        return []
 
 
 def extract_paragraphs_from_soup(soup: BeautifulSoup, max_paragraphs: int = 4) -> List[str]:
@@ -1079,6 +1755,8 @@ def extract_paragraphs_from_soup(soup: BeautifulSoup, max_paragraphs: int = 4) -
             continue
         lowered = text.lower()
         if any(hint in lowered for hint in NOISE_HINTS):
+            continue
+        if is_platform_noise(text):
             continue
         if is_noise_text(text):
             continue
@@ -1188,10 +1866,10 @@ def collect_source_urls(composer: str) -> List[str]:
         query = template.format(composer=composer)
         log(f"Source pack query: {query}", "INFO")
         candidates: List[str] = []
-        candidates.extend(search_perplexity(query, num=6))
-        if SOURCE_PACK_GOOGLE_FALLBACK and len(candidates) < 6:
+        candidates.extend(search_perplexity(query, num=8))
+        if SOURCE_PACK_GOOGLE_FALLBACK and len(candidates) < 8:
             try:
-                candidates.extend(list(search(query, num=4, stop=4, pause=1.0)))
+                candidates.extend(list(search(query, num=6, stop=6, pause=1.0)))
             except Exception:
                 pass
         for url in candidates:
@@ -1254,6 +1932,7 @@ def build_source_pack(composer: str) -> Optional[Dict[str, object]]:
     for idx, url in enumerate(urls, 1):
         log(f"Source pack: fetching {url}", "INFO")
         text = preloaded.get(url) or extract_source_text(url)
+        text = filter_noise_paragraphs(text)
         if len(text) < 200:
             log(f"Source pack: skipped short source {url}", "WARNING")
             continue
@@ -1564,7 +2243,7 @@ def tmdb_person_movie_credits(person_id: int, language: str = 'es-ES') -> List[D
             'vote_count': item.get('vote_count'),
             'vote_average': item.get('vote_average'),
         })
-        if len(films) >= FILM_LIMIT:
+        if not is_unlimited_limit(FILM_LIMIT) and len(films) >= FILM_LIMIT:
             break
     return films
 
@@ -1745,7 +2424,7 @@ def normalize_title_key(title: str) -> str:
 
 def build_title_keys(entry: Dict[str, Optional[str]]) -> List[str]:
     keys: List[str] = []
-    for field in ['original_title', 'title', 'title_es']:
+    for field in ['original_title', 'title', 'title_es', 'title_es_literal', 'title_es_distribution']:
         value = entry.get(field)
         if value:
             key = normalize_title_key(value)
@@ -2218,10 +2897,11 @@ def imdb_films_to_dicts(films) -> List[Dict]:
 def imdb_get_titles(composer: str, title_types: List[str]) -> List[Dict]:
     if not imdb_is_available():
         return []
+    max_titles = None if is_unlimited_limit(FILM_LIMIT) else FILM_LIMIT
     films = IMDB_CLIENT.get_composer_filmography(
         composer,
         title_types=set(title_types),
-        max_titles=FILM_LIMIT,
+        max_titles=max_titles,
     )
     return imdb_films_to_dicts(films)
 
@@ -2278,8 +2958,6 @@ def get_complete_filmography(composer: str, composer_folder: Path) -> List[Dict]
         poster_path = entry.get('poster_path')
         if poster_path and not poster_url:
             poster_url = f"{TMDB_IMAGE}{poster_path}"
-        if not entry.get('title_es') and entry.get('original_title'):
-            entry['title_es'] = entry['original_title']
         entry['poster_url'] = poster_url
         entry['poster_file'] = str(composer_folder / 'posters' / poster_filename(
             entry.get('original_title') or entry.get('title') or '',
@@ -2317,13 +2995,27 @@ def get_complete_filmography(composer: str, composer_folder: Path) -> List[Dict]
                     entry['poster_local'] = future.result()
                 except Exception:
                     entry['poster_local'] = PLACEHOLDER_IMAGE
+    apply_title_translations(films)
     return films
+
+
+def apply_title_translations(entries: List[Dict]) -> None:
+    for entry in entries:
+        original = (entry.get('original_title') or entry.get('title') or '').strip()
+        title_es = (entry.get('title_es') or '').strip()
+        if title_es and not entry.get('title_es_distribution'):
+            if not original or title_es.lower() != original.lower():
+                entry['title_es_distribution'] = title_es
+        title_for_literal = original or title_es
+        if title_for_literal:
+            entry['title_es_literal'] = ensure_spanish(title_for_literal)
 
 
 def get_tv_credits(composer: str) -> List[Dict]:
     entries = imdb_get_titles(composer, ['tvSeries', 'tvMiniSeries', 'tvSpecial', 'tvShort'])
     entries = dedupe_films(entries)
     entries.sort(key=lambda item: (item.get('year') or 9999, item.get('title') or ''))
+    apply_title_translations(entries)
     return entries
 
 
@@ -2331,6 +3023,7 @@ def get_video_game_credits(composer: str) -> List[Dict]:
     entries = imdb_get_titles(composer, ['videoGame'])
     entries = dedupe_films(entries)
     entries.sort(key=lambda item: (item.get('year') or 9999, item.get('title') or ''))
+    apply_title_translations(entries)
     return entries
 
 
@@ -2450,6 +3143,9 @@ def get_general_snippets(composer: str, limit: int, existing_urls: set) -> List[
                 continue
             text = truncate_text(' '.join(paragraphs), EXTERNAL_SNIPPET_MAX_CHARS)
             text = translate_to_spanish(text)
+            text = filter_noise_paragraphs(text)
+            if not is_snippet_relevant(text, composer):
+                continue
             name = urlparse(url).netloc or 'Fuente externa'
             snippets.append({'name': name, 'url': url, 'text': text})
             existing_urls.add(url)
@@ -2477,6 +3173,9 @@ def get_external_snippets(composer: str, sources: List[Dict[str, str]]) -> List[
             continue
         text = truncate_text(' '.join(paragraphs), EXTERNAL_SNIPPET_MAX_CHARS)
         text = translate_to_spanish(text)
+        text = filter_noise_paragraphs(text)
+        if not is_snippet_relevant(text, composer):
+            continue
         snippets.append({'name': source['name'], 'url': url, 'text': text})
         seen_urls.add(url)
         if len(snippets) >= EXTERNAL_SNIPPET_SOURCES:
@@ -2495,6 +3194,14 @@ def select_snippet_by_keywords(snippets: List[Dict[str, str]], keywords: List[st
     return None
 
 
+def select_first_relevant_snippet(snippets: List[Dict[str, str]], composer: str) -> str:
+    for snippet in snippets:
+        text = snippet.get('text') or ''
+        if is_snippet_relevant(text, composer):
+            return text
+    return ''
+
+
 def build_enriched_text(
     composer: str,
     base: str,
@@ -2509,6 +3216,8 @@ def build_enriched_text(
         text = snippet.get('text') or ''
         lowered = text.lower()
         if not text or text in parts:
+            continue
+        if not is_snippet_relevant(text, composer):
             continue
         if any(keyword in lowered for keyword in keywords):
             parts.append(text)
@@ -2590,7 +3299,14 @@ def get_film_poster(
             img = og['content'] if og and og.get('content') else None
             if img:
                 saved = download_image(img, poster_file)
-                return saved or PLACEHOLDER_IMAGE
+                if saved:
+                    return saved
+    if GOOGLE_IMAGE_FALLBACK:
+        image_urls = search_google_images(f"{title} movie poster", num=GOOGLE_IMAGE_RESULTS)
+        for img in image_urls:
+            saved = download_image(img, poster_file)
+            if saved:
+                return saved
     return PLACEHOLDER_IMAGE
 
 
@@ -2721,19 +3437,34 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
     deep_bio = False
     deep_style = False
     deep_facts = False
-    deep_profile = get_source_pack_profile(composer)
+    min_bio_target, min_style_target, min_facts_target = compute_content_targets(
+        len(info.get('filmography', [])),
+        len(info.get('awards', [])),
+        len(known_for_titles),
+    )
+    deep_profile = get_source_pack_profile(
+        composer,
+        min_bio=min_bio_target,
+        min_style=min_style_target,
+        min_facts=min_facts_target,
+    )
     if not deep_profile:
         log(f"Source pack missing; falling back to deep research for {composer}", "WARNING")
-        deep_profile = get_deep_research_profile(composer)
+        deep_profile = get_deep_research_profile(
+            composer,
+            min_bio=min_bio_target,
+            min_style=min_style_target,
+            min_facts=min_facts_target,
+        )
     if deep_profile:
         if deep_profile.get('biography'):
-            info['biography'] = deep_profile['biography']
+            info['biography'] = filter_noise_paragraphs(deep_profile['biography'])
             deep_bio = True
         if deep_profile.get('style'):
-            info['style'] = deep_profile['style']
+            info['style'] = filter_noise_paragraphs(deep_profile['style'])
             deep_style = True
         if deep_profile.get('facts'):
-            info['anecdotes'] = deep_profile['facts']
+            info['anecdotes'] = filter_noise_paragraphs(deep_profile['facts'])
             deep_facts = True
         if deep_profile.get('citations'):
             info['citations'] = deep_profile['citations']
@@ -2755,10 +3486,11 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
                 STYLE_HINTS,
                 f"{composer} estilo musical compositor -site:wikipedia.org",
             )
+        style_text = filter_noise_paragraphs(style_text)
         if biography and style_text and style_text in biography:
             style_text = ''
         if not style_text and info['external_snippets']:
-            style_text = info['external_snippets'][0].get('text', '')
+            style_text = select_first_relevant_snippet(info['external_snippets'], composer)
         if style_text:
             info['style'] = style_text
         else:
@@ -2775,10 +3507,11 @@ def get_composer_info(composer: str, composer_folder: Path) -> Dict:
                 ANECDOTE_HINTS,
                 f"{composer} vida personal curiosidades -site:wikipedia.org",
             )
+        anecdote_text = filter_noise_paragraphs(anecdote_text)
         if biography and anecdote_text and anecdote_text in biography:
             anecdote_text = ''
         if not anecdote_text and info['external_snippets']:
-            anecdote_text = info['external_snippets'][-1].get('text', '')
+            anecdote_text = select_first_relevant_snippet(info['external_snippets'], composer)
         if anecdote_text:
             info['anecdotes'] = anecdote_text
         else:
@@ -2797,11 +3530,11 @@ def format_link(path: str, base: Path) -> str:
 
 def format_film_title(entry: Dict[str, Optional[str]]) -> str:
     original = (entry.get('original_title') or entry.get('title') or '').strip()
-    spanish = (entry.get('title_es') or '').strip()
+    spanish = (entry.get('title_es_distribution') or '').strip()
+    if spanish and original and spanish.lower() == original.lower():
+        spanish = ''
     if not original and spanish:
         original = spanish
-    if original and not spanish:
-        spanish = original
     if original and spanish:
         return f"{original} (Título en España: {spanish})"
     return original or spanish
@@ -2830,14 +3563,21 @@ def format_award_label(award_name: str, status: str) -> str:
 
 def append_media_table(lines: List[str], title: str, entries: List[Dict], target: Path) -> None:
     lines.append(f"## {title}\n")
-    lines.append("| Año | Título | Título original | Póster |")
-    lines.append("| --- | --- | --- | --- |")
+    lines.append("| Año | Título | Título original | Traducción literal (ES) | Título en España | Póster |")
+    lines.append("| --- | --- | --- | --- | --- | --- |")
     for entry in entries:
         year = str(entry.get('year') or '—')
-        title_es = entry.get('title_es') or entry.get('title') or entry.get('original_title') or '—'
+        title_es = (
+            entry.get('title_es_distribution')
+            or entry.get('title')
+            or entry.get('original_title')
+            or '—'
+        )
         original = entry.get('original_title') or entry.get('title') or '—'
         if title_es == original:
             original = '—'
+        literal = entry.get('title_es_literal') or '—'
+        distrib = entry.get('title_es_distribution') or '—'
         poster = entry.get('poster_local') or entry.get('poster_url')
         if poster:
             poster_cell = f"[Póster]({format_link(poster, target.parent)})"
@@ -2845,7 +3585,8 @@ def append_media_table(lines: List[str], title: str, entries: List[Dict], target
             poster_cell = '—'
         lines.append(
             f"| {escape_table_cell(year)} | {escape_table_cell(title_es)} | "
-            f"{escape_table_cell(original)} | {escape_table_cell(poster_cell)} |"
+            f"{escape_table_cell(original)} | {escape_table_cell(literal)} | "
+            f"{escape_table_cell(distrib)} | {escape_table_cell(poster_cell)} |"
         )
     lines.append('')
 
@@ -2925,32 +3666,98 @@ def create_markdown_file(composer_info: Dict, target: Path) -> None:
         lines.append('')
     snippets = composer_info.get('external_snippets', [])
     if snippets:
+        cleaned_snippets = [
+            snippet for snippet in snippets
+            if is_snippet_relevant_strict(snippet.get('text', ''), composer_info.get('name', ''))
+        ]
+    else:
+        cleaned_snippets = []
+    if cleaned_snippets:
         lines.append("## Notas externas\n")
-        for snippet in snippets:
+        for snippet in cleaned_snippets:
             lines.append(f"* {snippet['name']}: {snippet['text']}")
         lines.append('')
     target.write_text('\n'.join(lines).strip() + '\n', encoding='utf-8')
 
 
 def main() -> None:
-    master = OUTPUT_DIR / 'composers_master_list.md'
+    master_env = os.getenv('MASTER_LIST_PATH', '').strip()
+    if master_env:
+        master = Path(master_env)
+        if not master.is_absolute():
+            master = BASE_DIR / master
+    else:
+        master = OUTPUT_DIR / 'composers_master_list.md'
     composers_with_indices = get_composers_with_indices(master)
     if not composers_with_indices:
         print('No composers to process.')
         return
+    control_state = load_control_state()
     start_index = int(os.getenv('START_INDEX', '1'))
     if start_index < 1:
         start_index = 1
+    skip_env = os.getenv('SKIP_INDICES', '').strip()
+    skip_indices: set[int] = set()
+    if skip_env:
+        for token in skip_env.split(','):
+            token = token.strip()
+            if not token:
+                continue
+            if '-' in token:
+                try:
+                    start_str, end_str = token.split('-', 1)
+                    start = int(start_str.strip())
+                    end = int(end_str.strip())
+                except ValueError:
+                    continue
+                if start > end:
+                    start, end = end, start
+                skip_indices.update(range(start, end + 1))
+            else:
+                try:
+                    skip_indices.add(int(token))
+                except ValueError:
+                    continue
     for position, (explicit_idx, composer) in enumerate(composers_with_indices, start=1):
         idx = explicit_idx or position
         if idx < start_index:
             continue
+        if idx in skip_indices:
+            log(f"Skipping index {idx} ({composer})", "INFO")
+            continue
         slug = slugify(composer)
         filename = OUTPUT_DIR / f"{idx:03}_{slug}.md"
         composer_folder = OUTPUT_DIR / f"{idx:03}_{slug}"
+        old_text = ''
+        if filename.exists():
+            try:
+                old_text = filename.read_text(encoding='utf-8')
+            except OSError:
+                old_text = ''
         info = get_composer_info(composer, composer_folder)
         print(f"Processing {composer} -> {filename}")
         create_markdown_file(info, filename)
+        try:
+            new_text = filename.read_text(encoding='utf-8')
+        except OSError:
+            new_text = ''
+        changed = update_composer_control(composer, composer_folder, old_text, new_text)
+        if changed:
+            record = control_state.get(composer, {})
+            if record:
+                record['modified_count'] = int(record.get('modified_count', 0)) + 1
+                record['last_modified'] = now_local_stamp()
+            else:
+                record = {
+                    'generated_at': now_local_stamp(),
+                    'modified_count': 1,
+                    'last_modified': now_local_stamp(),
+                }
+            record['index'] = idx
+            control_state[composer] = record
+            save_control_state(control_state)
+            update_control_table(control_state, composers_with_indices)
+        write_batch_progress(idx, composer)
         print(f"  saved {filename}")
 
 

@@ -331,6 +331,9 @@ Ver **CONVENTIONS_FRONTEND_TEMPLATE.md** para estándares completos de:
 - ❌ **NO** modifiques manualmente archivos en `outputs/`
 - ✅ Los pósters se descargan automáticamente
 - ✅ Los cachés (`tmdb_cache.json`, `streaming_cache.json`) son regenerables
+- ✅ **CONTROL OBLIGATORIO**: Cada vez que se modifique una ficha de compositor (`outputs/NNN_slug.md`),
+  **debe actualizarse** su archivo `outputs/NNN_slug/control_changes.md` y el
+  **control general** `outputs/control_composers.md` (estado, fechas y recuento de modificaciones).
 
 ---
 
