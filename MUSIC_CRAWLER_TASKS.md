@@ -119,7 +119,7 @@ FASE 5 (Tests + CI)
 | 1.3.3 | Añadir hash MD5 (6 chars) al final si se trunca | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.3.4 | Sanitizar caracteres no permitidos en Windows/Linux | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 1.3.5 | Añadir test unitario para filenames largos (>200 chars) | L | GPT | 4o-mini | 🟡 | `[x]` | 2026-02-05 |
-| 1.3.6 | Añadir test unitario para filenames con caracteres especiales | L | GPT | 4o-mini | 🟡 | `[ ]` | |
+| 1.3.6 | Añadir test unitario para filenames con caracteres especiales | L | GPT | 4o-mini | 🟡 | `[x]` | 2026-02-05 |
 
 **Código esperado**:
 ```python

@@ -15,3 +15,15 @@ def test_filename_base_truncates_with_hash() -> None:
     assert len(filename) == 200
     assert re.match(r".*_[0-9a-f]{6}$", filename)
 
+
+def test_filename_base_sanitizes_special_chars() -> None:
+    track = Track(
+        rank=2,
+        film='My:Film/Name*?"<>|',
+        cue_title="Cue\\Name:Part*?",
+        description="",
+    )
+    filename = track.filename_base()
+
+    forbidden = set('<>:"/\\\\|?*')
+    assert not any(ch in forbidden for ch in filename)
