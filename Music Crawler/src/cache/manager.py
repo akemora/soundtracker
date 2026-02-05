@@ -4,7 +4,14 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
+
+
+class CacheEntry(TypedDict):
+    status: str
+    timestamp: str
+    path: str
+    url: str
 
 
 class CacheManager:
@@ -12,7 +19,7 @@ class CacheManager:
 
     def __init__(self, path: Path):
         self.path = path
-        self.data: dict[str, dict[str, Any]] = {}
+        self.data: dict[str, CacheEntry] = {}
 
     def load(self) -> None:
         """Load cache data from disk."""
