@@ -24,6 +24,9 @@ CACHE_STATUSES = {
 }
 
 
+DEFAULT_CACHE_TTL_DAYS = 7
+
+
 def _current_timestamp() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -31,8 +34,9 @@ def _current_timestamp() -> str:
 class CacheManager:
     """Handle cache persistence for search results."""
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, ttl_days: int = DEFAULT_CACHE_TTL_DAYS):
         self.path = path
+        self.ttl_days = ttl_days
         self.data: dict[str, CacheEntry] = {}
 
     def load(self) -> None:

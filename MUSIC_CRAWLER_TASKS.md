@@ -98,7 +98,7 @@ FASE 5 (Tests + CI)
 | 1.2.2 | Definir schema de cache: `{query: {status, timestamp, path, url}}` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.2.3 | Implementar 5 estados: `downloaded`, `free_available`, `paid_only`, `not_found`, `error` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 1.2.4 | Añadir campo `timestamp` a cada entrada de cache | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 1.2.5 | Implementar `CACHE_TTL_DAYS` configurable (default: 7) | L | Claude | haiku | 🔴 | `[ ]` | |
+| 1.2.5 | Implementar `CACHE_TTL_DAYS` configurable (default: 7) | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.2.6 | Implementar método `is_expired(entry)` que compara timestamp | L | Claude | haiku | 🔴 | `[ ]` | |
 | 1.2.7 | Implementar método `get(query)` que respeta TTL | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 1.2.8 | Implementar método `set(query, status, path, url)` | L | Claude | haiku | 🔴 | `[ ]` | |
