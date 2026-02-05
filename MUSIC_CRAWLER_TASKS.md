@@ -205,7 +205,7 @@ class SearchProvider(ABC):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 2.2.1 | Crear `src/providers/perplexity.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
+| 2.2.1 | Crear `src/providers/perplexity.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.2.2 | Implementar `PerplexityProvider(SearchProvider)` | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 2.2.3 | Leer `PPLX_API_KEY` desde environment | L | Claude | haiku | 🔴 | `[ ]` | |
 | 2.2.4 | Implementar llamada a Perplexity API para búsqueda web | M | Claude | sonnet | 🔴 | `[ ]` | |
