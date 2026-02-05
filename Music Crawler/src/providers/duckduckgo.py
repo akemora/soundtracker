@@ -55,6 +55,7 @@ class DuckDuckGoProvider(SearchProvider):
     def search_urls(
         self, query: str, num_results: int = 5, site_filter: str | None = None
     ) -> list[str]:
+        logger.warning("Using DuckDuckGo fallback for web search")
         search_query = query if not site_filter else f"site:{site_filter} {query}"
         urls = _ddg_search(search_query, num_results)
         if site_filter:
