@@ -52,4 +52,15 @@ def _ddg_search(query: str, num_results: int) -> list[str]:
 class DuckDuckGoProvider(SearchProvider):
     """Fallback search provider using DuckDuckGo HTML."""
 
-    pass
+    def search_urls(
+        self, query: str, num_results: int = 5, site_filter: str | None = None
+    ) -> list[str]:
+        search_query = query if not site_filter else f"site:{site_filter} {query}"
+        urls = _ddg_search(search_query, num_results)
+        if site_filter:
+            urls = [url for url in urls if site_filter in url]
+        return urls[:num_results]
+
+    def get_rate_limit(self) -> float:
+        """Return seconds to wait between requests."""
+        return 1.0
