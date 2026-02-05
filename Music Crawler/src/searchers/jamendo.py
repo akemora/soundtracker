@@ -1,12 +1,12 @@
 """Jamendo searcher - Creative Commons licensed music."""
 
-import os
 import re
 import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup
 
+from src.core.config import settings
 from src.core.logger import get_logger
 from src.models.track import SearchResult, Track
 from src.searchers.base import BaseSearcher
@@ -24,7 +24,7 @@ class JamendoSearcher(BaseSearcher):
     def __init__(self, max_results: int = 3):
         self.max_results = max_results
         # Try to get client ID from environment
-        self.client_id = os.environ.get("JAMENDO_CLIENT_ID")
+        self.client_id = settings.jamendo_client_id
 
     def search(self, track: Track) -> list[SearchResult]:
         """Search Jamendo - tries API first, falls back to web search."""

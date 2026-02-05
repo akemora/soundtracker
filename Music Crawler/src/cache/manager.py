@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, TypedDict
 
+from src.core.config import settings
 
 class CacheEntry(TypedDict):
     status: str
@@ -24,9 +25,6 @@ CACHE_STATUSES = {
 }
 
 
-DEFAULT_CACHE_TTL_DAYS = 7
-
-
 def _current_timestamp() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -34,9 +32,9 @@ def _current_timestamp() -> str:
 class CacheManager:
     """Handle cache persistence for search results."""
 
-    def __init__(self, path: Path, ttl_days: int = DEFAULT_CACHE_TTL_DAYS):
+    def __init__(self, path: Path, ttl_days: int | None = None):
         self.path = path
-        self.ttl_days = ttl_days
+        self.ttl_days = ttl_days if ttl_days is not None else settings.cache_ttl_days
         self.data: dict[str, CacheEntry] = {}
 
     def load(self) -> None:

@@ -157,7 +157,7 @@ def filename_base(self) -> str:
 | 1.5.3 | Añadir `load_dotenv()` al inicio de `cli/crawl.py` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.5.4 | Crear `src/core/config.py` con pydantic-settings | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 1.5.5 | Definir `Settings` class con todas las variables de entorno | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
-| 1.5.6 | Migrar constantes hardcodeadas a Settings | L | Claude | haiku | 🟡 | `[ ]` | |
+| 1.5.6 | Migrar constantes hardcodeadas a Settings | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 
 **Checkpoint Fase 1**: `[ ]` Completada
 

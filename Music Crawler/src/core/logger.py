@@ -7,6 +7,7 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Optional, Union
 
+from src.core.config import settings
 _DEFAULT_LOGGER_NAME = "music_crawler"
 _LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
 _LOG_LEVELS = {
@@ -19,7 +20,7 @@ _LOG_LEVELS = {
 
 def _resolve_level(level: Optional[Union[int, str]]) -> int:
     if level is None:
-        return logging.INFO
+        level = settings.log_level
     if isinstance(level, int):
         return level
     normalized = level.upper()
@@ -41,7 +42,7 @@ def configure_logging(
     handlers = [logging.StreamHandler()]
 
     if log_file is None:
-        log_file = Path("logs") / "music_crawler.log"
+        log_file = settings.log_file or (Path("logs") / "music_crawler.log")
     log_path = Path(log_file)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     handlers.append(
