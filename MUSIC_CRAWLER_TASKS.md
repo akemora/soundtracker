@@ -94,7 +94,7 @@ FASE 5 (Tests + CI)
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 1.2.1 | Crear `src/cache/manager.py` con clase `CacheManager` | M | Claude | sonnet | 🔴 | `[ ]` | |
+| 1.2.1 | Crear `src/cache/manager.py` con clase `CacheManager` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 1.2.2 | Definir schema de cache: `{query: {status, timestamp, path, url}}` | L | Claude | haiku | 🔴 | `[ ]` | |
 | 1.2.3 | Implementar 5 estados: `downloaded`, `free_available`, `paid_only`, `not_found`, `error` | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 1.2.4 | Añadir campo `timestamp` a cada entrada de cache | L | Claude | haiku | 🔴 | `[ ]` | |
