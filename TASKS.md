@@ -865,7 +865,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 9.1.1 | Medir cobertura actual App (pytest --cov=src) | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-05 |
 | 9.1.2 | Medir cobertura actual Backend (pytest --cov) | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-05 |
 | 9.1.3 | Medir cobertura actual Music Crawler (pytest --cov=src) | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-05 |
-| 9.1.4 | Medir cobertura actual Frontend (jest --coverage) | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.1.4 | Medir cobertura actual Frontend (jest --coverage) | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-05 |
 
 ### 9.2 App (Python) 100%
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
