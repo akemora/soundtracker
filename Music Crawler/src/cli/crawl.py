@@ -1,6 +1,7 @@
 """Main CLI entry point for Music Crawler."""
 
 import argparse
+from datetime import datetime
 import sys
 import time
 from pathlib import Path
@@ -169,6 +170,11 @@ Examples:
         help="Report output path (default: OUTPUT_DIR/REPORT.md)",
     )
     parser.add_argument(
+        "--json",
+        type=Path,
+        help="Results JSON output path (default: OUTPUT_DIR/results.json)",
+    )
+    parser.add_argument(
         "--search-only",
         "-s",
         action="store_true",
@@ -320,6 +326,11 @@ Examples:
     generator.generate(results, report_path)
     logger.info("Report saved to: %s", report_path)
 
+    # Generate results JSON
+    json_path = args.json or (args.output / "results.json")
+    write_results_json(results, json_path, args.composer)
+    logger.info("Results JSON saved to: %s", json_path)
+
     # Print summary
     print_summary(results)
 
@@ -399,6 +410,46 @@ def print_summary(results: list[CrawlResult]) -> None:
     logger.info("  Paid Only: %s", paid_only)
     logger.info("  Not Found: %s", not_found)
     logger.info("  Total: %s", len(results))
+
+
+def _serialize_search_result(result: SearchResult) -> dict:
+    return {
+        "source": result.source,
+        "url": result.url,
+        "is_free": result.is_free,
+        "quality": result.quality,
+        "duration": result.duration,
+        "title": result.title,
+        "downloaded": result.downloaded,
+        "local_path": str(result.local_path) if result.local_path else None,
+        "error": result.error,
+    }
+
+
+def _serialize_crawl_result(result: CrawlResult) -> dict:
+    return {
+        "rank": result.track.rank,
+        "film": result.track.film,
+        "cue_title": result.track.cue_title,
+        "description": result.track.description,
+        "notes": result.track.notes,
+        "status": result.status,
+        "downloaded_from": _serialize_search_result(result.downloaded_from)
+        if result.downloaded_from
+        else None,
+        "free_alternatives": [_serialize_search_result(r) for r in result.free_alternatives],
+        "paid_alternatives": [_serialize_search_result(r) for r in result.paid_alternatives],
+    }
+
+
+def write_results_json(results: list[CrawlResult], output_path: Path, composer: str) -> None:
+    """Write crawl results to JSON file."""
+    payload = {
+        "composer": composer,
+        "generated_at": datetime.utcnow().isoformat(),
+        "tracks": [_serialize_crawl_result(result) for result in results],
+    }
+    output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

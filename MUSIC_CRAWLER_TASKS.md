@@ -314,10 +314,10 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.3.1 | Modificar Music Crawler para generar `results.json` además de `REPORT.md` | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.3.2 | Definir schema de `results.json` compatible con ETL | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.3.3 | Incluir: track_info, status, source, url, local_path, alternatives | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.3.4 | Añadir flag `--json` al CLI de Music Crawler | L | Claude | haiku | 🟡 | `[ ]` | |
+| 3.3.1 | Modificar Music Crawler para generar `results.json` además de `REPORT.md` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.3.2 | Definir schema de `results.json` compatible con ETL | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.3.3 | Incluir: track_info, status, source, url, local_path, alternatives | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.3.4 | Añadir flag `--json` al CLI de Music Crawler | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
