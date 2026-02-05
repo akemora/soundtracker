@@ -17,3 +17,7 @@ class SearchProvider(ABC):
     def get_rate_limit(self) -> float:
         """Return seconds to wait between requests."""
         pass
+
+    def get_name(self) -> str:
+        """Return provider name."""
+        return self.__class__.__name__

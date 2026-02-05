@@ -178,7 +178,7 @@ def filename_base(self) -> str:
 | 2.1.2 | Crear `src/providers/base.py` con ABC `SearchProvider` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.1.3 | Definir método abstracto `search_urls(query, num_results, site_filter) -> list[str]` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 2.1.4 | Añadir método `get_rate_limit() -> float` (segundos entre requests) | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 2.1.5 | Añadir método `get_name() -> str` | L | Claude | haiku | 🟢 | `[ ]` | |
+| 2.1.5 | Añadir método `get_name() -> str` | L | Claude | haiku | 🟢 | `[x]` | 2026-02-05 |
 
 **Código esperado**:
 ```python
