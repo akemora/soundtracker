@@ -20,3 +20,15 @@ class RateLimiter:
             if elapsed < min_delay:
                 time.sleep(min_delay - elapsed)
         self._last_request[provider_name] = time.monotonic()
+
+    def backoff(
+        self,
+        provider_name: str,
+        attempt: int,
+        initial_delay: float,
+        max_delay: float,
+    ) -> None:
+        """Apply exponential backoff for retryable errors."""
+        delay = min(max_delay, initial_delay * (2 ** max(attempt - 1, 0)))
+        time.sleep(delay)
+        self._last_request[provider_name] = time.monotonic()
