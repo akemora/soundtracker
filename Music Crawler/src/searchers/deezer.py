@@ -43,7 +43,7 @@ class DeezerSearcher(BaseSearcher):
                     results.append(result)
 
         except requests.RequestException as exc:
-            logger.error("Deezer search failed for query '%s': %s", query, exc)
+            logger.error("Deezer search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

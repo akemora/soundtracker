@@ -63,7 +63,7 @@ class SoundCloudSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("SoundCloud search failed for query '%s': %s", query, exc)
+            logger.error("SoundCloud search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

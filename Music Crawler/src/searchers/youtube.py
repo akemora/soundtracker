@@ -58,9 +58,9 @@ class YouTubeSearcher(BaseSearcher):
                     continue
 
         except subprocess.TimeoutExpired as exc:
-            logger.error("YouTube search timed out for query '%s': %s", query, exc)
+            logger.error("YouTube search timed out for query '%s': %s", query, exc, exc_info=True)
         except FileNotFoundError as exc:
-            logger.error("yt-dlp not installed for YouTube search '%s': %s", query, exc)
+            logger.error("yt-dlp not installed for YouTube search '%s': %s", query, exc, exc_info=True)
 
         return results
 

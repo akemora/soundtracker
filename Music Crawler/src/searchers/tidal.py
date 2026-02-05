@@ -60,7 +60,7 @@ class TidalSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("Tidal search failed for query '%s': %s", query, exc)
+            logger.error("Tidal search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 
@@ -120,7 +120,7 @@ class QobuzSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("Qobuz search failed for query '%s': %s", query, exc)
+            logger.error("Qobuz search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

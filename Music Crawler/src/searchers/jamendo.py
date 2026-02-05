@@ -57,7 +57,7 @@ class JamendoSearcher(BaseSearcher):
                     results.append(result)
 
         except requests.RequestException as exc:
-            logger.error("Jamendo API search failed for query '%s': %s", query, exc)
+            logger.error("Jamendo API search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 
@@ -127,7 +127,7 @@ class JamendoSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("Jamendo web search failed for query '%s': %s", query, exc)
+            logger.error("Jamendo web search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

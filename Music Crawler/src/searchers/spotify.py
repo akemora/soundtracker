@@ -61,7 +61,7 @@ class SpotifySearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("Spotify search failed for query '%s': %s", query, exc)
+            logger.error("Spotify search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 
@@ -112,7 +112,7 @@ class ITunesSearcher(BaseSearcher):
                     results.append(result)
 
         except requests.RequestException as exc:
-            logger.error("iTunes search failed for query '%s': %s", query, exc)
+            logger.error("iTunes search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

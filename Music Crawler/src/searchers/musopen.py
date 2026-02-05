@@ -59,7 +59,7 @@ class MusopenSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("Musopen search failed for query '%s': %s", query, exc)
+            logger.error("Musopen search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 
@@ -119,7 +119,7 @@ class IMSLPSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("IMSLP search failed for query '%s': %s", query, exc)
+            logger.error("IMSLP search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

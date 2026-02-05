@@ -60,7 +60,7 @@ class BandcampSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("Bandcamp search failed for query '%s': %s", query, exc)
+            logger.error("Bandcamp search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

@@ -60,7 +60,7 @@ class AmazonMusicSearcher(BaseSearcher):
                         break
 
         except requests.RequestException as exc:
-            logger.error("Amazon Music search failed for query '%s': %s", query, exc)
+            logger.error("Amazon Music search failed for query '%s': %s", query, exc, exc_info=True)
 
         return results
 

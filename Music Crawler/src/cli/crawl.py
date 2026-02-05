@@ -202,18 +202,18 @@ Examples:
             track.composer = args.composer
             tracks = [track]
         else:
-            logger.error("Failed to parse track")
+            logger.error("Failed to parse track", exc_info=True)
             sys.exit(1)
     else:
         if not args.input_file.exists():
-            logger.error("File not found: %s", args.input_file)
+            logger.error("File not found: %s", args.input_file, exc_info=True)
             sys.exit(1)
         tracks = parse_track_list(args.input_file)
         for t in tracks:
             t.composer = args.composer
 
     if not tracks:
-        logger.error("No tracks found in input")
+        logger.error("No tracks found in input", exc_info=True)
         sys.exit(1)
 
     logger.info("Found %s tracks to search", len(tracks))
@@ -361,7 +361,7 @@ def load_cache(path: Path) -> dict:
         try:
             return json.loads(path.read_text())
         except json.JSONDecodeError as exc:
-            logger.error("Failed to parse cache file %s: %s", path, exc)
+            logger.error("Failed to parse cache file %s: %s", path, exc, exc_info=True)
     return {}
 
 

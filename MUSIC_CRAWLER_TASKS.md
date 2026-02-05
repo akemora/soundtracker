@@ -84,7 +84,7 @@ FASE 5 (Tests + CI)
 | 1.1.7 | Reemplazar `print()` en `downloaders/ytdlp.py` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 1.1.8 | Buscar y eliminar TODOS los `except: pass` (grep recursivo) | M | Gemini | flash | 🔴 | `[x]` | 2026-02-05 |
 | 1.1.9 | Reemplazar `except: pass` por `except Exception as e: logger.error(...)` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
-| 1.1.10 | Añadir `exc_info=True` a todos los `logger.error` | L | Claude | haiku | 🟡 | `[ ]` | |
+| 1.1.10 | Añadir `exc_info=True` a todos los `logger.error` | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 
 **Verificación 1.1**: `grep -r "print(" src/` debe devolver 0 resultados. `grep -r "except.*pass" src/` debe devolver 0 resultados.
 

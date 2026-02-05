@@ -101,5 +101,5 @@ class YtDlpDownloader:
                 import json
                 return json.loads(process.stdout)
         except (subprocess.TimeoutExpired, FileNotFoundError) as exc:
-            logger.error("yt-dlp info failed for url '%s': %s", url, exc)
+            logger.error("yt-dlp info failed for url '%s': %s", url, exc, exc_info=True)
         return None
