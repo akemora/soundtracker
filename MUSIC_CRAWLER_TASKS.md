@@ -264,7 +264,7 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 2.5.1 | Crear `src/core/rate_limiter.py` | M | Claude | sonnet | 🔴 | `[ ]` | |
+| 2.5.1 | Crear `src/core/rate_limiter.py` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.5.2 | Implementar clase `RateLimiter` con per-provider limits | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 2.5.3 | Implementar exponential backoff para errores 429/5xx | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 2.5.4 | Config: max_retries=3, initial_delay=1s, max_delay=30s | L | Claude | haiku | 🟡 | `[ ]` | |
