@@ -332,7 +332,7 @@ class SpotifySearcher(BaseSearcher):
 | 3.4.5 | Buscar `film_id` por título (si existe) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 3.4.6 | Implementar UPSERT (INSERT OR REPLACE) | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 3.4.7 | Actualizar `updated_at` en cada insert | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 3.4.8 | Integrar ETL en `music_crawler_batch.py` (ejecutar después de crawler) | L | Claude | haiku | 🔴 | `[ ]` | |
+| 3.4.8 | Integrar ETL en `music_crawler_batch.py` (ejecutar después de crawler) | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 
 ---
 

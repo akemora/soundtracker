@@ -178,6 +178,26 @@ def main() -> None:
                 logger.warning("Music Crawler stderr: %s", result.stderr)
             if result.returncode != 0:
                 raise RuntimeError(f"Music Crawler failed for {slug}")
+
+            results_path = output_dir / "results.json"
+            etl_cmd = [
+                "python",
+                str(APP_ROOT / "scripts" / "etl_music.py"),
+                str(results_path),
+                "--db",
+                str(DB_PATH),
+            ]
+            etl_result = subprocess.run(
+                etl_cmd,
+                capture_output=True,
+                text=True,
+            )
+            if etl_result.stdout:
+                logger.info("ETL stdout: %s", etl_result.stdout)
+            if etl_result.stderr:
+                logger.warning("ETL stderr: %s", etl_result.stderr)
+            if etl_result.returncode != 0:
+                raise RuntimeError(f"ETL failed for {slug}")
     finally:
         connection.close()
 
