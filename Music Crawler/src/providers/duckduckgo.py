@@ -32,11 +32,22 @@ def _ddg_search(query: str, num_results: int) -> list[str]:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     }
 
-    response = requests.get(url, headers=headers, timeout=15)
-    response.raise_for_status()
+    try:
+        response = requests.get(url, headers=headers, timeout=15)
+        response.raise_for_status()
+    except requests.Timeout:
+        logger.error("DuckDuckGo request timed out", exc_info=True)
+        return []
+    except requests.RequestException:
+        logger.error("DuckDuckGo request failed", exc_info=True)
+        return []
 
-    soup = BeautifulSoup(response.text, "html.parser")
-    links = soup.find_all("a", class_="result__a", limit=num_results * 2)
+    try:
+        soup = BeautifulSoup(response.text, "html.parser")
+        links = soup.find_all("a", class_="result__a", limit=num_results * 2)
+    except Exception:
+        logger.error("DuckDuckGo HTML parsing failed", exc_info=True)
+        return []
 
     results: list[str] = []
     for link in links:

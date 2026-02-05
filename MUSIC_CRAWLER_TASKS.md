@@ -225,7 +225,7 @@ class SearchProvider(ABC):
 | 2.3.3 | Implementar `DuckDuckGoProvider(SearchProvider)` | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 2.3.4 | Rate limit: 2.0 segundos (scraping requiere más cuidado) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 | 2.3.5 | Añadir `logger.warning("Using DuckDuckGo fallback...")` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
-| 2.3.6 | Manejo de errores: HTML cambiado, blocked, timeout | M | Claude | sonnet | 🟡 | `[ ]` | |
+| 2.3.6 | Manejo de errores: HTML cambiado, blocked, timeout | M | Claude | sonnet | 🟡 | `[x]` | 2026-02-05 |
 | 2.3.7 | Crear test con mock de HTML response | M | GPT | 4o | 🟡 | `[ ]` | |
 
 ---
