@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, TypedDict
 
@@ -21,6 +22,10 @@ CACHE_STATUSES = {
     "not_found",
     "error",
 }
+
+
+def _current_timestamp() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 class CacheManager:
