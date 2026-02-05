@@ -1,6 +1,6 @@
 # Plan de Desarrollo - SOUNDTRACKER
 
-**Versión**: 2.0 | **Actualizado**: 2026-02-03
+**Versión**: 2.1 | **Actualizado**: 2026-02-05
 
 > Este documento define el roadmap completo para transformar SOUNDTRACKER de un pipeline de generación de datos a una aplicación web completa.
 
@@ -9,16 +9,21 @@
 ## 1. Visión del Proyecto
 
 ### 1.1 Estado Actual
-- Pipeline Python funcional (1,968 líneas en archivo monolítico)
-- 164 compositores documentados con biografía, filmografía, Top 10 y premios
-- ~970 MB de datos (Markdown + pósters)
+- Pipeline Python en transición: script monolítico y pipeline modular coexistiendo
+- `scripts/create_composer_files.py` supera los 3,700+ líneas (deuda técnica vigente)
+- 142 compositores generados en `App/outputs/` (sin contar tests/OLD)
+- ~4.3 GB de datos (Markdown + pósters)
+- Base de datos SQLite + FTS5 generada en `App/data/soundtrackers.db`
+- Backend FastAPI y frontend Next.js presentes (pendiente de validación reciente)
 - Integración con TMDB, Wikipedia, Wikidata, YouTube, Perplexity
+- Módulo independiente `Music Crawler` añadido al repo (sin integración todavía)
 
 ### 1.2 Estado Objetivo
 - **Backend**: FastAPI + SQLite (FTS5) con API REST documentada
 - **Frontend**: Next.js 14 + Tailwind + shadcn/ui
-- **Pipeline**: Código modular, testeable y mantenible
+- **Pipeline**: Código modular, testeable y mantenible (retirar script monolítico)
 - **Datos**: Base de datos estructurada con búsqueda full-text
+- **Módulos**: Music Crawler integrado como submódulo estable
 
 ---
 
@@ -39,53 +44,70 @@
 ### 2.2 Estructura de Directorios (Objetivo)
 
 ```
-App/
-├── src/                          # Código fuente Python refactorizado
-│   └── soundtracker/
-│       ├── __init__.py
-│       ├── config.py             # Configuración centralizada
-│       ├── models.py             # Dataclasses/Pydantic
-│       ├── clients/              # Clientes de APIs
-│       │   ├── tmdb.py
-│       │   ├── wikipedia.py
-│       │   ├── wikidata.py
-│       │   ├── youtube.py
-│       │   └── search.py
-│       ├── services/             # Lógica de negocio
-│       │   ├── biography.py
-│       │   ├── filmography.py
-│       │   ├── top10.py
-│       │   └── awards.py
-│       ├── generators/           # Generación de salidas
-│       │   └── markdown.py
-│       └── cache/                # Sistema de caché
-│           └── file_cache.py
-├── backend/                      # API FastAPI
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── routers/
-│   │   ├── models/
-│   │   └── services/
-│   └── tests/
-├── frontend/                     # Next.js
-│   ├── src/
-│   │   ├── app/
-│   │   ├── components/
-│   │   └── lib/
-│   └── public/
-├── scripts/                      # Scripts de orquestación
-│   ├── create_composer_files.py  # Refactorizado (~50 líneas)
-│   ├── build_database.py         # ETL Markdown → SQLite
-│   └── update_top10.py
-├── tests/                        # Tests del pipeline
-├── outputs/                      # Datos generados (existente)
-├── data/                         # Base de datos SQLite
-│   └── soundtrackers.db
-├── pyproject.toml
+
+### 2.3 Módulo Music Crawler (Estado Actual)
+
+- CLI independiente para búsqueda/descarga de música en fuentes legales.
+- Descarga real solo via `yt-dlp` (YouTube); el resto de fuentes registran enlaces.
+- Cache local por carpeta de salida (`.crawl_cache.json`).
+- Integración con SOUNDTRACKER pendiente (ver tareas futuras).
+SOUNDTRACKER/
 ├── AGENTS.md
 ├── CONVENTIONS.md
 ├── CONVENTIONS_FRONTEND.md
-└── README.md
+├── TASKS.md
+├── DEVELOPMENT_PLAN.md
+├── AUDIT_AND_PROPOSAL.md
+├── README.md
+├── App/
+│   ├── src/                          # Código fuente Python refactorizado
+│   │   └── soundtracker/
+│   │       ├── __init__.py
+│   │       ├── config.py             # Configuración centralizada
+│   │       ├── models.py             # Dataclasses/Pydantic
+│   │       ├── clients/              # Clientes de APIs
+│   │       │   ├── tmdb.py
+│   │       │   ├── wikipedia.py
+│   │       │   ├── wikidata.py
+│   │       │   ├── youtube.py
+│   │       │   └── search.py
+│   │       ├── services/             # Lógica de negocio
+│   │       │   ├── biography.py
+│   │       │   ├── filmography.py
+│   │       │   ├── top10.py
+│   │       │   └── awards.py
+│   │       ├── generators/           # Generación de salidas
+│   │       │   └── markdown.py
+│   │       └── cache/                # Sistema de caché
+│   │           └── file_cache.py
+│   ├── backend/                      # API FastAPI
+│   │   ├── app/
+│   │   │   ├── main.py
+│   │   │   ├── routers/
+│   │   │   ├── models/
+│   │   │   └── services/
+│   │   └── tests/
+│   ├── frontend/                     # Next.js
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   ├── components/
+│   │   │   └── lib/
+│   │   └── public/
+│   ├── scripts/                      # Scripts de orquestación
+│   │   ├── create_composer_files.py  # Monolítico (legacy)
+│   │   ├── generate_composers.py     # CLI modular
+│   │   ├── build_database.py         # ETL Markdown → SQLite
+│   │   └── update_top10.py
+│   ├── tests/                        # Tests del pipeline
+│   ├── outputs/                      # Datos generados
+│   ├── data/                         # Base de datos SQLite
+│   │   └── soundtrackers.db
+│   └── pyproject.toml
+└── Music Crawler/                    # Módulo independiente (CLI)
+    ├── README.md
+    ├── README_LOCAL.md
+    ├── src/
+    └── tests/
 ```
 
 ---

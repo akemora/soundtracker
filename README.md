@@ -21,13 +21,22 @@ SOUNDTRACKER es una enciclopedia web de compositores de bandas sonoras con datos
 
 | Componente | Estado | Descripción |
 |------------|--------|-------------|
-| Pipeline Python | ✅ v2.0 | Arquitectura modular refactorizada |
-| Datos | ✅ 164 compositores | ~970 MB con pósters |
-| Base de datos | ✅ Funcional | SQLite + FTS5 (5.88 MB) |
-| Backend API | ✅ Completado | FastAPI con búsqueda FTS5 |
-| Frontend | ✅ Completado | Next.js 14 + Tailwind + shadcn/ui |
-| Docker | ✅ Completado | Multi-stage builds + Compose |
-| CI/CD | ✅ Completado | GitHub Actions |
+| Pipeline Python | ⚠️ En transición | Script monolítico + pipeline modular (`App/src/soundtracker/`) |
+| Datos | ✅ Generados | 142 compositores en `App/outputs/` (~4.3 GB, sin tests/OLD) |
+| Base de datos | ✅ Generada | SQLite + FTS5 (`App/data/soundtrackers.db`) |
+| Backend API | ✅ Implementado | FastAPI presente (pendiente de validación reciente) |
+| Frontend | ✅ Implementado | Next.js 14 presente (pendiente de validación reciente) |
+| Docker | ✅ Configurado | Multi-stage builds + Compose |
+| CI/CD | ⚠️ Configurado | Workflows existentes (no verificados en esta actualización) |
+| Music Crawler | ✅ Módulo CLI | Submódulo independiente (integración pendiente) |
+
+## Estado Actual (2026-02-05)
+
+- Se movieron los documentos de gobernanza al root del repo y los módulos apuntan a ellos.
+- El pipeline convive en dos rutas: `scripts/create_composer_files.py` (monolítico) y `src/soundtracker/` (modular).
+- Se añadió control de cambios por compositor (`control_changes.md`) y control general (`control_composers.md`).
+- El batch controller existe y escribe progreso en `outputs/batch_last_index.txt`.
+- El módulo `Music Crawler` está incluido como CLI independiente; integración con SOUNDTRACKER pendiente.
 
 ## Inicio Rápido
 

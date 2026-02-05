@@ -38,6 +38,14 @@ Cuando una tarea requiera una IA diferente a la actual:
 
 **Prioridad**: 🔴 Alta | 🟡 Media | 🟢 Baja
 
+## Estado Actual (2026-02-05)
+
+- Documentos de gobernanza movidos al root del repo; módulos apuntan a ellos.
+- Pipeline en transición: monolítico (`create_composer_files.py`) + modular (`src/soundtracker/`).
+- Control de cambios activado por compositor y control general en `outputs/`.
+- Batch controller operativo y escribe progreso en `outputs/batch_last_index.txt`.
+- Módulo `Music Crawler` añadido (CLI independiente, integración pendiente).
+
 ---
 
 ## FASE 0: Preparación
@@ -914,5 +922,5 @@ Cuando una tarea requiera una IA diferente a la actual:
 
 ---
 
-**Última actualización**: 2026-02-03
-**Versión**: 1.3
+**Última actualización**: 2026-02-05
+**Versión**: 1.4

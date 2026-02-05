@@ -12,6 +12,20 @@ Music Crawler automatiza la búsqueda de pistas musicales específicas (ej: band
 
 Ideal para coleccionistas de música clásica de cine, investigadores y archivistas.
 
+## Estado actual (2026-02-05)
+
+- CLI funcional con búsqueda multi-fuente y generación de reportes.
+- Descarga real solo desde YouTube mediante `yt-dlp`.
+- Resto de fuentes: solo se registran enlaces en el reporte.
+- Cache local por carpeta de salida (`.crawl_cache.json`).
+- Tests actuales limitados al parser de listas de pistas.
+
+## Limitaciones conocidas
+
+- Varias fuentes usan búsqueda web HTML (más frágil ante cambios externos).
+- Sin integración directa con el pipeline de SOUNDTRACKER (pendiente).
+- Rate limiting básico (sleep fijo); sin backoff ni control por proveedor.
+
 ## Instalación
 
 ```bash
