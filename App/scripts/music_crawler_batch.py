@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
+import tempfile
 from pathlib import Path
 
 
@@ -28,6 +29,29 @@ def fetch_top10_films(connection: sqlite3.Connection, composer_slug: str) -> lis
     """
     cursor = connection.execute(query, (composer_slug,))
     return list(cursor.fetchall())
+
+
+def build_track_list_content(rows: list[sqlite3.Row]) -> str:
+    """Build track list content from Top 10 rows."""
+    blocks: list[str] = []
+    for index, row in enumerate(rows, start=1):
+        rank = row["top10_rank"] or index
+        film_title = row["title_es"] or row["title"] or row["original_title"] or "Unknown"
+        blocks.append(str(rank))
+        blocks.append(film_title)
+        blocks.append('"Main Title"')
+        blocks.append("")
+    return "\n".join(blocks).strip() + "\n"
+
+
+def write_track_list(rows: list[sqlite3.Row]) -> Path:
+    """Write track list to a temporary file and return the path."""
+    content = build_track_list_content(rows)
+    temp_file = tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False)
+    temp_file.write(content)
+    temp_file.flush()
+    temp_file.close()
+    return Path(temp_file.name)
 
 
 def main() -> None:

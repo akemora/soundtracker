@@ -290,7 +290,7 @@ class SpotifySearcher(BaseSearcher):
 | 3.1.2 | Implementar CLI con argparse: `--composer`, `--all`, `--playlist-only` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 3.1.3 | Implementar conexión a `soundtrackers.db` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 3.1.4 | Implementar query para obtener Top 10 films de un compositor | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
-| 3.1.5 | Generar `track_list.txt` temporal desde resultados de query | L | Claude | haiku | 🔴 | `[ ]` | |
+| 3.1.5 | Generar `track_list.txt` temporal desde resultados de query | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 3.1.6 | Ejecutar Music Crawler via `subprocess.run` desde su directorio | M | Claude | sonnet | 🔴 | `[ ]` | |
 | 3.1.7 | Pasar env vars: `PPLX_API_KEY` al subprocess | L | Claude | haiku | 🔴 | `[ ]` | |
 | 3.1.8 | Definir output dir: `App/data/music_crawler/{slug}/` | L | Claude | haiku | 🔴 | `[ ]` | |
@@ -303,10 +303,10 @@ class SpotifySearcher(BaseSearcher):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 3.2.1 | Definir query SQL para Top 10 films por compositor (ordenados por score) | M | Claude | sonnet | 🔴 | `[ ]` | |
-| 3.2.2 | Extraer: rank, film_title, cue_title (Main Title por defecto) | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.2.3 | Formatear en formato de track_list.txt que Music Crawler espera | L | Claude | haiku | 🔴 | `[ ]` | |
-| 3.2.4 | Guardar en archivo temporal (tempfile.NamedTemporaryFile) | L | Claude | haiku | 🟡 | `[ ]` | |
+| 3.2.1 | Definir query SQL para Top 10 films por compositor (ordenados por score) | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
+| 3.2.2 | Extraer: rank, film_title, cue_title (Main Title por defecto) | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.2.3 | Formatear en formato de track_list.txt que Music Crawler espera | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
+| 3.2.4 | Guardar en archivo temporal (tempfile.NamedTemporaryFile) | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
 
 ---
 
