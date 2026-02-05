@@ -271,7 +271,7 @@ class SpotifySearcher(BaseSearcher):
 | 2.5.5 | Integrar RateLimiter en SearchProvider base | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.5.6 | Crear test para backoff con mock de respuestas 429 | M | GPT | 4o | 🟡 | `[x]` | 2026-02-05 |
 
-**Checkpoint Fase 2**: `[ ]` Completada
+**Checkpoint Fase 2**: `[x]` Completada (2026-02-05)
 
 ---
 
