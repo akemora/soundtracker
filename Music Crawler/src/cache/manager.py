@@ -52,3 +52,17 @@ class CacheManager:
     def save(self) -> None:
         """Persist cache data to disk."""
         self.path.write_text(json.dumps(self.data, indent=2))
+
+    def is_expired(self, entry: CacheEntry) -> bool:
+        """Check if a cache entry is expired based on its timestamp."""
+        timestamp = entry.get("timestamp")
+        if not timestamp:
+            return True
+        try:
+            parsed = datetime.fromisoformat(timestamp)
+        except ValueError:
+            return True
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        age = datetime.now(timezone.utc) - parsed
+        return age.total_seconds() > self.ttl_days * 86400
