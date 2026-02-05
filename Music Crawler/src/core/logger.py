@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import logging
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
 from typing import Optional, Union
 
 _DEFAULT_LOGGER_NAME = "music_crawler"
@@ -26,14 +28,32 @@ def _resolve_level(level: Optional[Union[int, str]]) -> int:
     raise ValueError(f"Unsupported log level: {level}")
 
 
-def configure_logging(level: Optional[Union[int, str]] = None) -> None:
+def configure_logging(
+    level: Optional[Union[int, str]] = None,
+    log_file: Optional[Union[str, Path]] = None,
+) -> None:
     """Configure base logging for the application.
 
     Args:
         level: Optional logging level to set globally.
     """
     resolved_level = _resolve_level(level)
-    logging.basicConfig(level=resolved_level, format=_LOG_FORMAT)
+    handlers = [logging.StreamHandler()]
+
+    if log_file is None:
+        log_file = Path("logs") / "music_crawler.log"
+    log_path = Path(log_file)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    handlers.append(
+        RotatingFileHandler(
+            log_path,
+            maxBytes=10 * 1024 * 1024,
+            backupCount=5,
+            encoding="utf-8",
+        )
+    )
+
+    logging.basicConfig(level=resolved_level, format=_LOG_FORMAT, handlers=handlers)
 
 
 def get_logger(name: Optional[str] = None) -> logging.Logger:
