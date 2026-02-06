@@ -140,6 +140,7 @@ class PlaylistGenerator:
     def _get_alternative_tracks(self, film: Film, position: int) -> list[Track]:
         """Generate alternative tracks for fallback search."""
         candidates = [
+            "Main Title",
             "Main Theme",
             "Theme",
             f"{film.title} Theme",
