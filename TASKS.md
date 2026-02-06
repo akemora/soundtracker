@@ -885,7 +885,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 9.4 Music Crawler 100%
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 9.4.1 | Tests exhaustivos providers/searchers/cache | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.4.1 | Tests exhaustivos providers/searchers/cache | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-06 |
 | 9.4.2 | Tests exhaustivos playlist/report/cli | **GPT** | `4o` | 🔴 | `[ ]` |  |
 | 9.4.3 | Ajustes de cobertura (branches) a 100% | **GPT** | `4o` | 🔴 | `[ ]` |  |
 

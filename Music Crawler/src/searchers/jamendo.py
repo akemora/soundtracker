@@ -90,7 +90,7 @@ class JamendoSearcher(BaseSearcher):
         )
 
     def _search_web(self, track: Track) -> list[SearchResult]:
-        """Fallback: search via DuckDuckGo."""
+        """Fallback: search via Chrome provider."""
         query = self.build_query(track)
         results: list[SearchResult] = []
 
