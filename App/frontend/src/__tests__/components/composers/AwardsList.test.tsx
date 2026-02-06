@@ -59,8 +59,8 @@ describe("AwardsList", () => {
     });
     render(<AwardsList slug="composer" />);
     await waitFor(() => {
-      const year2000 = screen.getAllByText("2000")[0];
-      const year1999 = screen.getAllByText("1999")[0];
+      const year2000 = screen.getByText("2000");
+      const year1999 = screen.getByText("1999");
       expect(
         year2000.compareDocumentPosition(year1999) & Node.DOCUMENT_POSITION_FOLLOWING
       ).toBeTruthy();

@@ -27,10 +27,10 @@ describe("i18n routing (actual module)", () => {
       expect(routingModule.routing.locales).toEqual(["es", "en"]);
       const element = <routingModule.Link href="/test">Test</routingModule.Link>;
       expect(element.props.href).toBe("/test");
-      routingModule.redirect("/test");
+      routingModule.redirect({ href: "/test", locale: "es" });
       routingModule.usePathname();
       routingModule.useRouter();
-      routingModule.getPathname("/test");
+      routingModule.getPathname({ href: "/test", locale: "es" });
     });
 
     expect(createNavigation).toHaveBeenCalled();

@@ -22,6 +22,14 @@ jest.mock("@/lib/api", () => ({
   getComposerFilters: () => getComposerFiltersMock(),
 }));
 
+const getAt = (items: HTMLElement[], index: number, label: string) => {
+  const item = items[index];
+  if (!item) {
+    throw new Error(`Missing ${label}`);
+  }
+  return item;
+};
+
 describe("FilterPanel", () => {
   beforeEach(() => {
     pushMock.mockReset();
@@ -45,27 +53,29 @@ describe("FilterPanel", () => {
       expect(screen.getByText("Limpiar filtros")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getAllByText("Todas")[0]);
+    fireEvent.click(getAt(screen.getAllByText("Todas"), 0, "Todas"));
     expect(pushMock).toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole("button", { name: "Todos" }));
     expect(pushMock).toHaveBeenCalled();
 
-    fireEvent.click(screen.getAllByText("1890s")[0]);
+    fireEvent.click(getAt(screen.getAllByText("1890s"), 0, "1890s"));
     expect(pushMock).toHaveBeenCalled();
 
-    fireEvent.click(screen.getAllByText("Con premios")[0]);
+    fireEvent.click(getAt(screen.getAllByText("Con premios"), 0, "Con premios"));
     expect(pushMock).toHaveBeenCalled();
-    fireEvent.click(screen.getAllByText("Sin premios")[0]);
+    fireEvent.click(getAt(screen.getAllByText("Sin premios"), 0, "Sin premios"));
     expect(pushMock).toHaveBeenCalled();
 
     const selects = screen.getAllByRole("combobox");
-    fireEvent.change(selects[0], { target: { value: "USA" } });
+    const countrySelect = getAt(selects, 0, "country select");
+    const awardSelect = getAt(selects, 1, "award select");
+    fireEvent.change(countrySelect, { target: { value: "USA" } });
     expect(pushMock).toHaveBeenCalled();
-    fireEvent.change(selects[0], { target: { value: "" } });
+    fireEvent.change(countrySelect, { target: { value: "" } });
     expect(pushMock).toHaveBeenCalled();
 
-    fireEvent.change(selects[1], { target: { value: "Oscar" } });
+    fireEvent.change(awardSelect, { target: { value: "Oscar" } });
     expect(pushMock).toHaveBeenCalled();
 
     fireEvent.click(screen.getByText("Limpiar filtros"));

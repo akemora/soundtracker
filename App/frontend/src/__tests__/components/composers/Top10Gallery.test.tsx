@@ -6,6 +6,14 @@ jest.mock("@/lib/api", () => ({
     `http://localhost:8000/api/assets/${type}/${filename}`,
 }));
 
+const getAt = (items: HTMLElement[], index: number, label: string) => {
+  const item = items[index];
+  if (!item) {
+    throw new Error(`Missing ${label}`);
+  }
+  return item;
+};
+
 describe("Top10Gallery", () => {
   const films = [
     {
@@ -69,19 +77,21 @@ describe("Top10Gallery", () => {
 
   it("renders films and opens modal", () => {
     render(<Top10Gallery films={films} />);
-    fireEvent.click(screen.getAllByText("Film Three")[0]);
-    expect(screen.getAllByAltText("Film Three").length).toBeGreaterThan(1);
-    expect(screen.getAllByAltText("Film Three")[1].getAttribute("src")).toContain("poster.jpg");
+    fireEvent.click(getAt(screen.getAllByText("Film Three"), 0, "Film Three trigger"));
+    const filmThreeImages = screen.getAllByAltText("Film Three");
+    expect(filmThreeImages.length).toBeGreaterThan(1);
+    const modalImage = getAt(filmThreeImages, 1, "Film Three modal image");
+    expect(modalImage.getAttribute("src")).toContain("poster.jpg");
     expect(screen.getAllByText("Film One").length).toBeGreaterThan(0);
     expect(screen.getByText("Original Three")).toBeInTheDocument();
     expect(screen.getByText("Puntuación TMDB")).toBeInTheDocument();
 
-    fireEvent.click(screen.getAllByText("Close")[0]);
+    fireEvent.click(getAt(screen.getAllByText("Close"), 0, "Close button"));
   });
 
   it("opens modal without poster when missing", () => {
     render(<Top10Gallery films={films} />);
-    fireEvent.click(screen.getAllByText("Film One")[0]);
+    fireEvent.click(getAt(screen.getAllByText("Film One"), 0, "Film One trigger"));
     expect(screen.queryByAltText("Film One")).not.toBeInTheDocument();
   });
 });
