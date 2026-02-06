@@ -181,11 +181,6 @@ def clean_redirect_url(href: str) -> str:
         redirect = params.get("q") or params.get("url") or []
         if redirect:
             return unquote(redirect[0])
-    if parsed.netloc.endswith("duckduckgo.com") and parsed.path == "/l/":
-        params = parse_qs(parsed.query)
-        redirect = params.get("uddg", [])
-        if redirect:
-            return unquote(redirect[0])
     return href
 
 

@@ -204,7 +204,7 @@ class SearchResult:
 Dos tipos de searchers:
 
 - **API-based**: Usan APIs oficiales (YouTube, Deezer, iTunes, Archive.org)
-- **Web Search**: Buscan via DuckDuckGo (SoundCloud, Spotify, Amazon, etc.)
+- **Web Search**: Buscan via Chrome headless (Google results) o Perplexity (SoundCloud, Spotify, Amazon, etc.)
 
 El modo `--fast` solo usa searchers con API para evitar rate limiting.
 

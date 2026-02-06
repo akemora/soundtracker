@@ -406,16 +406,6 @@ class TestCleanRedirectUrl:
         url = "https://www.google.com/url?sa=U"
         assert clean_redirect_url(url) == url
 
-    def test_duckduckgo_redirect(self):
-        """Test DuckDuckGo redirect cleaning."""
-        url = "https://duckduckgo.com/l/?uddg=https%3A%2F%2Fexample.com%2Fduck"
-        assert clean_redirect_url(url) == "https://example.com/duck"
-
-    def test_duckduckgo_redirect_missing_params(self):
-        """Test DuckDuckGo redirect with missing params returns original."""
-        url = "https://duckduckgo.com/l/?q=test"
-        assert clean_redirect_url(url) == url
-
 
 class TestFetchUrlText:
     """Tests for fetch_url_text function."""

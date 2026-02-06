@@ -1016,10 +1016,6 @@ def download_posters_bulk(entries: List[Dict], composer_folder: Path) -> None:
                 entry['poster_local'] = saved
 
 
-def search_duckduckgo(query: str, num: int = 5) -> List[str]:
-    return []
-
-
 def search_perplexity(query: str, num: int = 5) -> List[str]:
     if not (SEARCH_WEB_ENABLED and PPLX_API_KEY):
         return []
