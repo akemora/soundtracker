@@ -45,6 +45,72 @@ class TestSpotifyClient:
         assert token == "token"
         assert client._token == "token"
 
+    def test_get_token_returns_cached(self, monkeypatch) -> None:
+        """_get_token should reuse cached token when valid."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._token = "cached"
+        client._token_expires_at = 9999999999
+        client.session.post = Mock()
+
+        token = client._get_token()
+
+        assert token == "cached"
+        client.session.post.assert_not_called()
+
+    def test_get_token_returns_none_when_disabled(self, monkeypatch) -> None:
+        """_get_token should return None when disabled."""
+        monkeypatch.setattr(settings, "spotify_enabled", False)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        assert client._get_token() is None
+
+    def test_get_token_handles_error(self, monkeypatch) -> None:
+        """_get_token should return None on request error."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client.session.post = Mock(side_effect=Exception("boom"))
+
+        assert client._get_token() is None
+
+    def test_get_token_returns_none_when_missing_token(self, monkeypatch) -> None:
+        """_get_token should return None when response lacks token."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        response = Mock()
+        response.raise_for_status = Mock()
+        response.json = Mock(return_value={"expires_in": 3600})
+        client.session.post = Mock(return_value=response)
+
+        assert client._get_token() is None
+
+    def test_health_check_false_without_token(self, monkeypatch) -> None:
+        """health_check should return False when token unavailable."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value=None)
+
+        assert client.health_check() is False
+
+    def test_health_check_true_on_success(self, monkeypatch) -> None:
+        """health_check should return True on 200 response."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        response = Mock()
+        response.status_code = 200
+        client.session.get = Mock(return_value=response)
+
+        assert client.health_check() is True
+
+    def test_health_check_handles_error(self, monkeypatch) -> None:
+        """health_check should return False on exception."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        client.session.get = Mock(side_effect=Exception("boom"))
+
+        assert client.health_check() is False
+
     def test_search_popularity_returns_cached_value(self, monkeypatch) -> None:
         """search_popularity should use cached popularity when present."""
         monkeypatch.setattr(settings, "spotify_enabled", True)
@@ -56,6 +122,22 @@ class TestSpotifyClient:
         result = client.search_popularity("John Williams", "Star Wars")
 
         assert result == 77
+
+    def test_search_popularity_returns_none_without_title(self, monkeypatch) -> None:
+        """search_popularity should return None when no title."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+
+        assert client.search_popularity("John Williams", "") is None
+
+    def test_search_popularity_returns_none_without_token(self, monkeypatch) -> None:
+        """search_popularity should return None when token missing."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value=None)
+
+        assert client.search_popularity("John Williams", "Star Wars") is None
 
     def test_search_popularity_returns_best_score(self, monkeypatch) -> None:
         """search_popularity should return highest popularity from results."""
@@ -77,6 +159,43 @@ class TestSpotifyClient:
         assert result == 55.0
         assert cache.get("spotify|John Williams|Star Wars") == {"popularity": 55.0}
 
+    def test_search_popularity_keeps_highest(self, monkeypatch) -> None:
+        """search_popularity should keep the highest popularity score."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        response = Mock()
+        response.raise_for_status = Mock()
+        response.json = Mock(
+            return_value={
+                "tracks": {"items": [{"popularity": 50}, {"popularity": 10}]}
+            }
+        )
+        client.session.get = Mock(return_value=response)
+
+        assert client.search_popularity("John Williams", "Star Wars") == 50.0
+
+    def test_search_popularity_handles_search_error(self, monkeypatch) -> None:
+        """search_popularity should skip failed searches and return None."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        client.session.get = Mock(side_effect=Exception("boom"))
+
+        assert client.search_popularity("John Williams", "Star Wars") is None
+
+    def test_search_popularity_handles_no_results(self, monkeypatch) -> None:
+        """search_popularity should return None when no popularity found."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        response = Mock()
+        response.raise_for_status = Mock()
+        response.json = Mock(return_value={"tracks": {"items": [{}]}})
+        client.session.get = Mock(return_value=response)
+
+        assert client.search_popularity("John Williams", "Star Wars") is None
+
     def test_search_artist_returns_item(self, monkeypatch) -> None:
         """search_artist should return the first artist item."""
         monkeypatch.setattr(settings, "spotify_enabled", True)
@@ -91,6 +210,42 @@ class TestSpotifyClient:
 
         assert artist == {"id": "a1"}
 
+    def test_search_artist_returns_none_when_unavailable(self, monkeypatch) -> None:
+        """search_artist should return None when unavailable."""
+        monkeypatch.setattr(settings, "spotify_enabled", False)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+
+        assert client.search_artist("John Williams") is None
+
+    def test_search_artist_returns_none_when_token_missing(self, monkeypatch) -> None:
+        """search_artist should return None when token missing."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value=None)
+
+        assert client.search_artist("John Williams") is None
+
+    def test_search_artist_returns_none_on_error(self, monkeypatch) -> None:
+        """search_artist should return None on error."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        client.session.get = Mock(side_effect=Exception("boom"))
+
+        assert client.search_artist("John Williams") is None
+
+    def test_search_artist_returns_none_when_no_items(self, monkeypatch) -> None:
+        """search_artist should return None when no items."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        response = Mock()
+        response.raise_for_status = Mock()
+        response.json = Mock(return_value={"artists": {"items": []}})
+        client.session.get = Mock(return_value=response)
+
+        assert client.search_artist("John Williams") is None
+
     def test_get_artist_top_tracks_returns_list(self, monkeypatch) -> None:
         """get_artist_top_tracks should return tracks list."""
         monkeypatch.setattr(settings, "spotify_enabled", True)
@@ -104,3 +259,27 @@ class TestSpotifyClient:
         tracks = client.get_artist_top_tracks("a1", market="ES")
 
         assert tracks == [{"id": "t1"}]
+
+    def test_get_artist_top_tracks_returns_empty_when_unavailable(self, monkeypatch) -> None:
+        """get_artist_top_tracks should return empty when unavailable."""
+        monkeypatch.setattr(settings, "spotify_enabled", False)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+
+        assert client.get_artist_top_tracks("a1") == []
+
+    def test_get_artist_top_tracks_returns_empty_when_token_missing(self, monkeypatch) -> None:
+        """get_artist_top_tracks should return empty when token missing."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value=None)
+
+        assert client.get_artist_top_tracks("a1") == []
+
+    def test_get_artist_top_tracks_handles_error(self, monkeypatch) -> None:
+        """get_artist_top_tracks should return empty on error."""
+        monkeypatch.setattr(settings, "spotify_enabled", True)
+        client = SpotifyClient(client_id="id", client_secret="secret")
+        client._get_token = Mock(return_value="token")
+        client.session.get = Mock(side_effect=Exception("boom"))
+
+        assert client.get_artist_top_tracks("a1") == []

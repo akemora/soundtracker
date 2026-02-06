@@ -1,7 +1,11 @@
 """Tests for soundtracker.utils module."""
 
-import pytest
 from pathlib import Path
+from unittest.mock import Mock
+import tempfile
+
+import pytest
+import requests
 
 from soundtracker.utils.text import (
     clean_text,
@@ -22,6 +26,7 @@ from soundtracker.utils.urls import (
     extract_domain,
     extract_urls_from_text,
     format_link,
+    fetch_url_text,
     is_blocked_domain,
     is_image_url,
     is_wikipedia_url,
@@ -103,6 +108,23 @@ class TestIsNoiseText:
         """Test all caps detection."""
         assert is_noise_text("THIS IS ALL CAPS WITH MORE THAN EIGHT WORDS IN IT")
 
+    def test_upper_ratio_detection(self):
+        """Test upper ratio detection."""
+        assert is_noise_text("THIS TEXT HAS MANY UPPER WORDS HERE NOW")
+
+    def test_long_no_punctuation(self):
+        """Test long text without punctuation."""
+        text = (
+            "This text has many words and keeps going without punctuation to ensure "
+            "the heuristic triggers on long paragraphs with no dots or commas at all"
+        )
+        assert is_noise_text(text)
+
+    def test_numeric_all_caps_branch(self):
+        """Test numeric text hits all-caps branch without letters."""
+        text = "1 2 3 4 5 6 7 8 9 10"
+        assert is_noise_text(text)
+
     def test_noise_keywords(self):
         """Test noise keyword detection."""
         assert is_noise_text("Please subscribe to our newsletter for updates")
@@ -160,6 +182,10 @@ class TestPosterFilename:
         """Test empty title."""
         assert poster_filename("") == "poster_poster.jpg"
 
+    def test_blank_title_hits_composer_branch(self):
+        """Test blank title triggers composer fallback."""
+        assert poster_filename("   ") == "poster_poster.jpg"
+
 
 class TestFormatFilmTitle:
     """Tests for format_film_title function."""
@@ -179,6 +205,10 @@ class TestFormatFilmTitle:
         """Test with only original title."""
         assert format_film_title("Star Wars") == "Star Wars"
 
+    def test_only_spanish(self):
+        """Test with only Spanish title."""
+        assert format_film_title("", "La Guerra") == "La Guerra"
+
 
 class TestExtractYear:
     """Tests for extract_year function."""
@@ -196,6 +226,7 @@ class TestExtractYear:
         """Test invalid year range."""
         assert extract_year("Year 1800") is None
         assert extract_year("Year 2100") is None
+        assert extract_year("Year 2031") is None
 
 
 class TestHasSpanishChars:
@@ -237,6 +268,11 @@ class TestIsBlockedDomain:
         assert not is_blocked_domain("https://wikipedia.org/wiki/Test")
         assert not is_blocked_domain("https://imdb.com/title")
 
+    def test_invalid_url(self, monkeypatch):
+        """Test invalid URL handling."""
+        monkeypatch.setattr("soundtracker.utils.urls.urlparse", Mock(side_effect=ValueError))
+        assert not is_blocked_domain("bad-url")
+
 
 class TestIsImageUrl:
     """Tests for is_image_url function."""
@@ -246,6 +282,7 @@ class TestIsImageUrl:
         assert is_image_url("https://example.com/image.jpg")
         assert is_image_url("https://example.com/photo.png")
         assert is_image_url("https://example.com/pic.webp")
+        assert is_image_url("https://example.com/anim.gif")
 
     def test_non_images(self):
         """Test non-image URLs."""
@@ -262,9 +299,25 @@ class TestFormatLink:
 
     def test_relative_path(self):
         """Test relative path formatting."""
-        # This depends on file existence, so just test URL passthrough
-        result = format_link("https://test.com/image.jpg", Path("/tmp"))
-        assert result == "https://test.com/image.jpg"
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base = Path(tmpdir)
+            file_path = base / "a" / "b" / "c.txt"
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            file_path.write_text("ok", encoding="utf-8")
+            assert format_link(str(file_path), base) == "a/b/c.txt"
+
+    def test_relative_path_not_under_base(self):
+        """Test fallback when path is not under base."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base = Path(tmpdir) / "base"
+            base.mkdir()
+            other = Path(tmpdir) / "other.txt"
+            other.write_text("ok", encoding="utf-8")
+            assert format_link(str(other), base) == str(other)
+
+    def test_missing_path(self):
+        """Test missing file returns original path."""
+        assert format_link("/tmp/does_not_exist.txt", Path("/tmp")) == "/tmp/does_not_exist.txt"
 
 
 class TestExtractDomain:
@@ -278,6 +331,10 @@ class TestExtractDomain:
     def test_invalid(self):
         """Test invalid URL."""
         assert extract_domain("not-a-url") == "unknown"
+
+    def test_exception_returns_unknown(self, monkeypatch):
+        monkeypatch.setattr("soundtracker.utils.urls.urlparse", Mock(side_effect=ValueError))
+        assert extract_domain("bad-url") == "unknown"
 
 
 class TestIsWikipediaUrl:
@@ -339,6 +396,48 @@ class TestCleanRedirectUrl:
         url = "https://www.google.com/url?q=https%3A%2F%2Fexample.com%2Fpage"
         assert clean_redirect_url(url) == "https://example.com/page"
 
+    def test_google_redirect_url_param(self):
+        """Test Google redirect cleaning via url param."""
+        url = "https://www.google.com/url?url=https%3A%2F%2Fexample.com%2Falt"
+        assert clean_redirect_url(url) == "https://example.com/alt"
+
+    def test_google_redirect_missing_params(self):
+        """Test Google redirect with missing params returns original."""
+        url = "https://www.google.com/url?sa=U"
+        assert clean_redirect_url(url) == url
+
+    def test_duckduckgo_redirect(self):
+        """Test DuckDuckGo redirect cleaning."""
+        url = "https://duckduckgo.com/l/?uddg=https%3A%2F%2Fexample.com%2Fduck"
+        assert clean_redirect_url(url) == "https://example.com/duck"
+
+    def test_duckduckgo_redirect_missing_params(self):
+        """Test DuckDuckGo redirect with missing params returns original."""
+        url = "https://duckduckgo.com/l/?q=test"
+        assert clean_redirect_url(url) == url
+
+
+class TestFetchUrlText:
+    """Tests for fetch_url_text function."""
+
+    def test_blocked_domain(self, monkeypatch):
+        monkeypatch.setattr("soundtracker.utils.urls.is_blocked_domain", Mock(return_value=True))
+        assert fetch_url_text("https://blocked.com") == ""
+
+    def test_success(self, monkeypatch):
+        response = Mock()
+        response.raise_for_status = Mock()
+        response.text = "OK"
+        monkeypatch.setattr("soundtracker.utils.urls.requests.get", Mock(return_value=response))
+        assert fetch_url_text("https://example.com") == "OK"
+
+    def test_request_exception(self, monkeypatch):
+        monkeypatch.setattr(
+            "soundtracker.utils.urls.requests.get",
+            Mock(side_effect=requests.RequestException("boom")),
+        )
+        assert fetch_url_text("https://example.com") == ""
+
 
 class TestExtractUrlsFromText:
     """Tests for extract_urls_from_text function."""
@@ -359,3 +458,17 @@ class TestExtractUrlsFromText:
         """Test no URLs found."""
         urls = extract_urls_from_text("No URLs here")
         assert urls == []
+
+    def test_duplicate_urls(self):
+        """Test duplicate URL de-duplication."""
+        text = "Visit https://a.com and https://a.com again."
+        urls = extract_urls_from_text(text)
+        assert urls == ["https://a.com"]
+
+
+def test_utils_exports() -> None:
+    """Ensure utils __all__ exports are available."""
+    from soundtracker import utils
+
+    assert "slugify" in utils.__all__
+    assert callable(utils.slugify)

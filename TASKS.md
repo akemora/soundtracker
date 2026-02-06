@@ -870,7 +870,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 9.2 App (Python) 100%
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 9.2.1 | Tests completos para `clients/*` y `utils/*` | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.2.1 | Tests completos para `clients/*` y `utils/*` | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-06 |
 | 9.2.2 | Tests completos para `services/*` | **GPT** | `4o` | 🔴 | `[ ]` |  |
 | 9.2.3 | Tests completos para `pipeline.py` y `logging_config.py` | **GPT** | `4o` | 🔴 | `[ ]` |  |
 | 9.2.4 | Ajustes de cobertura (branches) a 100% | **GPT** | `4o` | 🔴 | `[ ]` |  |
