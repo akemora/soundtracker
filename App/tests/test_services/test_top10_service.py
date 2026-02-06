@@ -447,3 +447,69 @@ class TestTop10Service:
         titles = service._extract_titles_from_html(html, max_titles=10)
 
         assert titles.count("Jaws") == 1
+
+    def test_select_top_10_skips_future_year(self) -> None:
+        """select_top_10 should skip films with future years."""
+        service = Top10Service(
+            spotify_client=DummyStreamingClient(),
+            youtube_client=DummyStreamingClient(),
+            search_client=DummySearchClient(),
+            min_vote_count=0,
+        )
+        films = [Film(title=f"Film {i}", year=2000, vote_count=100) for i in range(10)]
+        films.append(Film(title="Future", year=3000, vote_count=100))
+
+        result = service.select_top_10("Composer", films, [])
+
+        assert all(f.title != "Future" for f in result)
+
+    def test_force_awards_skips_duplicate_award_entries(self) -> None:
+        """select_top_10 should skip duplicate award entries."""
+        service = Top10Service(
+            spotify_client=DummyStreamingClient(),
+            youtube_client=DummyStreamingClient(),
+            search_client=DummySearchClient(),
+            force_awards=True,
+        )
+        films = [
+            Film(title="Jaws", year=1975),
+            Film(title="Jaws", year=1975),
+            Film(title="Star Wars", year=1977),
+        ]
+        awards = [Mock(film="Jaws")]
+
+        result = service.select_top_10("Composer", films, awards)
+
+        assert sum(1 for film in result if film.title == "Jaws") == 1
+
+    def test_force_awards_returns_early_when_full(self) -> None:
+        """select_top_10 should return when award list fills top 10."""
+        service = Top10Service(
+            spotify_client=DummyStreamingClient(),
+            youtube_client=DummyStreamingClient(),
+            search_client=DummySearchClient(),
+            force_awards=True,
+        )
+        award_films = [Film(title=f"Award {i}", year=2000) for i in range(10)]
+        extra = [Film(title=f"Extra {i}", year=2001) for i in range(2)]
+        awards = [Mock(film=f"Award {i}") for i in range(10)]
+
+        result = service.select_top_10("Composer", award_films + extra, awards)
+
+        assert len(result) == 10
+        assert all(f.title.startswith("Award ") for f in result)
+
+    def test_score_film_includes_popularity(self) -> None:
+        """_score_film should include popularity signal."""
+        service = Top10Service(
+            spotify_client=DummyStreamingClient(),
+            youtube_client=DummyStreamingClient(),
+            search_client=DummySearchClient(),
+        )
+        with_popularity = Film(title="Popular", popularity=50)
+        without_popularity = Film(title="Unpopular", popularity=None)
+
+        score_with = service._score_film(with_popularity, {}, set(), 2024)
+        score_without = service._score_film(without_popularity, {}, set(), 2024)
+
+        assert score_with > score_without
