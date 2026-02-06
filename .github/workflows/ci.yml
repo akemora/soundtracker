@@ -44,8 +44,10 @@ jobs:
 
           db_path = Path("../data/soundtrackers.db")
           schema_path = Path("../scripts/schema.sql")
+          schema_music_path = Path("../scripts/schema_music.sql")
           conn = sqlite3.connect(db_path)
           conn.executescript(schema_path.read_text())
+          conn.executescript(schema_music_path.read_text())
           conn.execute(
               """
               INSERT INTO composers (
@@ -70,6 +72,23 @@ jobs:
                   "Orchestral film music.",
                   "Sample anecdotes.",
               ),
+          )
+          composer_id = conn.execute(
+              "SELECT id FROM composers WHERE slug = ?",
+              ("john_williams",),
+          ).fetchone()[0]
+          conn.execute(
+              """
+              INSERT INTO films (
+                  composer_id,
+                  title,
+                  year,
+                  is_top10,
+                  top10_rank
+              )
+              VALUES (?, ?, ?, ?, ?)
+              """,
+              (composer_id, "Test Film", 1977, 1, 1),
           )
           conn.commit()
           conn.close()
