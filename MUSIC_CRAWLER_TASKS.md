@@ -637,7 +637,7 @@ class SpotifySearcher(BaseSearcher):
 - [x] `pytest "App/tests/"` pasa al 100%
 - [x] API `/api/composers/john_williams/playlist` devuelve datos válidos
 - [x] Frontend muestra PlaylistPlayer con embeds funcionales
-- [ ] `downloads/` no está en git (`git status` limpio)
+- [x] `downloads/` no está en git (`git status` limpio)
 - [ ] CI verde en GitHub Actions
 
 ---

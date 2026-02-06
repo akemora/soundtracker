@@ -18,7 +18,8 @@ venv/
 
 # Project outputs
 App/intermediate_research/
-Music Crawler/downloads/
+Music Crawler/downloads/*
+!Music Crawler/downloads/.gitkeep
 Music Crawler/.crawl_cache.json
 App/data/music_crawler/*/downloads/
 
