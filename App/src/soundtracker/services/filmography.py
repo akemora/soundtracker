@@ -18,6 +18,7 @@ from soundtracker.clients import (
 )
 from soundtracker.config import settings
 from soundtracker.models import Film
+from soundtracker.services.translator import TranslatorService
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +78,7 @@ class FilmographyService:
         self.search = search_client or SearchClient()
         self.imdb = imdb_client or ImdbDataset()
         self.film_limit = film_limit or settings.film_limit
+        self.translator = TranslatorService()
 
     def get_complete_filmography(
         self,
@@ -145,6 +147,9 @@ class FilmographyService:
             for film in films:
                 self._enrich_film(film)
 
+        # Ensure Spanish title translations
+        self._apply_title_translations(films)
+
         # Set poster paths
         if composer_folder:
             for film in films:
@@ -156,21 +161,38 @@ class FilmographyService:
         """Get TV credits from IMDb dataset."""
         if not self.imdb.is_available:
             return []
-        return self.imdb.get_composer_filmography(
+        films = self.imdb.get_composer_filmography(
             composer,
             title_types={"tvSeries", "tvMiniSeries", "tvSpecial", "tvShort"},
             max_titles=self.film_limit,
         )
+        self._apply_title_translations(films)
+        return films
 
     def get_video_game_credits(self, composer: str) -> list[Film]:
         """Get video game credits from IMDb dataset."""
         if not self.imdb.is_available:
             return []
-        return self.imdb.get_composer_filmography(
+        films = self.imdb.get_composer_filmography(
             composer,
             title_types={"videoGame"},
             max_titles=self.film_limit,
         )
+        self._apply_title_translations(films)
+        return films
+
+    def _apply_title_translations(self, films: list[Film]) -> None:
+        """Populate literal and distribution Spanish titles for films."""
+        for film in films:
+            original = (film.original_title or film.title or "").strip()
+            if not original:
+                continue
+            title_es = (film.title_es or "").strip()
+            if title_es and not film.title_es_distribution:
+                if not original or title_es.lower() != original.lower():
+                    film.title_es_distribution = title_es
+            if not film.title_es_literal:
+                film.title_es_literal = self.translator.ensure_spanish(original)
 
     def _merge_films(self, base: list[Film], extra: list[Film]) -> list[Film]:
         """Merge film lists, avoiding duplicates.
