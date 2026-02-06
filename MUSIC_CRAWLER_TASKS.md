@@ -359,7 +359,7 @@ class SpotifySearcher(BaseSearcher):
 | 3.6.4 | Implementar `GET /api/composers/{slug}/music` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 3.6.5 | Añadir router a `main.py` | L | Claude | haiku | 🔴 | `[x]` | 2026-02-05 |
 | 3.6.6 | Crear modelo Pydantic para response | L | Claude | haiku | 🟡 | `[x]` | 2026-02-05 |
-| 3.6.7 | Añadir tests para endpoint | M | GPT | 4o | 🟡 | `[ ]` | |
+| 3.6.7 | Añadir tests para endpoint | M | GPT | 4o | 🟡 | `[x]` | 2026-02-06 |
 
 ---
 

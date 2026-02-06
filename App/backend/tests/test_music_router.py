@@ -10,6 +10,7 @@ from httpx import AsyncClient
 from app.models import MusicResponse, PlaylistResponse
 
 DB_PATH = Path(__file__).resolve().parents[2] / "data" / "soundtrackers.db"
+TEST_COMPOSER_SLUG = "test-music-router-composer"
 
 
 def _get_composer_id(slug: str) -> int | None:
@@ -17,6 +18,39 @@ def _get_composer_id(slug: str) -> int | None:
     row = conn.execute("SELECT id FROM composers WHERE slug = ?", (slug,)).fetchone()
     conn.close()
     return row[0] if row else None
+
+
+def _ensure_test_composer() -> int:
+    conn = sqlite3.connect(DB_PATH)
+    row = conn.execute("SELECT id FROM composers WHERE slug = ?", (TEST_COMPOSER_SLUG,)).fetchone()
+    if row:
+        composer_id = row[0]
+        conn.execute("DELETE FROM music_tracks WHERE composer_id = ?", (composer_id,))
+        conn.execute("DELETE FROM composer_playlists WHERE composer_id = ?", (composer_id,))
+        conn.commit()
+        conn.close()
+        return composer_id
+    next_index = conn.execute("SELECT COALESCE(MAX(index_num), 0) + 1 FROM composers").fetchone()[0]
+    cursor = conn.execute(
+        "INSERT INTO composers (index_num, name, slug) VALUES (?, ?, ?)",
+        (next_index, "Test Music Router Composer", TEST_COMPOSER_SLUG),
+    )
+    conn.commit()
+    composer_id = cursor.lastrowid
+    conn.close()
+    return composer_id
+
+
+def _delete_test_composer() -> None:
+    conn = sqlite3.connect(DB_PATH)
+    row = conn.execute("SELECT id FROM composers WHERE slug = ?", (TEST_COMPOSER_SLUG,)).fetchone()
+    if row:
+        composer_id = row[0]
+        conn.execute("DELETE FROM music_tracks WHERE composer_id = ?", (composer_id,))
+        conn.execute("DELETE FROM composer_playlists WHERE composer_id = ?", (composer_id,))
+        conn.execute("DELETE FROM composers WHERE id = ?", (composer_id,))
+        conn.commit()
+    conn.close()
 
 
 def _insert_music_track(composer_id: int) -> None:
@@ -49,6 +83,48 @@ def _insert_music_track(composer_id: int) -> None:
             "https://www.youtube.com/watch?v=abc",
             "",
             json.dumps([]),
+        ),
+    )
+    conn.commit()
+    conn.close()
+
+
+def _insert_music_track_custom(
+    composer_id: int,
+    title: str,
+    status: str,
+    rank: int,
+    alternatives_json: str = "[]",
+) -> None:
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute(
+        """
+        INSERT INTO music_tracks (
+            composer_id,
+            film_id,
+            title,
+            work,
+            rank,
+            status,
+            source,
+            url,
+            local_path,
+            alternatives_json,
+            searched_at,
+            updated_at
+        )
+        VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+        """,
+        (
+            composer_id,
+            title,
+            "Test Film",
+            rank,
+            status,
+            "youtube",
+            "https://www.youtube.com/watch?v=abc",
+            "",
+            alternatives_json,
         ),
     )
     conn.commit()
@@ -169,3 +245,56 @@ async def test_get_playlist_success(async_client: AsyncClient, sample_composer_s
 async def test_get_music_not_found(async_client: AsyncClient) -> None:
     response = await async_client.get("/api/composers/not-a-real-composer/music")
     assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_get_music_status_filter(async_client: AsyncClient) -> None:
+    composer_id = _ensure_test_composer()
+    title_free = "Test Track Free"
+    title_paid = "Test Track Paid"
+    _insert_music_track_custom(composer_id, title_free, "free_available", rank=1)
+    _insert_music_track_custom(composer_id, title_paid, "paid_only", rank=2)
+    try:
+        response = await async_client.get(
+            f"/api/composers/{TEST_COMPOSER_SLUG}/music?status=free_available"
+        )
+        assert response.status_code == 200
+        parsed = MusicResponse.model_validate(response.json())
+        assert parsed.total == 1
+        assert parsed.tracks[0].title == title_free
+        assert parsed.tracks[0].status == "free_available"
+    finally:
+        _delete_test_composer()
+
+
+@pytest.mark.asyncio
+async def test_get_music_status_filter_no_results(async_client: AsyncClient) -> None:
+    composer_id = _ensure_test_composer()
+    _insert_music_track_custom(composer_id, "Test Track Only", "free_available", rank=1)
+    try:
+        response = await async_client.get(
+            f"/api/composers/{TEST_COMPOSER_SLUG}/music?status=paid_only"
+        )
+        assert response.status_code == 404
+    finally:
+        _delete_test_composer()
+
+
+@pytest.mark.asyncio
+async def test_get_music_invalid_alternatives_json(async_client: AsyncClient) -> None:
+    composer_id = _ensure_test_composer()
+    _insert_music_track_custom(
+        composer_id,
+        "Test Track Bad JSON",
+        "free_available",
+        rank=1,
+        alternatives_json="{bad json",
+    )
+    try:
+        response = await async_client.get(f"/api/composers/{TEST_COMPOSER_SLUG}/music")
+        assert response.status_code == 200
+        parsed = MusicResponse.model_validate(response.json())
+        assert parsed.total == 1
+        assert parsed.tracks[0].alternatives == []
+    finally:
+        _delete_test_composer()
