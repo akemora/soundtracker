@@ -631,10 +631,10 @@ class SpotifySearcher(BaseSearcher):
 
 ### Checklist Pre-Deploy
 
-- [ ] `grep -r "print(" "Music Crawler/src/"` devuelve 0 resultados
-- [ ] `grep -r "except.*pass" "Music Crawler/src/"` devuelve 0 resultados
-- [ ] `pytest "Music Crawler/tests/"` pasa al 100%
-- [ ] `pytest "App/tests/"` pasa al 100%
+- [x] `grep -r "print(" "Music Crawler/src/"` devuelve 0 resultados
+- [x] `grep -r "except.*pass" "Music Crawler/src/"` devuelve 0 resultados
+- [x] `pytest "Music Crawler/tests/"` pasa al 100%
+- [x] `pytest "App/tests/"` pasa al 100%
 - [ ] API `/api/composers/john_williams/playlist` devuelve datos válidos
 - [ ] Frontend muestra PlaylistPlayer con embeds funcionales
 - [ ] `downloads/` no está en git (`git status` limpio)
