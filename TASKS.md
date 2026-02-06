@@ -879,7 +879,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
 | 9.3.1 | Tests exhaustivos routers + servicios | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-06 |
-| 9.3.2 | Tests de errores/validación/timeouts | **GPT** | `4o` | 🔴 | `[ ]` |  |
+| 9.3.2 | Tests de errores/validación/timeouts | **GPT** | `4o` | 🔴 | `[x]` | 2026-02-06 |
 | 9.3.3 | Ajustes de cobertura (branches) a 100% | **GPT** | `4o` | 🔴 | `[ ]` |  |
 
 ### 9.4 Music Crawler 100%
