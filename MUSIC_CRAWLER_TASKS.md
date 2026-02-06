@@ -234,7 +234,7 @@ class SearchProvider(ABC):
 
 | # | Tarea | LOE | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|-----|--------|-----------|--------|-------|
-| 2.4.1 | Listar todos los searchers que usan DDG scraping | L | Gemini | flash | 🔴 | `[x]` | 2026-02-05 |
+| 2.4.1 | Listar todos los searchers que usan Chrome scraping | L | Gemini | flash | 🔴 | `[x]` | 2026-02-05 |
 | 2.4.2 | Modificar `SpotifySearcher` para usar `SearchProvider` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.4.3 | Modificar `AmazonSearcher` para usar `SearchProvider` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |
 | 2.4.4 | Modificar `SoundCloudSearcher` para usar `SearchProvider` | M | Claude | sonnet | 🔴 | `[x]` | 2026-02-05 |

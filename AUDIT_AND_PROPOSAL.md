@@ -45,7 +45,7 @@ SOUNDTRACKER es un **sistema de investigación automatizada de compositores de c
 - Sistema de caché efectivo (TMDB, streaming)
 - Descarga concurrente de pósters (8 workers)
 - Traducción automática con detección de idioma
-- Sistema de fallback para búsquedas (Perplexity → Google → DuckDuckGo)
+- Sistema de fallback para búsquedas (Perplexity → Google → Chrome)
 
 **Debilidades:**
 - **Archivo monolítico**: `create_composer_files.py` (1,968 líneas) viola límites de mantenibilidad
@@ -94,7 +94,7 @@ App/
 | Wikidata | Filmografía, premios | ✅ Activo |
 | Perplexity | Búsqueda principal | ✅ Activo |
 | Google Search | Fallback | ✅ Activo |
-| DuckDuckGo | Fallback | ✅ Activo |
+| Chrome | Fallback | ✅ Activo |
 | YouTube | Views para Top 10 | ✅ Activo |
 | Spotify | Popularidad | ⏸️ Pendiente credenciales |
 | Google Translate | Traducción | ✅ Activo |
@@ -202,7 +202,7 @@ App/
 │       │   ├── wikidata.py        # WikidataClient
 │       │   ├── youtube.py         # YouTubeClient
 │       │   ├── spotify.py         # SpotifyClient
-│       │   └── search.py          # SearchClient (Perplexity/Google/DDG)
+│       │   └── search.py          # SearchClient (Perplexity/Google/Chrome)
 │       ├── services/              # Lógica de negocio
 │       │   ├── __init__.py
 │       │   ├── biography.py       # Obtención de biografía
@@ -1289,7 +1289,7 @@ export default async function HomePage() {
 - [ ] Extraer `WikipediaClient`
 - [ ] Extraer `WikidataClient`
 - [ ] Extraer `YouTubeClient`
-- [ ] Extraer `SearchClient` (Perplexity/Google/DDG)
+- [ ] Extraer `SearchClient` (Perplexity/Google/Chrome)
 - [ ] Implementar `BiographyService`
 - [ ] Implementar `FilmographyService`
 - [ ] Implementar `Top10Service`

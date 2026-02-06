@@ -297,7 +297,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 | 1.9.1 | Crear `src/soundtracker/clients/search.py` | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 | 1.9.2 | Extraer `search_perplexity()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.9.3 | Extraer `search_web()` (Google) | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
-| 1.9.4 | Extraer `search_duckduckgo()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
+| 1.9.4 | Extraer `search_chrome()` | **Claude** | `haiku` | 🔴 | `[x]` | 2026-02-03 |
 | 1.9.5 | Implementar fallback chain en SearchClient | **Claude** | `sonnet` | 🔴 | `[x]` | 2026-02-03 |
 | 1.9.6 | Crear tests para SearchClient | **GPT** | `4o-mini` | 🟡 | `[x]` | 2026-02-03 |
 
@@ -847,7 +847,7 @@ Cuando una tarea requiera una IA diferente a la actual:
 ### 8.8 Listas Top (Cine/Videojuegos)
 | # | Tarea | IA | Modelo | Prioridad | Estado | Fecha |
 |---|-------|-----|--------|-----------|--------|-------|
-| 8.8.1 | Eliminar DuckDuckGo del buscador | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
+| 8.8.1 | Reemplazar búsqueda legacy por Chrome | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.8.2 | Generar top 300 cine (A+B+D) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 | 8.8.3 | Generar top 100 videojuegos (A+B+D) | **GPT** | `gpt-5.1-codex-mini` | 🟡 | `[x]` | 2026-02-04 |
 
