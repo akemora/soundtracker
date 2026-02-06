@@ -638,10 +638,10 @@ class SpotifySearcher(BaseSearcher):
 - [x] API `/api/composers/john_williams/playlist` devuelve datos válidos
 - [x] Frontend muestra PlaylistPlayer con embeds funcionales
 - [x] `downloads/` no está en git (`git status` limpio)
-- [ ] CI verde en GitHub Actions
+- [x] CI verde en GitHub Actions (2026-02-06)
 
 ---
 
 **Documento creado**: 2026-02-05
-**Última actualización**: 2026-02-05
+**Última actualización**: 2026-02-06
 **Versión**: 1.0
