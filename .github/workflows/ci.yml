@@ -35,10 +35,45 @@ jobs:
           pip install -r requirements.txt
           pip install ruff
 
-      - name: Copy test database
+      - name: Create test database
         run: |
-          mkdir -p data
-          cp ../data/soundtrackers.db data/
+          mkdir -p ../data
+          python - <<'PY'
+          import sqlite3
+          from pathlib import Path
+
+          db_path = Path("../data/soundtrackers.db")
+          schema_path = Path("../scripts/schema.sql")
+          conn = sqlite3.connect(db_path)
+          conn.executescript(schema_path.read_text())
+          conn.execute(
+              """
+              INSERT INTO composers (
+                  index_num,
+                  name,
+                  slug,
+                  birth_year,
+                  country,
+                  biography,
+                  style,
+                  anecdotes
+              )
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+              """,
+              (
+                  1,
+                  "John Williams",
+                  "john_williams",
+                  1932,
+                  "USA",
+                  "Composer of film scores.",
+                  "Orchestral film music.",
+                  "Sample anecdotes.",
+              ),
+          )
+          conn.commit()
+          conn.close()
+          PY
 
       - name: Run tests
         run: |

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,9 +18,16 @@ export function PlaylistPlayer({ composerSlug, composerName, tracks }: PlaylistP
   const [isPlaying, setIsPlaying] = useState(false);
 
   const safeTracks = useMemo(() => tracks || [], [tracks]);
-  const activeTrack = safeTracks[currentTrack];
+  const activeTrack = safeTracks[currentTrack] ?? safeTracks[0];
 
   if (!safeTracks.length) {
+    return (
+      <Card className="p-6">
+        <p className="text-muted-foreground">No hay playlist disponible todavía.</p>
+      </Card>
+    );
+  }
+  if (!activeTrack) {
     return (
       <Card className="p-6">
         <p className="text-muted-foreground">No hay playlist disponible todavía.</p>
@@ -141,10 +149,13 @@ export function PlaylistPlayer({ composerSlug, composerName, tracks }: PlaylistP
               >
                 <div className="h-12 w-12 rounded-md bg-muted flex items-center justify-center overflow-hidden">
                   {track.thumbnail ? (
-                    <img
+                    <Image
                       src={track.thumbnail}
                       alt=""
+                      width={48}
+                      height={48}
                       className="h-full w-full object-cover"
+                      unoptimized
                     />
                   ) : (
                     <span className="text-xs text-muted-foreground">#{track.position}</span>

@@ -1,5 +1,4 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { SearchBar } from "@/components/search/SearchBar";
 
 // Mock the API module
