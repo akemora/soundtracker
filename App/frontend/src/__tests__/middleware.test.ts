@@ -3,11 +3,12 @@ jest.mock("next-intl/middleware", () => ({
   default: jest.fn(() => "middleware"),
 }));
 
+import nextIntlMiddleware from "next-intl/middleware";
 import middleware, { config } from "@/middleware";
 
 describe("middleware", () => {
   it("creates middleware with routing config", () => {
-    const mocked = require("next-intl/middleware").default as jest.Mock;
+    const mocked = nextIntlMiddleware as jest.Mock;
     expect(mocked).toHaveBeenCalled();
     expect(middleware).toBe("middleware");
   });

@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { SearchBar, LoadingSpinner } from "@/components/search/SearchBar";
+import type { SearchResponse } from "@/lib/types";
 
 // Mock the API module
 jest.mock("@/lib/api", () => ({
@@ -386,11 +387,11 @@ describe("SearchBar", () => {
   });
 
   it("shows loading spinner during search and opens on focus", async () => {
-    let resolveSearch: (value: unknown) => void = () => undefined;
+    let resolveSearch: (value: SearchResponse) => void = () => undefined;
     mockedSearch.mockReturnValue(
-      new Promise((resolve) => {
+      new Promise<SearchResponse>((resolve) => {
         resolveSearch = resolve;
-      }) as Promise<any>
+      })
     );
 
     render(<SearchBar />);

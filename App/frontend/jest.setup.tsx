@@ -25,14 +25,12 @@ jest.mock("next-intl", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => {
-    const {
-      fill,
-      priority,
-      unoptimized,
-      placeholder,
-      blurDataURL,
-      ...rest
-    } = props as Record<string, unknown>;
+    const rest = { ...(props as Record<string, unknown>) };
+    delete rest.fill;
+    delete rest.priority;
+    delete rest.unoptimized;
+    delete rest.placeholder;
+    delete rest.blurDataURL;
     // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     return <img {...rest} />;
   },

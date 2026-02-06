@@ -1,7 +1,7 @@
 import React from "react";
 
 describe("i18n routing (actual module)", () => {
-  it("loads routing config and exports", () => {
+  it("loads routing config and exports", async () => {
     jest.resetModules();
     jest.unmock("@/i18n/routing");
     const createNavigation = jest.fn(() => ({
@@ -22,9 +22,8 @@ describe("i18n routing (actual module)", () => {
       createNavigation,
     }));
 
-    jest.isolateModules(() => {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const routingModule = require("@/i18n/routing");
+    await jest.isolateModulesAsync(async () => {
+      const routingModule = await import("@/i18n/routing");
       expect(routingModule.routing.locales).toEqual(["es", "en"]);
       const element = <routingModule.Link href="/test">Test</routingModule.Link>;
       expect(element.props.href).toBe("/test");

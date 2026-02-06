@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination } from "@/components/ui/Pagination";
+import Link from "next/link";
 
 describe("ui components", () => {
   it("renders Button and Badge", () => {
@@ -36,14 +37,14 @@ describe("ui components", () => {
           O
         </Button>
         <Button asChild>
-          <a href="/link">Link</a>
+          <Link href="/link">Link</Link>
         </Button>
         <Badge data-testid="badge">New</Badge>
         <Badge data-testid="badge-outline" variant="outline">
           Outline
         </Badge>
         <Badge asChild>
-          <a href="/badge">B</a>
+          <Link href="/badge">B</Link>
         </Badge>
       </div>
     );

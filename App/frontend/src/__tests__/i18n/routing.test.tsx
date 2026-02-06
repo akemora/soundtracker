@@ -1,7 +1,7 @@
 import React from "react";
 
 describe("i18n routing", () => {
-  it("exports routing config", () => {
+  it("exports routing config", async () => {
     jest.resetModules();
     jest.unmock("@/i18n/routing");
     jest.doMock("next-intl/routing", () => ({
@@ -19,14 +19,14 @@ describe("i18n routing", () => {
       }),
     }));
 
-    jest.isolateModules(() => {
-      const actual = require("@/i18n/routing");
+    await jest.isolateModulesAsync(async () => {
+      const actual = await import("@/i18n/routing");
       expect(actual.routing.locales).toEqual(["es", "en"]);
       expect(actual.routing.defaultLocale).toBe("es");
     });
   });
 
-  it("exports Link component", () => {
+  it("exports Link component", async () => {
     jest.resetModules();
     jest.unmock("@/i18n/routing");
     jest.doMock("next-intl/routing", () => ({
@@ -44,14 +44,14 @@ describe("i18n routing", () => {
       }),
     }));
 
-    jest.isolateModules(() => {
-      const actual = require("@/i18n/routing");
+    await jest.isolateModulesAsync(async () => {
+      const actual = await import("@/i18n/routing");
       const element = <actual.Link href="/test">Test</actual.Link>;
       expect(element.props.href).toBe("/test");
     });
   });
 
-  it("creates navigation helpers", () => {
+  it("creates navigation helpers", async () => {
     jest.resetModules();
     jest.unmock("@/i18n/routing");
     const createNavigationMock = jest.fn(() => ({
@@ -70,8 +70,8 @@ describe("i18n routing", () => {
       createNavigation: createNavigationMock,
     }));
 
-    jest.isolateModules(() => {
-      const actual = require("@/i18n/routing");
+    await jest.isolateModulesAsync(async () => {
+      const actual = await import("@/i18n/routing");
       expect(actual.getPathname).toBeDefined();
     });
   });
