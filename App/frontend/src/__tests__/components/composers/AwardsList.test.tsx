@@ -29,11 +29,13 @@ describe("AwardsList", () => {
   });
 
   it("handles error state", async () => {
+    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => undefined);
     getAwardsMock.mockRejectedValue(new Error("fail"));
     render(<AwardsList slug="composer" />);
     await waitFor(() => {
       expect(screen.getByText("Error loading awards")).toBeInTheDocument();
     });
+    errorSpy.mockRestore();
   });
 
   it("shows fallback when no data", async () => {

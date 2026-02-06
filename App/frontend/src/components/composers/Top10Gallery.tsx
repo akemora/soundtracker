@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -50,6 +51,9 @@ export function Top10Gallery({ films }: Top10GalleryProps) {
                 <DialogTitle className="font-display text-xl">
                   {selectedFilm.title}
                 </DialogTitle>
+                <DialogDescription className="sr-only">
+                  Detalles de la banda sonora seleccionada.
+                </DialogDescription>
               </DialogHeader>
               <FilmDetailModal film={selectedFilm} />
             </>

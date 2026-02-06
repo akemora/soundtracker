@@ -23,9 +23,16 @@ jest.mock("@/i18n/routing", () => ({
   }: {
     children: React.ReactNode;
     href: string;
-    onClick?: () => void;
+    onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   }) => (
-    <a href={href} onClick={onClick} {...rest}>
+    <a
+      href={href}
+      onClick={(event) => {
+        event.preventDefault();
+        onClick?.(event);
+      }}
+      {...rest}
+    >
       {children}
     </a>
   ),

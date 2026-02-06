@@ -100,14 +100,17 @@ describe("FilmographyList", () => {
   });
 
   it("shows error when loading fails", async () => {
+    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => undefined);
     getFilmographyMock.mockRejectedValue(new Error("fail"));
     render(<FilmographyList slug="composer" />);
     await waitFor(() => {
       expect(screen.getByText("Error loading filmography")).toBeInTheDocument();
     });
+    errorSpy.mockRestore();
   });
 
   it("handles load more errors", async () => {
+    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => undefined);
     getFilmographyMock
       .mockResolvedValueOnce({
         composer_id: 1,
@@ -126,6 +129,7 @@ describe("FilmographyList", () => {
     await waitFor(() => {
       expect(screen.getByText("Film 1")).toBeInTheDocument();
     });
+    errorSpy.mockRestore();
   });
 
   it("skips load more when already loading", async () => {

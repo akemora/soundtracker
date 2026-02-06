@@ -98,6 +98,10 @@ describe("ui components", () => {
     render(
       <Dialog open>
         <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Footer Dialog</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>Footer dialog description</DialogDescription>
           <DialogFooter>
             <button>Action</button>
           </DialogFooter>

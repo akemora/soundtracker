@@ -28,6 +28,11 @@ import HomePage from "@/app/[locale]/page";
 describe("HomePage", () => {
   beforeEach(() => {
     getComposersMock.mockReset();
+    jest.spyOn(console, "warn").mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    (console.warn as jest.Mock).mockRestore();
   });
 
   it("renders hero and featured composers", async () => {

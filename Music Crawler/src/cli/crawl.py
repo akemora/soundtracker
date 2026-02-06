@@ -1,7 +1,7 @@
 """Main CLI entry point for Music Crawler."""
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 import sys
@@ -528,7 +528,7 @@ def write_results_json(results: list[CrawlResult], output_path: Path, composer: 
     """Write crawl results to JSON file."""
     payload = {
         "composer": composer,
-        "generated_at": datetime.utcnow().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "tracks": [_serialize_crawl_result(result) for result in results],
     }
     output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")

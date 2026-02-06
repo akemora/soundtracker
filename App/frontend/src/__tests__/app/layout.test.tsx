@@ -1,5 +1,4 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
 
 const notFoundMock = jest.fn(() => {
   throw new Error("not-found");
@@ -48,8 +47,8 @@ describe("LocaleLayout", () => {
       params: Promise.resolve({ locale: "es" }),
       children: <div>Child</div>,
     });
-    render(element);
-    expect(screen.getByText("Child")).toBeInTheDocument();
+    expect(element.type).toBe("html");
+    expect(element.props.lang).toBe("es");
   });
 
   it("calls notFound for invalid locale", async () => {

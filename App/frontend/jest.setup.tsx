@@ -25,8 +25,16 @@ jest.mock("next-intl", () => ({
 jest.mock("next/image", () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => {
+    const {
+      fill,
+      priority,
+      unoptimized,
+      placeholder,
+      blurDataURL,
+      ...rest
+    } = props as Record<string, unknown>;
     // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-    return <img {...props} />;
+    return <img {...rest} />;
   },
 }));
 
@@ -36,8 +44,26 @@ jest.mock("@/i18n/routing", () => ({
     locales: ["es", "en"],
     defaultLocale: "es",
   },
-  Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
+  Link: ({
+    children,
+    href,
+    onClick,
+    ...rest
+  }: {
+    children: React.ReactNode;
+    href: string;
+    onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  }) => (
+    <a
+      href={href}
+      onClick={(event) => {
+        event.preventDefault();
+        onClick?.(event);
+      }}
+      {...rest}
+    >
+      {children}
+    </a>
   ),
   redirect: jest.fn(),
   useRouter: () => ({
