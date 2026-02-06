@@ -110,6 +110,26 @@ class TestAward:
         text = award.display_text
         assert "Oscar" in text
         assert "Star Wars" in text
+        assert "🏆" in text
+
+        nomination = Award(
+            award="Golden Globe",
+            year=2001,
+            film="Test Film",
+            status=AwardStatus.NOMINATION,
+            category="Best Score",
+        )
+        text_nom = nomination.display_text
+        assert "🎯" in text_nom
+        assert "Best Score" in text_nom
+
+    def test_display_text_without_optional_fields(self):
+        """Test display_text without optional fields."""
+        award = Award(award="Oscar", status=AwardStatus.NOMINATION, year=None, film=None, category=None)
+        text = award.display_text
+        assert "Oscar" in text
+        assert "🎯" in text
+        assert "por *" not in text
 
     def test_to_dict(self):
         """Test conversion to dictionary."""
@@ -153,6 +173,15 @@ class TestExternalSource:
         d = source.to_dict()
         assert d["name"] == "Test"
         assert d["url"] == "https://test.com"
+
+    def test_from_dict(self):
+        """Test creation from dictionary."""
+        data = {"name": "Src", "url": "https://src.com", "snippet": "s", "text": "t"}
+        source = ExternalSource.from_dict(data)
+        assert source.name == "Src"
+        assert source.url == "https://src.com"
+        assert source.snippet == "s"
+        assert source.text == "t"
 
 
 class TestComposerInfo:
@@ -200,6 +229,9 @@ class TestComposerInfo:
         info.death_year = 2020
         assert info.life_span == "(1932-2020)"
 
+        info.birth_year = None
+        assert info.life_span == ""
+
     def test_slug(self):
         """Test slug generation."""
         info = ComposerInfo(name="John Williams")
@@ -207,6 +239,9 @@ class TestComposerInfo:
 
         info = ComposerInfo(name="Hans Zimmer")
         assert info.slug == "hans_zimmer"
+
+        info = ComposerInfo(name="!!!")
+        assert info.slug == "composer"
 
     def test_filename(self):
         """Test filename generation."""
@@ -220,6 +255,9 @@ class TestComposerInfo:
         """Test folder_name generation."""
         info = ComposerInfo(name="John Williams", index=1)
         assert info.folder_name == "001_john_williams"
+
+        info = ComposerInfo(name="John Williams")
+        assert info.folder_name == "john_williams"
 
     def test_photo_property(self):
         """Test photo property returns local or URL."""
@@ -258,6 +296,8 @@ class TestComposerInfo:
             "tv_credits": [{"title": "Series A", "year": 1990}],
             "video_games": [{"title": "Game A", "year": 2000}],
             "awards": [{"award": "Oscar", "year": 1978}],
+            "created_at": datetime.utcnow().isoformat(),
+            "updated_at": datetime.utcnow().isoformat(),
         }
         info = ComposerInfo.from_dict(data)
         assert info.name == "John Williams"
@@ -266,6 +306,18 @@ class TestComposerInfo:
         assert info.filmography[0].title == "Star Wars"
         assert len(info.tv_credits) == 1
         assert len(info.video_games) == 1
+
+    def test_from_dict_without_timestamps(self):
+        """Test creation when timestamps are missing."""
+        data = {
+            "name": "Composer",
+            "filmography": [],
+            "awards": [],
+        }
+        info = ComposerInfo.from_dict(data)
+        assert info.name == "Composer"
+        assert info.created_at is not None
+        assert info.updated_at is not None
 
 
 class TestAwardStatus:

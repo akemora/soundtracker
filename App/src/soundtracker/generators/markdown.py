@@ -189,15 +189,24 @@ class MarkdownGenerator:
         if self.max_filmography:
             film_list = films[: self.max_filmography]
 
-        lines.append("| Año | Título | Título original | Póster |")
-        lines.append("| --- | --- | --- | --- |")
+        lines.append("| Año | Título | Título original | Traducción literal (ES) | Título en España | Póster |")
+        lines.append("| --- | --- | --- | --- | --- | --- |")
 
         for film in film_list:
             year = str(film.year) if film.year else "—"
-            title_es = film.title_es or film.title or film.original_title or "—"
+            title_es = (
+                film.title_es_distribution
+                or film.title_es_literal
+                or film.title_es
+                or film.title
+                or film.original_title
+                or "—"
+            )
             original = film.original_title or film.title or "—"
             if title_es == original:
                 original = "—"
+            literal = film.title_es_literal or "—"
+            distrib = film.title_es_distribution or "—"
             poster = film.poster_local or film.poster_url
             if poster:
                 link = format_link(poster, base_path)
@@ -209,6 +218,8 @@ class MarkdownGenerator:
                 f"| {self._escape_table_cell(year)} | "
                 f"{self._escape_table_cell(title_es)} | "
                 f"{self._escape_table_cell(original)} | "
+                f"{self._escape_table_cell(literal)} | "
+                f"{self._escape_table_cell(distrib)} | "
                 f"{self._escape_table_cell(poster_cell)} |"
             )
 
@@ -223,15 +234,24 @@ class MarkdownGenerator:
     ) -> list[str]:
         """Build a generic media table section."""
         lines = [f"## {title}\n"]
-        lines.append("| Año | Título | Título original | Póster |")
-        lines.append("| --- | --- | --- | --- |")
+        lines.append("| Año | Título | Título original | Traducción literal (ES) | Título en España | Póster |")
+        lines.append("| --- | --- | --- | --- | --- | --- |")
 
         for film in films:
             year = str(film.year) if film.year else "—"
-            title_es = film.title_es or film.title or film.original_title or "—"
+            title_es = (
+                film.title_es_distribution
+                or film.title_es_literal
+                or film.title_es
+                or film.title
+                or film.original_title
+                or "—"
+            )
             original = film.original_title or film.title or "—"
             if title_es == original:
                 original = "—"
+            literal = film.title_es_literal or "—"
+            distrib = film.title_es_distribution or "—"
             poster = film.poster_local or film.poster_url
             if poster:
                 link = format_link(poster, base_path)
@@ -239,7 +259,7 @@ class MarkdownGenerator:
             else:
                 poster_cell = "—"
             lines.append(
-                f"| {year} | {title_es} | {original} | {poster_cell} |"
+                f"| {year} | {title_es} | {original} | {literal} | {distrib} | {poster_cell} |"
             )
         lines.append("")
         return lines

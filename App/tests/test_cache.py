@@ -142,6 +142,113 @@ class TestFileCache:
             cache = FileCache(cache_path)
             assert len(cache) == 0
 
+    def test_default_factory_used(self):
+        """Test default factory returns value when missing."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path, default_factory=lambda: {"a": 1})
+
+            assert cache.get("missing") == {"a": 1}
+
+    def test_save_no_dirty_returns_true(self):
+        """Test save returns True when not dirty but loaded."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path, auto_save=False)
+
+            cache.load()
+            assert cache.save() is True
+
+    def test_save_error_returns_false(self):
+        """Test save handles write errors."""
+        with TemporaryDirectory() as tmpdir:
+            cache_dir = Path(tmpdir) / "cache_dir"
+            cache_dir.mkdir()
+            cache = FileCache(cache_dir, auto_save=False)
+
+            cache.set("key", "value")
+            assert cache.save() is False
+
+    def test_delete_missing_returns_false(self):
+        """Test delete returns False when key missing."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path)
+
+            assert cache.delete("missing") is False
+
+    def test_update_and_get_or_set(self):
+        """Test update and get_or_set behaviors."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path, auto_save=True)
+
+            cache.update({"a": 1})
+            assert cache.get("a") == 1
+
+            created = cache.get_or_set("b", lambda: 2)
+            assert created == 2
+            assert cache.get("b") == 2
+
+            existing = cache.get_or_set("b", lambda: 3)
+            assert existing == 2
+
+    def test_path_property_and_repr(self):
+        """Test path property and repr."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path)
+            assert cache.path == cache_path
+            assert "FileCache" in repr(cache)
+
+    def test_load_twice_noop(self):
+        """Test load twice returns without re-reading."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache_path.write_text("{}", encoding="utf-8")
+            cache = FileCache(cache_path)
+            cache.load()
+            cache.load()
+
+    def test_delete_with_autosave(self):
+        """Test delete triggers autosave when enabled."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path, auto_save=True)
+            cache.set("key", "value")
+            assert cache.delete("key") is True
+
+    def test_autosave_branches_write_file(self):
+        """Test autosave branches for clear/update/get_or_set and del."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path, auto_save=True)
+
+            cache.update({"a": 1})
+            assert cache_path.exists()
+
+            cache.get_or_set("b", lambda: 2)
+            assert json.loads(cache_path.read_text())["b"] == 2
+
+            del cache["a"]
+            assert "a" not in json.loads(cache_path.read_text())
+
+            cache.clear()
+            assert json.loads(cache_path.read_text()) == {}
+
+    def test_operations_without_autosave(self):
+        """Test operations skip autosave when disabled."""
+        with TemporaryDirectory() as tmpdir:
+            cache_path = Path(tmpdir) / "test_cache.json"
+            cache = FileCache(cache_path, auto_save=False)
+
+            cache.update({"a": 1})
+            cache.get_or_set("b", lambda: 2)
+            assert cache.delete("a") is True
+            del cache["b"]
+            cache.clear()
+            assert cache_path.exists() is False
+
 
 class TestTMDBCache:
     """Tests for TMDBCache class."""

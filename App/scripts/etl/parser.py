@@ -343,10 +343,66 @@ def parse_filmography(content: str, file_path: Path) -> list[ParsedFilm]:
         return []
 
     films = []
+    lines = section.splitlines()
 
-    # Format: - Title (Título en España: Spanish) (Year) · [Póster](path)
-    # Or: - Title (Year) · [Póster](path)
-    for line in section.split('\n'):
+    # Table format (preferred)
+    header_idx = None
+    for idx, line in enumerate(lines):
+        if "| Año |" in line and "| Título |" in line:
+            header_idx = idx
+            break
+
+    if header_idx is not None:
+        for line in lines[header_idx + 2 :]:
+            line = line.strip()
+            if not line.startswith("|"):
+                continue
+            if "---" in line:
+                continue
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if len(cells) < 4:
+                continue
+            year_str = cells[0]
+            year = int(year_str) if year_str.isdigit() else None
+            title = cells[1] if len(cells) > 1 else ""
+            original = cells[2] if len(cells) > 2 else ""
+            literal = cells[3] if len(cells) > 3 else ""
+            distrib = cells[4] if len(cells) > 4 else ""
+            poster_cell = cells[5] if len(cells) > 5 else ""
+
+            if original in {"—", ""}:
+                original = title
+            title_es = None
+            if distrib and distrib != "—":
+                title_es = distrib
+            elif literal and literal != "—":
+                title_es = literal
+
+            poster_path = None
+            poster_match = re.search(r'\[Póster\]\(([^)]+)\)', poster_cell)
+            if poster_match:
+                poster_path = poster_match.group(1).strip()
+
+            film = ParsedFilm(
+                title=title,
+                original_title=original or title,
+                title_es=title_es,
+                year=year,
+            )
+
+            if poster_path:
+                if poster_path.startswith(("http://", "https://")):
+                    film.poster_url = poster_path
+                else:
+                    local_path = file_path.parent / poster_path
+                    film.poster_local = str(local_path) if local_path.exists() else poster_path
+
+            films.append(film)
+
+        return films
+
+    # Legacy bullet format
+    for line in lines:
         line = line.strip()
         if not line.startswith('-'):
             continue

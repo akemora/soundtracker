@@ -5,7 +5,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import patch
 
-from soundtracker.config import Settings, get_settings
+from soundtracker.config import Settings, _disable_dotenv, get_settings
 
 
 class TestSettings:
@@ -160,3 +160,98 @@ class TestSettingsValidation:
             assert "themoviedb.org" in settings.tmdb_api_url
             assert "image.tmdb.org" in settings.tmdb_image_url
             assert "perplexity.ai" in settings.pplx_api_url
+
+    def test_imdb_paths_default(self, tmp_path):
+        """Test imdb paths derived from base_dir."""
+        with patch.dict(os.environ, {}, clear=True):
+            settings = Settings(base_dir=tmp_path)
+            assert settings.imdb_data_dir == tmp_path / "data" / "imdb_data"
+            assert settings.imdb_db_path == tmp_path / "data" / "imdb_data" / "imdb.sqlite"
+
+    def test_paths_override(self, tmp_path):
+        """Test path overrides."""
+        custom_output = tmp_path / "out"
+        custom_imdb = tmp_path / "imdb"
+        custom_db = tmp_path / "imdb.sqlite"
+        with patch.dict(
+            os.environ,
+            {"IMDB_DATA_DIR": str(custom_imdb), "IMDB_DB_PATH": str(custom_db)},
+            clear=True,
+        ):
+            settings = Settings(base_dir=tmp_path, output_dir=custom_output)
+            assert settings.output_dir == custom_output
+            assert settings.imdb_data_dir == custom_imdb
+            assert settings.imdb_db_path == custom_db
+
+    def test_imdb_available(self, tmp_path):
+        """Test imdb availability when file exists."""
+        imdb_dir = tmp_path / "data" / "imdb_data"
+        imdb_dir.mkdir(parents=True)
+        db_path = imdb_dir / "imdb.sqlite"
+        db_path.write_text("test")
+        with patch.dict(os.environ, {}, clear=True):
+            settings = Settings(base_dir=tmp_path)
+            assert settings.is_imdb_available is True
+
+    def test_perplexity_available_flag(self):
+        """Test perplexity availability respects flags."""
+        with patch.dict(os.environ, {"PPLX_API_KEY": "key"}, clear=True):
+            settings = Settings()
+            assert settings.is_perplexity_available
+        with patch.dict(os.environ, {"PPLX_API_KEY": "key", "SEARCH_WEB_ENABLED": "0"}, clear=True):
+            settings = Settings()
+            assert not settings.is_perplexity_available
+
+
+class TestDotenvBehavior:
+    """Tests for dotenv disabling behavior."""
+
+    def test_disable_dotenv_env_flag(self):
+        """Test explicit disable flag."""
+        with patch.dict(os.environ, {"SOUNDTRACKER_DISABLE_DOTENV": "1"}, clear=True):
+            assert _disable_dotenv() is True
+
+    def test_disable_dotenv_in_pytest(self, monkeypatch):
+        """Test pytest detection disables dotenv."""
+        with patch.dict(os.environ, {}, clear=True):
+            assert _disable_dotenv() is True
+
+    def test_settings_customise_sources(self, monkeypatch):
+        """Test settings sources omit dotenv when disabled."""
+        with patch.dict(os.environ, {"SOUNDTRACKER_DISABLE_DOTENV": "1"}, clear=True):
+            sources = Settings.settings_customise_sources(
+                Settings,
+                init_settings="init",
+                env_settings="env",
+                dotenv_settings="dotenv",
+                file_secret_settings="secrets",
+            )
+            assert sources == ("init", "env", "secrets")
+
+    def test_settings_customise_sources_includes_dotenv(self, monkeypatch):
+        """Test settings sources include dotenv when enabled."""
+        with patch.dict(os.environ, {}, clear=True):
+            # Temporarily remove pytest indicator
+            import sys
+            original_pytest = sys.modules.pop("pytest", None)
+            try:
+                sources = Settings.settings_customise_sources(
+                    Settings,
+                    init_settings="init",
+                    env_settings="env",
+                    dotenv_settings="dotenv",
+                    file_secret_settings="secrets",
+                )
+                assert sources == ("init", "env", "dotenv", "secrets")
+            finally:
+                if original_pytest is not None:
+                    sys.modules["pytest"] = original_pytest
+
+
+def test_set_imdb_db_path_fallback():
+    """Test imdb_db_path fallback uses base_dir when imdb_data_dir missing."""
+    class DummyInfo:
+        data = {"base_dir": Path("/tmp/base")}
+
+    value = Settings.set_imdb_db_path(None, DummyInfo())
+    assert value == Path("/tmp/base") / "data" / "imdb_data" / "imdb.sqlite"
