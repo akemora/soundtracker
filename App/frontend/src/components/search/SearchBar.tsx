@@ -59,9 +59,7 @@ export function SearchBar({
     }, 300);
 
     return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
+      clearTimeout(debounceRef.current as NodeJS.Timeout);
     };
   }, [query, showAutocomplete]);
 
@@ -243,7 +241,7 @@ function SearchIcon({ className }: { className?: string }) {
   );
 }
 
-function LoadingSpinner({ className }: { className?: string }) {
+export function LoadingSpinner({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

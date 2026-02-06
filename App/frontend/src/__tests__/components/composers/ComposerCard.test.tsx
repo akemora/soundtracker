@@ -99,4 +99,15 @@ describe("ComposerCard", () => {
     render(<ComposerCard composer={deceasedComposer} />);
     expect(screen.getByText(/1888.*-.*1971/)).toBeInTheDocument();
   });
+
+  it("renders unknown birth year and no country", () => {
+    const unknownComposer: ComposerWithStats = {
+      ...mockComposer,
+      country: null,
+      birth_year: null,
+      death_year: null,
+    };
+    render(<ComposerCard composer={unknownComposer} />);
+    expect(screen.getByText(/\? - present/)).toBeInTheDocument();
+  });
 });

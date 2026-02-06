@@ -58,4 +58,67 @@ describe("PlaylistPlayer", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Comprar en itunes")).toBeInTheDocument();
   });
+
+  it("toggles play state and handles keyboard selection", () => {
+    render(
+      <PlaylistPlayer
+        composerSlug="john_williams"
+        composerName="John Williams"
+        tracks={tracks}
+      />
+    );
+
+    const playButton = screen.getByRole("button", { name: "Reproducir" });
+    fireEvent.click(playButton);
+    expect(screen.getByText("Pausar")).toBeInTheDocument();
+
+    const listItem = screen.getByRole("button", { name: /Theme/ });
+    fireEvent.keyDown(listItem, { key: "Enter", code: "Enter" });
+    fireEvent.keyDown(listItem, { key: " ", code: "Space" });
+    fireEvent.keyDown(listItem, { key: "Escape", code: "Escape" });
+    expect(
+      screen.getByText("Este track no está disponible gratuitamente.")
+    ).toBeInTheDocument();
+  });
+
+  it("renders fallback when no tracks", () => {
+    render(
+      <PlaylistPlayer
+        composerSlug="john_williams"
+        composerName="John Williams"
+        tracks={[]}
+      />
+    );
+    expect(
+      screen.getByText("No hay playlist disponible todavía.")
+    ).toBeInTheDocument();
+  });
+
+  it("renders fallback when active track is missing", () => {
+    render(
+      <PlaylistPlayer
+        composerSlug="john_williams"
+        composerName="John Williams"
+        // @ts-expect-error intentional invalid track
+        tracks={[undefined]}
+      />
+    );
+    expect(
+      screen.getByText("No hay playlist disponible todavía.")
+    ).toBeInTheDocument();
+  });
+
+  it("handles undefined tracks prop", () => {
+    render(
+      <PlaylistPlayer
+        composerSlug="john_williams"
+        composerName="John Williams"
+        // @ts-expect-error intentional undefined tracks
+        tracks={undefined}
+      />
+    );
+    expect(
+      screen.getByText("No hay playlist disponible todavía.")
+    ).toBeInTheDocument();
+  });
 });

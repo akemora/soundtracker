@@ -41,8 +41,6 @@ export function FilmographyList({ slug }: FilmographyListProps) {
   }, [slug]);
 
   const loadMore = async () => {
-    if (!data || loadingMore) return;
-
     setLoadingMore(true);
     try {
       const nextPage = page + 1;
@@ -65,8 +63,13 @@ export function FilmographyList({ slug }: FilmographyListProps) {
   }
 
   // Get unique decades
-  const decades = [...new Set(allFilms.map((f) => f.year ? Math.floor(f.year / 10) * 10 : null).filter(Boolean))]
-    .sort((a, b) => (b ?? 0) - (a ?? 0)) as number[];
+  const decades = [
+    ...new Set(
+      allFilms
+        .map((film) => (film.year ? Math.floor(film.year / 10) * 10 : null))
+        .filter((value): value is number => value !== null)
+    ),
+  ].sort((a, b) => b - a);
 
   // Filter films by decade
   const filteredFilms = decadeFilter

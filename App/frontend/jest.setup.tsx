@@ -16,6 +16,9 @@ jest.mock("next/navigation", () => ({
 jest.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
   useLocale: () => "es",
+  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 // Mock next/image
@@ -29,9 +32,14 @@ jest.mock("next/image", () => ({
 
 // Mock the i18n routing
 jest.mock("@/i18n/routing", () => ({
+  routing: {
+    locales: ["es", "en"],
+    defaultLocale: "es",
+  },
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
+  redirect: jest.fn(),
   useRouter: () => ({
     push: jest.fn(),
     replace: jest.fn(),
@@ -39,4 +47,5 @@ jest.mock("@/i18n/routing", () => ({
     back: jest.fn(),
   }),
   usePathname: () => "/",
+  getPathname: jest.fn(),
 }));
